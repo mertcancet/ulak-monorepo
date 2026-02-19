@@ -12,6 +12,8 @@ export default [
     index("routes/dashboard/dashboard.tsx"),
     route("agent", "routes/dashboard/agent.tsx"),
     route("knowledge-base", "routes/dashboard/knowledge-base.tsx"),
+    route("call-history", "routes/dashboard/call-history.tsx"),
+    route("analytics", "routes/dashboard/analytics.tsx"),
   ]),
 
   route("auth", "routes/auth/layout.tsx", [
