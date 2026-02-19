@@ -1,17 +1,8 @@
 {
-  "name": "@apps/api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "api",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node index.js",
-    "build": "echo build api"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^5.2.1"
+    "dev": "node index.js"
   }
 }
