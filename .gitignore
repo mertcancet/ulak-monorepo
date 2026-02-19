@@ -1,0 +1,58 @@
+# Node
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency directories
+jspm_packages/
+
+# Build output
+dist/
+build/
+
+# Misc
+.DS_Store
+.env
+.env.*
+*.local
+*.env
+
+# VSCode
+.vscode/
+
+# TypeScript
+*.tsbuildinfo
+
+# Mac system files
+*.DS_Store
+
+# Monorepo
+.pnpm-store/
+
+# Turbo
+.turbo/
+
+# IDEs
+.idea/
+*.sw?
+
+# Coverage
+coverage/
+
+# Docker
+*.pid
+
+# Others
+*.tgz
+*.bak
+*.tmp
+
+# Ignore lock files in packages
+**/package-lock.json
+**/yarn.lock
