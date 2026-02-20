@@ -38,12 +38,12 @@ export const initialEdges: Edge[] = [
     id: "e1-2",
     source: "greetings",
     target: "identity-confirmation",
-    type: "smoothstep",
+    type: "step",
   },
   {
     id: "e2-3",
     source: "identity-confirmation",
     target: "success-path",
-    type: "smoothstep",
+    type: "step",
   },
 ];

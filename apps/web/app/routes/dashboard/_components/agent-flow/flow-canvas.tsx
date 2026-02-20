@@ -1,17 +1,15 @@
-import React, { useCallback } from "react";
 import ReactFlow, {
   Background,
-  addEdge,
-  useNodesState,
-  useEdgesState,
   Panel,
   BackgroundVariant,
   useReactFlow,
   ReactFlowProvider,
+  ConnectionLineType,
 } from "reactflow";
 import type { Connection, Edge, NodeProps, Node } from "reactflow";
 import "reactflow/dist/style.css";
 
+import { useFlowStore } from "~/store/flow-store";
 import { nodeTypes } from "./node-types";
 import { initialNodes, initialEdges } from "./data";
 import {
@@ -25,14 +23,10 @@ import {
 } from "lucide-react";
 
 const FlowCanvasInner: React.FC = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
+    useFlowStore();
 
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  );
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
 
   const onAddNode = () => {
     const newNode = {
@@ -45,7 +39,7 @@ const FlowCanvasInner: React.FC = () => {
         color: "text-gray-500",
       },
     };
-    setNodes((nds) => nds.concat(newNode));
+    addNode(newNode);
   };
 
   return (
@@ -57,6 +51,11 @@ const FlowCanvasInner: React.FC = () => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        defaultEdgeOptions={{
+          type: "step",
+          style: { strokeWidth: 2 },
+        }}
+        connectionLineType={ConnectionLineType.Step}
         fitView
         snapToGrid
         snapGrid={[15, 15]}

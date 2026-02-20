@@ -1,7 +1,26 @@
-import React from "react";
 import { NODE_TYPES } from "./constants";
+import { useFlowStore } from "~/store/flow-store";
 
 export const NodeLibrary: React.FC = () => {
+  const { addNode } = useFlowStore();
+
+  const handleAddNode = (nodeType: (typeof NODE_TYPES)[0]) => {
+    const newNode = {
+      id: `${nodeType.id}-${Date.now()}`,
+      type: "custom",
+      position: {
+        x: Math.random() * 200 + 100,
+        y: Math.random() * 200 + 100,
+      },
+      data: {
+        title: nodeType.label,
+        content: `New ${nodeType.label} node added.`,
+        color: nodeType.color,
+      },
+    };
+    addNode(newNode);
+  };
+
   return (
     <aside className="w-64 bg-background border-r border-border flex flex-col font-display">
       <div className="flex border-b border-border">
@@ -16,6 +35,7 @@ export const NodeLibrary: React.FC = () => {
         {NODE_TYPES.map((node) => (
           <div
             key={node.id}
+            onClick={() => handleAddNode(node)}
             className="flex items-center gap-3 p-2 hover:bg-secondary rounded-lg cursor-pointer group transition-all"
           >
             <span
