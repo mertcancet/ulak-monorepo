@@ -10,7 +10,7 @@ export default function AnalyticsPage() {
     <div className="flex flex-col h-full overflow-hidden bg-background">
       <AnalyticsHeader />
 
-      <main className="flex-1 overflow-y-auto p-8 space-y-8 bg-mesh scrollbar-thin">
+      <main className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-thin">
         <MetricCards />
 
         <AnalyticsCharts />

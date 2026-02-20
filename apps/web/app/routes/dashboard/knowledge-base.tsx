@@ -26,11 +26,7 @@ export default function KnowledgeBasePage() {
             <BookOpen className="w-4 h-4 text-muted-foreground" />
             <h2 className="font-semibold text-sm">Bilgi Bankası</h2>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 bg-foreground text-background hover:bg-foreground/90 transition-colors"
-          >
+          <Button variant="outline" size="icon" className="h-8 w-8 ">
             <Plus className="w-4 h-4" />
           </Button>
         </div>
@@ -66,7 +62,7 @@ export default function KnowledgeBasePage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button className="gap-2 bg-foreground text-background hover:bg-foreground/90 transition-colors h-10 px-4 text-sm font-semibold">
+              <Button>
                 <Edit className="w-4 h-4" /> Düzenle
               </Button>
               <Button

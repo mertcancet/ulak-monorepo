@@ -1,49 +1,53 @@
 import React from "react";
 import DashboardHeader from "../dashboard-header";
+import {
+  Home,
+  Edit,
+  Copy,
+  Clock,
+  Info,
+  MessageCircle,
+  MoreHorizontal,
+  Share,
+  History,
+  Play,
+} from "lucide-react";
+import { Button } from "~/components/ui/button";
 
 export const FlowHeader: React.FC = () => {
   return (
     <DashboardHeader>
-      {" "}
-      <div className="flex items-center gap-4">
-        <div className="p-1.5 bg-secondary/50 rounded">
-          <span className="material-icons-outlined text-muted-foreground">
-            home
-          </span>
+      <div className="flex flex-col gap-1">
+        <div className="flex">
+          <div className="mr-1 bg-secondary/50 rounded">
+            <Button variant="outline" size="icon">
+              <Home className="text-muted-foreground w-5 h-5" />
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <h1 className="font-semibold text-md">
+              Patient Screening (from template)
+            </h1>
+            <Edit className="text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors w-3 h-3" />
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <h1 className="font-semibold text-sm">
-            Patient Screening (from template)
-          </h1>
-          <span className="material-icons-outlined text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
-            edit
-          </span>
-        </div>
-        <div className="h-4 w-px bg-border mx-2"></div>
-        <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-medium font-display">
-          <span className="flex items-center gap-1">
-            Agent ID: ag...acc{" "}
-            <span className="material-icons-outlined text-[12px] cursor-pointer hover:text-foreground">
-              content_copy
+
+        <div>
+          <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-medium font-display">
+            <span className="flex items-center gap-1">Agent ID: ag...acc </span>
+            <Copy className="w-3 h-3 cursor-pointer hover:text-foreground" />
+            <span className="flex items-center gap-1">
+              CF ID: co...774{" "}
+              <Copy className="w-3 h-3 cursor-pointer hover:text-foreground" />
             </span>
-          </span>
-          <span className="flex items-center gap-1">
-            CF ID: co...774{" "}
-            <span className="material-icons-outlined text-[12px] cursor-pointer hover:text-foreground">
-              content_copy
+            <span>$0.115/min</span>
+            <span className="flex items-center gap-1">
+              <Clock className="w-3 h-3" /> 820-1150ms latency
             </span>
-          </span>
-          <span>$0.115/min</span>
-          <span className="flex items-center gap-1">
-            <span className="material-icons-outlined text-[12px]">
-              schedule
-            </span>{" "}
-            820-1150ms latency
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="material-icons-outlined text-[12px]">info</span>{" "}
-            104-304 tokens
-          </span>
+            <span className="flex items-center gap-1">
+              <Info className="w-3 h-3" /> 104-304 tokens
+            </span>
+          </div>
         </div>
       </div>
       <div className="flex items-center gap-4">
@@ -63,36 +67,26 @@ export const FlowHeader: React.FC = () => {
         </nav>
         <div className="flex items-center gap-2">
           <button className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-foreground bg-background border border-border rounded hover:bg-secondary transition-colors">
-            <span className="material-icons-outlined text-sm">
-              chat_bubble_outline
-            </span>{" "}
-            Give feedback
+            <MessageCircle className="w-3 h-3 text-muted-foreground" /> Give
+            feedback
           </button>
           <div className="flex items-center border border-border rounded overflow-hidden">
             <button className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors">
-              <span className="material-icons-outlined text-sm text-muted-foreground">
-                more_horiz
-              </span>
+              <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
             </button>
             <button className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors">
-              <span className="material-icons-outlined text-sm text-muted-foreground">
-                share
-              </span>
+              <Share className="w-3 h-3 text-muted-foreground" />
             </button>
             <button className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors">
-              <span className="material-icons-outlined text-sm text-muted-foreground">
-                history
-              </span>
+              <History className="w-3 h-3 text-muted-foreground" />
             </button>
             <button className="p-1.5 px-2 hover:bg-secondary transition-colors">
-              <span className="material-icons-outlined text-sm text-muted-foreground">
-                play_arrow
-              </span>
+              <Play className="w-3 h-3 text-muted-foreground" />
             </button>
           </div>
-          <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-1.5 rounded text-xs font-semibold transition-all shadow-sm shadow-primary/20">
+          <Button variant="default" size="sm" className="px-5 py-1.5 ">
             Publish
-          </button>
+          </Button>
         </div>
       </div>
     </DashboardHeader>

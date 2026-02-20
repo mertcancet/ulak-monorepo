@@ -98,8 +98,8 @@ const SidebarItem = ({
         className={cn(
           "flex items-center px-3 py-2 rounded-lg transition-all duration-200 group space-x-3",
           active
-            ? "bg-primary/10 text-primary font-semibold shadow-sm"
-            : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+            ? "border-border border"
+            : "text-muted-foreground border border-white hover:bg-secondary hover:text-foreground",
         )}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
