@@ -1,0 +1,101 @@
+/* shadcn/ui animasyon presetleri - Tailwind 4.0 için */
+
+@layer utilities {
+  .animate-in {
+    animation: fadeIn 0.2s ease-in;
+  }
+  .animate-out {
+    animation: fadeOut 0.2s ease-out;
+  }
+  .fade-in-0 {
+    animation: fadeIn 0.2s ease-in;
+  }
+  .fade-out-0 {
+    animation: fadeOut 0.2s ease-out;
+  }
+  .zoom-in-95 {
+    animation: zoomIn 0.2s ease-in;
+  }
+  .zoom-out-95 {
+    animation: zoomOut 0.2s ease-out;
+  }
+  .slide-in-from-top-2 {
+    animation: slideInFromTop 0.2s ease-in;
+  }
+  .slide-in-from-bottom-2 {
+    animation: slideInFromBottom 0.2s ease-in;
+  }
+  .slide-in-from-left-2 {
+    animation: slideInFromLeft 0.2s ease-in;
+  }
+  .slide-in-from-right-2 {
+    animation: slideInFromRight 0.2s ease-in;
+  }
+}
+
+@layer base {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.95);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes zoomOut {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(0.95);
+    }
+  }
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-8px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes slideInFromBottom {
+    from {
+      transform: translateY(8px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes slideInFromLeft {
+    from {
+      transform: translateX(-8px);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideInFromRight {
+    from {
+      transform: translateX(8px);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+}
