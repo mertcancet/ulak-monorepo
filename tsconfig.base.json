@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@ulak/api": [
+        "apps/api/src/index"
+      ],
+      "@ulak/shared": [
+        "packages/shared/src/index"
+      ],
+    }
+  },
+}
