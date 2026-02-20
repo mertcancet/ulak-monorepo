@@ -1,6 +1,14 @@
+import openapi, { fromTypes } from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const app = new Elysia()
+  .use(
+    openapi({
+      references: fromTypes(),
+    }),
+  )
+  .get("/", () => "Hello Elysia")
+  .listen(3000);
 
 console.log(
   `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,
