@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { cn } from "~/lib/utils";
+import DashboardHeader from "./_components/dashboard-header";
 
 const CallHistoryPage = () => {
   const calls = [
@@ -86,7 +87,7 @@ const CallHistoryPage = () => {
   return (
     <div className="flex flex-col h-full bg-background animate-in fade-in duration-500">
       {/* Header */}
-      <header className="h-14 border-b border-border bg-card/50 backdrop-blur-sm px-6 flex items-center justify-between sticky top-0 z-10 shrink-0">
+      <DashboardHeader>
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <History className="w-4 h-4 text-primary" />
@@ -149,7 +150,7 @@ const CallHistoryPage = () => {
             <RotateCw className="w-4 h-4" />
           </Button>
         </div>
-      </header>
+      </DashboardHeader>
 
       {/* Table Content */}
       <div className="flex-1 overflow-auto scrollbar-thin">

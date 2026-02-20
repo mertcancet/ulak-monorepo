@@ -52,9 +52,3 @@ coverage/
 *.tgz
 *.bak
 *.tmp
-
-# Ignore lock files in packages
-**/package-lock.json
-**/yarn.lock
-
-pnpm-lock.yaml

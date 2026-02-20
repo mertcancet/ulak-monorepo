@@ -10,10 +10,11 @@ import { Button } from "~/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { AgentMeta } from "./agent-meta";
 import { AGENT_MOCK_DATA } from "./constants";
+import DashboardHeader from "../dashboard-header";
 
 export const AgentHeader = () => {
   return (
-    <header className="h-14 border-b border-border bg-card flex items-center justify-between px-4 shrink-0 transition-opacity duration-300">
+    <DashboardHeader>
       <div className="flex items-center space-x-4">
         <Button
           variant="ghost"
@@ -36,7 +37,6 @@ export const AgentHeader = () => {
         </div>
         <AgentMeta />
       </div>
-
       <div className="flex items-center space-x-3">
         <Tabs defaultValue="configure" className="mr-6">
           <TabsList className="bg-transparent h-14 border-b-0 gap-8">
@@ -79,6 +79,6 @@ export const AgentHeader = () => {
           </Button>
         </div>
       </div>
-    </header>
+    </DashboardHeader>
   );
 };

@@ -1,8 +1,10 @@
 import React from "react";
+import DashboardHeader from "../dashboard-header";
 
 export const FlowHeader: React.FC = () => {
   return (
-    <header className="h-14 border-b border-border bg-background flex items-center justify-between px-4 z-50">
+    <DashboardHeader>
+      {" "}
       <div className="flex items-center gap-4">
         <div className="p-1.5 bg-secondary/50 rounded">
           <span className="material-icons-outlined text-muted-foreground">
@@ -93,6 +95,6 @@ export const FlowHeader: React.FC = () => {
           </button>
         </div>
       </div>
-    </header>
+    </DashboardHeader>
   );
 };

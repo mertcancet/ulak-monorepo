@@ -1,10 +1,11 @@
 import React from "react";
 import { Calendar, Filter, Plus, Edit2, ChevronDown } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import DashboardHeader from "../dashboard-header";
 
 export const AnalyticsHeader = () => {
   return (
-    <header className="h-16 border-b border-border flex items-center justify-between px-8 bg-card sticky top-0 z-20">
+    <DashboardHeader>
       <div className="flex items-center space-x-3">
         <div className="p-2 bg-primary/10 rounded-lg">
           <Filter className="w-4 h-4 text-primary" />
@@ -13,7 +14,6 @@ export const AnalyticsHeader = () => {
           Analizler ve İstatistikler
         </h1>
       </div>
-
       <div className="flex items-center space-x-3">
         <div className="flex items-center space-x-2 bg-secondary/50 border border-border rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer hover:bg-secondary transition-all">
           <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
@@ -49,6 +49,6 @@ export const AnalyticsHeader = () => {
           Düzenle
         </Button>
       </div>
-    </header>
+    </DashboardHeader>
   );
 };

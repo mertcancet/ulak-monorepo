@@ -27,6 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import DashboardHeader from "./_components/dashboard-header";
 
 const agents = [
   {
@@ -54,7 +55,7 @@ const agents = [
 export default function Dashboard() {
   return (
     <>
-      <header className="h-16 border-b border-border flex items-center justify-between px-8 bg-card sticky top-0 z-10">
+      <DashboardHeader>
         <h1 className="text-lg font-bold tracking-tight">Temsilciler</h1>
         <div className="flex items-center space-x-3">
           <div className="relative group">
@@ -73,9 +74,9 @@ export default function Dashboard() {
             <ChevronDown className="w-3.5 h-3.5" />
           </Button>
         </div>
-      </header>
+      </DashboardHeader>
 
-      <div className="p-8 space-y-6 flex-1 overflow-auto bg-mesh">
+      <div className="p-8 space-y-6 flex-1 overflow-auto">
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden glass">
           <Table>
             <TableHeader>
