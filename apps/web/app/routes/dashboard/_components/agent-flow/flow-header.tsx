@@ -1,5 +1,6 @@
 import React from "react";
 import DashboardHeader from "../dashboard-header";
+import { useFlowStore } from "~/store/flow-store";
 import {
   Home,
   Edit,
@@ -15,6 +16,28 @@ import {
 import { Button } from "~/components/ui/button";
 
 export const FlowHeader: React.FC = () => {
+  const { nodes, edges } = useFlowStore();
+
+  const handlePublish = () => {
+    // Transform nodes to include their connections
+    const enrichedNodes = nodes.map((node) => {
+      // Find edges where this node is the source
+      const outgoingEdges = edges.filter((edge) => edge.source === node.id);
+
+      return {
+        ...node,
+        data: {
+          ...node.data,
+          // Attach target node IDs directly to the node data
+          nextNodes: outgoingEdges.map((edge) => edge.target),
+        },
+      };
+    });
+
+    console.log("--- ENRICHED NODES (with connections) ---");
+    console.log(enrichedNodes);
+    alert("Bağlantı bilgileri node içine gömüldü ve konsola yazdırıldı!");
+  };
   return (
     <DashboardHeader>
       <div className="flex flex-col gap-1">
@@ -84,7 +107,12 @@ export const FlowHeader: React.FC = () => {
               <Play className="w-3 h-3 text-muted-foreground" />
             </button>
           </div>
-          <Button variant="default" size="sm" className="px-5 py-1.5 ">
+          <Button
+            variant="default"
+            size="sm"
+            className="px-5 py-1.5"
+            onClick={handlePublish}
+          >
             Publish
           </Button>
         </div>

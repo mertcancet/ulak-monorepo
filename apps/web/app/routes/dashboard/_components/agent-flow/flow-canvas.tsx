@@ -66,6 +66,11 @@ const FlowCanvasInner: React.FC = () => {
         selectionOnDrag={!isPanMode}
         snapToGrid={showGrid}
         snapGrid={[15, 15]}
+        minZoom={0.1}
+        maxZoom={2}
+        fitView
+        fitViewOptions={{ padding: 0.2 }}
+        onlyRenderVisibleElements={true}
         className={cn("transition-all", !showGrid && "bg-secondary/10")}
       >
         {showGrid && (
@@ -136,7 +141,7 @@ const FlowCanvasInner: React.FC = () => {
                 <ZoomIn className="w-4 h-4" />
               </button>
               <button
-                onClick={() => fitView()}
+                onClick={() => fitView({ padding: 0.2, duration: 800 })}
                 className="text-muted-foreground hover:text-foreground transition-colors p-1"
                 title="Fit View"
               >
