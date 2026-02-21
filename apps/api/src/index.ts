@@ -84,6 +84,14 @@ const app = new Elysia()
         status: 500,
       });
     }
+
+    if (!problem) return;
+
+    return problem({
+      title: "Internal Server Error",
+      detail: (error as Record<string, string>)?.message,
+      status: 500,
+    });
   })
   .get("/", () => "Hello Elysia")
   .post(
