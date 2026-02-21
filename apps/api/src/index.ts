@@ -1,10 +1,23 @@
-import openapi, { fromTypes } from "@elysiajs/openapi";
+import openapi from "@elysiajs/openapi";
+import { type } from "arktype";
 import { Elysia } from "elysia";
 
 const app = new Elysia()
   .use(
     openapi({
-      references: fromTypes(),
+      documentation: {
+        info: {
+          title: "Ulak Api Docs",
+          version: "v1",
+        },
+      },
+      mapJsonSchema: {
+        arktype: (schema: type) => {
+          return schema["~standard"].jsonSchema.input({
+            target: "draft-2020-12",
+          });
+        },
+      },
     }),
   )
   .get("/", () => "Hello Elysia")
