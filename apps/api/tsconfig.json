@@ -4,9 +4,7 @@
     "target": "es2021",
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "types": [
-      "bun-types"
-    ],
+    "types": ["bun-types"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

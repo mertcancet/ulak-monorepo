@@ -72,7 +72,7 @@ const app = new Elysia()
       return problem({
         title: "Bad Request",
         status: 400,
-        errors: error.all.map((e) => ({
+        errors: error.all.map(e => ({
           path: e.path,
           message: e.message,
         })),
@@ -88,7 +88,7 @@ const app = new Elysia()
   .get("/", () => "Hello Elysia")
   .post(
     "/sign-in",
-    ({ body }) => {
+    () => {
       return {
         status: 200,
         id: "30PKTuqj4FstWTdFpQWS8PcxeHvZ1HFjxOUtAmriWGE=",

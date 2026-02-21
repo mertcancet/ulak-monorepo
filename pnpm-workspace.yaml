@@ -7,3 +7,8 @@ ignoredBuiltDependencies:
 
 onlyBuiltDependencies:
   - esbuild
+  - lefthook
+
+catalog:
+  arktype: ^2.1.29
+  "@biomejs/biome": 2.4.4
