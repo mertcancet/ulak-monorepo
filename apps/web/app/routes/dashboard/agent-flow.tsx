@@ -30,13 +30,6 @@ export default function AgentFlowPage() {
       <style
         dangerouslySetInnerHTML={{
           __html: `
-          .canvas-grid {
-            background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
-            background-size: 20px 20px;
-          }
-          .dark .canvas-grid {
-            background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
-          }
           .scrollbar-hide::-webkit-scrollbar {
             display: none;
           }

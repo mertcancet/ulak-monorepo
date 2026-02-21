@@ -4,7 +4,7 @@ export const initialNodes: Node[] = [
   {
     id: "greetings",
     type: "custom",
-    position: { x: 250, y: 50 },
+    position: { x: 50, y: 150 },
     data: {
       title: "Greetings",
       content: "Hi, This is Anna. I'm an AI agent representing Northwell...",
@@ -14,7 +14,7 @@ export const initialNodes: Node[] = [
   {
     id: "identity-confirmation",
     type: "custom",
-    position: { x: 100, y: 200 },
+    position: { x: 300, y: 150 },
     data: {
       title: "Identity Confirmation",
       content: "Can I confirm I'm speaking with {{customer_name}}?",
@@ -24,7 +24,7 @@ export const initialNodes: Node[] = [
   {
     id: "success-path",
     type: "custom",
-    position: { x: 400, y: 200 },
+    position: { x: 550, y: 150 },
     data: {
       title: "Success Path",
       content: "Proceeding to screening questions...",
@@ -38,12 +38,12 @@ export const initialEdges: Edge[] = [
     id: "e1-2",
     source: "greetings",
     target: "identity-confirmation",
-    type: "step",
+    type: "smoothstep",
   },
   {
     id: "e2-3",
     source: "identity-confirmation",
     target: "success-path",
-    type: "step",
+    type: "smoothstep",
   },
 ];

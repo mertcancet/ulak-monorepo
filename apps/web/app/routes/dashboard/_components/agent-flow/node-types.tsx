@@ -13,7 +13,7 @@ const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
     <div className="bg-card p-4 rounded-xl shadow-sm border border-border w-48 text-[10px] transform hover:scale-105 transition-all duration-200 group">
       <Handle
         type="target"
-        position={Position.Top}
+        position={Position.Left}
         className="w-2 h-2 !bg-border border-2 !border-background hover:!bg-primary transition-colors"
       />
 
@@ -24,7 +24,7 @@ const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
 
       <Handle
         type="source"
-        position={Position.Bottom}
+        position={Position.Right}
         className="w-2 h-2 !bg-border border-2 !border-background hover:!bg-primary transition-colors"
       />
     </div>

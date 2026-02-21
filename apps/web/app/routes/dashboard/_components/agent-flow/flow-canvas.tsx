@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import ReactFlow, {
   Background,
   Panel,
@@ -20,13 +21,18 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize,
+  Hand,
+  MousePointer2,
 } from "lucide-react";
+import { cn } from "~/lib/utils";
 
 const FlowCanvasInner: React.FC = () => {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
     useFlowStore();
 
   const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const [showGrid, setShowGrid] = useState(true);
+  const [isPanMode, setIsPanMode] = useState(false);
 
   const onAddNode = () => {
     const newNode = {
@@ -52,43 +58,62 @@ const FlowCanvasInner: React.FC = () => {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         defaultEdgeOptions={{
-          type: "step",
+          type: "smoothstep",
           style: { strokeWidth: 2 },
         }}
-        connectionLineType={ConnectionLineType.Step}
-        fitView
-        snapToGrid
+        connectionLineType={ConnectionLineType.SmoothStep}
+        panOnDrag={isPanMode}
+        selectionOnDrag={!isPanMode}
+        snapToGrid={showGrid}
         snapGrid={[15, 15]}
-        className="canvas-grid"
+        className={cn("transition-all", !showGrid && "bg-secondary/10")}
       >
-        <Background
-          variant={BackgroundVariant.Dots}
-          gap={20}
-          size={1}
-          color="#cbd5e1"
-        />
+        {showGrid && (
+          <Background
+            variant={BackgroundVariant.Dots}
+            gap={20}
+            size={1}
+            color="#cbd5e1"
+          />
+        )}
 
         {/* Floating View Controls (Bottom-Center) */}
         <Panel position="bottom-center" className="mb-6">
           <div className="bg-card shadow-xl rounded-full border border-border px-5 py-2.5 flex items-center gap-5 transition-all hover:shadow-2xl">
             <button
-              className="text-muted-foreground hover:text-foreground transition-colors p-1"
-              title="Navigation"
+              onClick={() => setIsPanMode(!isPanMode)}
+              className={cn(
+                "transition-colors p-1 rounded-md",
+                isPanMode
+                  ? "text-primary bg-primary/10"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+              title={isPanMode ? "Pan Mode (Hand)" : "Selection Mode (Pointer)"}
             >
-              <Navigation className="w-4 h-4" />
+              {isPanMode ? (
+                <Hand className="w-4 h-4" />
+              ) : (
+                <MousePointer2 className="w-4 h-4" />
+              )}
             </button>
             <div className="w-px h-4 bg-border"></div>
 
             <button
-              className="text-muted-foreground hover:text-foreground transition-colors p-1"
-              title="Grid View"
+              onClick={() => setShowGrid(!showGrid)}
+              className={cn(
+                "transition-colors p-1 rounded-md",
+                showGrid
+                  ? "text-primary bg-primary/10"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+              title="Toggle Grid"
             >
               <Grid3X3 className="w-4 h-4" />
             </button>
 
             <button
               className="text-muted-foreground hover:text-foreground transition-colors p-1"
-              title="Search"
+              title="Search (Coming Soon)"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -119,17 +144,6 @@ const FlowCanvasInner: React.FC = () => {
               </button>
             </div>
           </div>
-        </Panel>
-
-        {/* Add Button (Bottom-Left) */}
-        <Panel position="bottom-left" className="ml-6 mb-6">
-          <button
-            onClick={onAddNode}
-            className="bg-primary text-primary-foreground p-3.5 rounded-full border border-primary shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center group"
-            title="Add Node"
-          >
-            <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
-          </button>
         </Panel>
 
         {/* Flow Indicator (Bottom-Right) */}
@@ -163,6 +177,12 @@ const FlowCanvasInner: React.FC = () => {
         .react-flow__edge-path {
           stroke: hsl(var(--border));
           stroke-width: 2;
+          transition: stroke 0.1s ease-in-out, stroke-width 0.1s ease-in-out;
+        }
+        .react-flow__edge:hover .react-flow__edge-path,
+        .react-flow__edge.selected .react-flow__edge-path {
+          stroke: #3b82f6 !important;
+          stroke-width: 3;
         }
         .react-flow__edge.animated path {
           stroke-dasharray: 5;
