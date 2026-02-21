@@ -32,6 +32,10 @@ const app = new Elysia()
           version: "v1",
         },
       },
+      scalar: {
+        persistAuth: true,
+        telemetry: false,
+      },
       mapJsonSchema: {
         arktype: (schema: type) => {
           return schema["~standard"].jsonSchema.input({
