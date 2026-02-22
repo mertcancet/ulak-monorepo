@@ -1,6 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "types/*": ["src/types/*"],
+      "plugins/*": ["src/plugins/*"],
+      "modules/*": ["src/modules/*"],
+      "shared/*": ["src/shared/*"],
+      "@prisma/*": ["src/prisma/generated/*"],
+      "@ulak/shared": ["../../packages/shared/src"]
+    },
     "target": "es2021",
     "module": "nodenext",
     "moduleResolution": "nodenext",

@@ -8,9 +8,15 @@
     "dev:api": "pnpm --filter api dev",
     "build:web": "pnpm --filter web build",
     "build:api": "pnpm --filter api build",
-    "format:api": "pnpm --filter api format"
+    "seed": "pnpm --filter api seed",
+    "format:api": "biome check --write --unsafe ./apps/api",
+    "format:web": "biome check --write --unsafe ./apps/web",
+    "check:api": "biome check --reporter=summary ./apps/api",
+    "check:web": "biome check --reporter=summary ./apps/web"
   },
   "devDependencies": {
-    "lefthook": "^2.1.1"
+    "@biomejs/biome": "catalog:",
+    "lefthook": "^2.1.1",
+    "prisma": "catalog:"
   }
 }

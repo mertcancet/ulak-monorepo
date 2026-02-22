@@ -1,0 +1,39 @@
+import openapi from "@elysiajs/openapi";
+import type { type } from "arktype";
+import { Elysia } from "elysia";
+import authModule from "modules/auth";
+import errorHandler from "plugins/error-handler";
+import env from "shared/env";
+
+const app = new Elysia()
+  .use(
+    openapi({
+      documentation: {
+        info: {
+          title: "Ulak Api Docs",
+          version: "v1",
+        },
+      },
+      scalar: {
+        persistAuth: true,
+        telemetry: false,
+      },
+      mapJsonSchema: {
+        arktype: (schema: type) => {
+          return schema["~standard"].jsonSchema.input({
+            target: "draft-2020-12",
+          });
+        },
+      },
+    }),
+  )
+  .use(errorHandler())
+  .use(authModule())
+  .get("/", () => "Hello Elysia")
+  .listen(env.PORT);
+
+console.log(
+  `Server running at http://${app.server?.hostname}:${app.server?.port}`,
+);
+
+export type UlakApi = typeof app;
