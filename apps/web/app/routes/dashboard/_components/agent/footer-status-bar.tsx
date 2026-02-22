@@ -1,4 +1,3 @@
-import React from "react";
 import { AGENT_MOCK_DATA } from "./constants";
 
 export const FooterStatusBar = () => {

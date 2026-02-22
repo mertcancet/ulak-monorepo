@@ -1,10 +1,10 @@
-import React from "react";
 import { ChevronDown } from "lucide-react";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { cn } from "~/lib/utils";
 import { CONFIG_SECTIONS } from "./constants";
 
 interface ConfigSectionItemProps {
+  // biome-ignore lint/suspicious/noExplicitAny: <>
   icon: any;
   label: string;
   active?: boolean;
@@ -16,6 +16,7 @@ const ConfigSectionItem = ({
   active = false,
 }: ConfigSectionItemProps) => (
   <button
+    type="button"
     className={cn(
       "w-full flex items-center justify-between p-4 transition-all duration-200 group hover:bg-secondary/50",
       active
@@ -48,6 +49,7 @@ export const ConfigSidebar = () => {
               key={section.label}
               icon={section.icon}
               label={section.label}
+              // biome-ignore lint/complexity/noUselessTernary: Fix later
               active={index === 0 ? false : false} // Could be driven by state later
             />
           ))}

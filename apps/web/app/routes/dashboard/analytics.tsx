@@ -1,9 +1,8 @@
-import React from "react";
+import { UserMinus } from "lucide-react";
+import { AnalyticsCharts } from "./_components/analytics/AnalyticsCharts";
 import { AnalyticsHeader } from "./_components/analytics/AnalyticsHeader";
 import { MetricCards } from "./_components/analytics/MetricCards";
-import { AnalyticsCharts } from "./_components/analytics/AnalyticsCharts";
 import { PerformanceTable } from "./_components/analytics/PerformanceTable";
-import { UserMinus } from "lucide-react";
 
 export default function AnalyticsPage() {
   return (
@@ -39,6 +38,7 @@ export default function AnalyticsPage() {
                 <div className="h-10 flex items-end gap-1">
                   {[40, 60, 45, 70, 50, 80, 55, 65, 45, 60].map((h, i) => (
                     <div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: <>
                       key={i}
                       className="flex-1 bg-indigo-500/20 rounded-t-sm hover:bg-indigo-500/40 transition-colors"
                       style={{ height: `${h}%` }}

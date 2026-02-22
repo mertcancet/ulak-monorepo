@@ -1,27 +1,25 @@
-import React, { useState, useRef } from "react";
-import { Outlet, Link, useLocation } from "react-router";
 import {
-  Bot,
-  BookOpen,
-  Phone,
-  List,
-  History,
-  MessageSquare,
+  ArrowLeft,
+  ArrowLeftRight,
   BarChart3,
-  ShieldCheck,
-  CreditCard,
-  Settings,
+  Bell,
+  BookOpen,
+  Bot,
   ChevronDown,
+  ChevronsUpDown,
+  CreditCard,
   Gift,
   HelpCircle,
-  Bell,
-  Search,
-  LayoutDashboard,
-  ChevronsUpDown,
-  ArrowLeftRight,
-  ArrowLeft,
+  History,
+  List,
+  MessageSquare,
+  Phone,
+  Settings,
+  ShieldCheck,
 } from "lucide-react";
-import { cn } from "~/lib/utils";
+import type React from "react";
+import { useRef, useState } from "react";
+import { Link, Outlet, useLocation } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
@@ -29,6 +27,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { cn } from "~/lib/utils";
 
 const SidebarItem = ({
   icon: Icon,
@@ -37,15 +36,16 @@ const SidebarItem = ({
   active,
   collapsed,
 }: {
+  // biome-ignore lint/suspicious/noExplicitAny: <>
   icon: any;
   label: string;
   href: string;
   active?: boolean;
   collapsed?: boolean;
 }) => {
-  const [hovered, setHovered] = useState(false);
+  const [_hovered, setHovered] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
-  const [tooltipStyle, setTooltipStyle] = useState<{
+  const [_tooltipStyle, setTooltipStyle] = useState<{
     top: number;
     left: number;
   } | null>(null);
@@ -172,12 +172,13 @@ const DashboardLayout = () => {
             </div>
           )}
           <button
+            type="button"
             className={cn(
               "flex items-center justify-center w-8 h-8 rounded-full hover:bg-secondary transition-colors",
               "border border-border",
             )}
             style={{ zIndex: 30 }}
-            onClick={() => setCollapsed((c) => !c)}
+            onClick={() => setCollapsed(c => !c)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {/* Left arrow when expanded, right arrow when collapsed */}
@@ -344,11 +345,17 @@ const DashboardLayout = () => {
             </div>
 
             <div className="flex items-center justify-around py-2 border-t border-border pt-4">
-              <button className="text-[10px] text-muted-foreground hover:text-foreground flex items-center space-x-1 transition-colors">
+              <button
+                type="button"
+                className="text-[10px] text-muted-foreground hover:text-foreground flex items-center space-x-1 transition-colors"
+              >
                 <HelpCircle className="w-3 h-3" />
                 <span>Yardım</span>
               </button>
-              <button className="text-[10px] text-muted-foreground hover:text-foreground flex items-center space-x-1 transition-colors">
+              <button
+                type="button"
+                className="text-[10px] text-muted-foreground hover:text-foreground flex items-center space-x-1 transition-colors"
+              >
                 <Bell className="w-3 h-3" />
                 <span>Güncellemeler</span>
               </button>

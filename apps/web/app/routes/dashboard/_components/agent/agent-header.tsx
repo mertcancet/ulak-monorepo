@@ -1,16 +1,15 @@
-import React from "react";
 import {
-  Home,
   Edit3,
-  MoreHorizontal,
   History as HistoryIcon,
+  Home,
+  MoreHorizontal,
   Rocket,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import DashboardHeader from "../dashboard-header";
 import { AgentMeta } from "./agent-meta";
 import { AGENT_MOCK_DATA } from "./constants";
-import DashboardHeader from "../dashboard-header";
 
 export const AgentHeader = () => {
   return (

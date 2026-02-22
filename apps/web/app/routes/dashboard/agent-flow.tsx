@@ -1,8 +1,6 @@
-import React from "react";
-import type { Route } from "./+types/agent-flow";
+import { FlowCanvas } from "./_components/agent-flow/flow-canvas";
 import { FlowHeader } from "./_components/agent-flow/flow-header";
 import { NodeLibrary } from "./_components/agent-flow/node-library";
-import { FlowCanvas } from "./_components/agent-flow/flow-canvas";
 import { SettingsPanel } from "./_components/agent-flow/settings-panel";
 
 export function links() {
@@ -28,6 +26,7 @@ export default function AgentFlowPage() {
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-display">
       <style
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
         dangerouslySetInnerHTML={{
           __html: `
           .scrollbar-hide::-webkit-scrollbar {

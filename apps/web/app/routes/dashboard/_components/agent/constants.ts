@@ -1,13 +1,13 @@
 import {
-  LayoutGrid,
-  BookOpen,
-  Settings2,
-  Subtitles,
-  PhoneCall,
   BarChart2,
-  ShieldCheck,
-  Webhook,
+  BookOpen,
+  LayoutGrid,
+  PhoneCall,
   Puzzle,
+  Settings2,
+  ShieldCheck,
+  Subtitles,
+  Webhook,
 } from "lucide-react";
 
 export const AGENT_MOCK_DATA = {

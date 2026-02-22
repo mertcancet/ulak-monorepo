@@ -1,8 +1,8 @@
-import React from "react";
-import { PhoneCall, Code, Mic, Info } from "lucide-react";
+import { Code, Info, Mic, PhoneCall } from "lucide-react";
 import { Button } from "~/components/ui/button";
 
 const MessagesSquare = ({ className }: { className?: string }) => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: <>
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -23,14 +23,20 @@ const MessagesSquare = ({ className }: { className?: string }) => (
 
 export const TestingPanel = () => {
   return (
-    <div className="w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-lg border-primary/10 overflow-hidden glass relative overflow-hidden">
+    <div className="w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-lg overflow-hidden glass relative">
       <div className="p-2 border-b border-border flex items-center justify-between bg-secondary/30 backdrop-blur-sm">
         <div className="flex space-x-1 bg-background/50 p-1 rounded-lg border border-border flex-1 shadow-inner">
-          <button className="flex-1 flex items-center justify-center space-x-2 py-1.5 px-3 bg-white shadow-sm rounded-md text-xs font-bold transition-all">
+          <button
+            type="button"
+            className="flex-1 flex items-center justify-center space-x-2 py-1.5 px-3 bg-white shadow-sm rounded-md text-xs font-bold transition-all"
+          >
             <PhoneCall className="w-3.5 h-3.5 text-primary" />
             <span>Ses Testi</span>
           </button>
-          <button className="flex-1 flex items-center justify-center space-x-2 py-1.5 px-3 text-muted-foreground text-xs font-bold hover:bg-background/80 rounded-md transition-all">
+          <button
+            type="button"
+            className="flex-1 flex items-center justify-center space-x-2 py-1.5 px-3 text-muted-foreground text-xs font-bold hover:bg-background/80 rounded-md transition-all"
+          >
             <MessagesSquare className="w-3.5 h-3.5" />
             <span>Sohbet Testi</span>
           </button>
@@ -47,7 +53,7 @@ export const TestingPanel = () => {
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center relative z-10">
         <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mb-6 relative group">
           <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping opacity-20" />
-          <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-xl shadow-primary/20 transition-transform group-hover:scale-105">
+          <div className="w-16 h-16 bg-linear-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-xl shadow-primary/20 transition-transform group-hover:scale-105">
             <Mic className="text-white w-8 h-8" />
           </div>
         </div>
@@ -55,7 +61,7 @@ export const TestingPanel = () => {
         <h3 className="text-xl font-bold tracking-tight mb-2">
           Temsilciyi Test Et
         </h3>
-        <p className="text-sm text-muted-foreground max-w-[260px] mb-8 font-medium">
+        <p className="text-sm text-muted-foreground max-w-65 mb-8 font-medium">
           Yapılandırmanızın nasıl çalıştığını gerçek zamanlı olarak
           deneyimleyin.
         </p>

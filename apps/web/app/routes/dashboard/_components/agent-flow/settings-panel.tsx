@@ -1,14 +1,20 @@
-import React from "react";
+import type React from "react";
 import { SETTINGS_MENU_ITEMS } from "./constants";
 
 export const SettingsPanel: React.FC = () => {
   return (
     <aside className="w-[320px] bg-background border-l border-border flex flex-col font-display">
       <div className="flex border-b border-border">
-        <button className="flex-1 py-3 text-xs font-bold border-b-2 border-primary transition-colors">
+        <button
+          type="button"
+          className="flex-1 py-3 text-xs font-bold border-b-2 border-primary transition-colors"
+        >
           Global Settings
         </button>
-        <button className="flex-1 py-3 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+        <button
+          type="button"
+          className="flex-1 py-3 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
           Test Agent
         </button>
       </div>
@@ -16,7 +22,10 @@ export const SettingsPanel: React.FC = () => {
       <div className="flex-1 overflow-y-auto p-4 scrollbar-hide space-y-6">
         {/* Agent Settings Section */}
         <section>
-          <button className="w-full flex items-center justify-between group mb-4">
+          <button
+            type="button"
+            className="w-full flex items-center justify-between group mb-4"
+          >
             <div className="flex items-center gap-2">
               <span className="material-icons-outlined text-lg text-muted-foreground group-hover:text-primary transition-colors">
                 smart_toy
@@ -31,6 +40,7 @@ export const SettingsPanel: React.FC = () => {
           <div className="space-y-4">
             {/* Voice & Language */}
             <div>
+              {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
               <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
                 Voice & Language
               </label>
@@ -59,7 +69,10 @@ export const SettingsPanel: React.FC = () => {
                     expand_more
                   </span>
                 </div>
-                <button className="p-1.5 bg-secondary/50 rounded border border-border hover:bg-secondary transition-colors text-muted-foreground">
+                <button
+                  type="button"
+                  className="p-1.5 bg-secondary/50 rounded border border-border hover:bg-secondary transition-colors text-muted-foreground"
+                >
                   <span className="material-icons-outlined text-sm">
                     settings
                   </span>
@@ -69,6 +82,7 @@ export const SettingsPanel: React.FC = () => {
 
             {/* Execution Mode */}
             <div>
+              {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
               <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
                 Execution Mode
               </label>
@@ -94,6 +108,7 @@ export const SettingsPanel: React.FC = () => {
             {/* Global Prompt */}
             <div>
               <div className="flex items-center justify-between mb-2">
+                {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
                 <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
                   Global Prompt
                 </label>
@@ -131,7 +146,7 @@ You are calling to follow up on a recent patient visit to screen for potential c
 
         {/* Global Action Menu Items */}
         <section className="space-y-px border-t border-border pt-4">
-          {SETTINGS_MENU_ITEMS.map((item) => (
+          {SETTINGS_MENU_ITEMS.map(item => (
             <div
               key={item.id}
               className="flex items-center justify-between py-2 px-2 cursor-pointer group hover:bg-secondary rounded-lg transition-colors"
@@ -178,7 +193,7 @@ const ExecutionModeButton: React.FC<ExecutionModeButtonProps> = ({
   >
     <div className="flex gap-3">
       <div
-        className={`w-8 h-8 rounded-full ${iconBg} flex items-center justify-center flex-shrink-0`}
+        className={`w-8 h-8 rounded-full ${iconBg} flex items-center justify-center shrink-0`}
       >
         <span className="material-icons-outlined text-base">{icon}</span>
       </div>

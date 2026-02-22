@@ -1,26 +1,17 @@
-import React from "react";
 import {
-  History,
   Calendar,
-  Filter,
-  Columns,
-  SlidersHorizontal,
-  Upload,
-  RotateCw,
   ChevronLeft,
   ChevronRight,
+  Columns,
+  Filter,
+  History,
   MoreHorizontal,
-  Download,
-  Search,
+  RotateCw,
+  SlidersHorizontal,
+  Upload,
 } from "lucide-react";
-import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import DashboardHeader from "./_components/dashboard-header";
 
@@ -154,7 +145,7 @@ const CallHistoryPage = () => {
 
       {/* Table Content */}
       <div className="flex-1 overflow-auto scrollbar-thin">
-        <table className="w-full text-left border-collapse min-w-[1200px]">
+        <table className="w-full text-left border-collapse min-w-300">
           <thead className="sticky top-0 z-10">
             <tr className="border-b border-border bg-secondary/30 backdrop-blur-md">
               <th className="px-6 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
@@ -192,6 +183,7 @@ const CallHistoryPage = () => {
           <tbody className="divide-y divide-border/50">
             {calls.map((call, idx) => (
               <tr
+                // biome-ignore lint/suspicious/noArrayIndexKey: <>
                 key={idx}
                 className="group hover:bg-secondary/40 transition-all duration-200 cursor-pointer"
               >
@@ -249,6 +241,7 @@ const CallHistoryPage = () => {
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   <Badge
+                    // biome-ignore lint/suspicious/noExplicitAny: <>
                     variant={call.statusVariant as any}
                     className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 shadow-sm"
                   >

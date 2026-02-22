@@ -1,5 +1,4 @@
-import React from "react";
-import { Calendar, Filter, Plus, Edit2, ChevronDown } from "lucide-react";
+import { Calendar, ChevronDown, Edit2, Filter, Plus } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import DashboardHeader from "../dashboard-header";
 

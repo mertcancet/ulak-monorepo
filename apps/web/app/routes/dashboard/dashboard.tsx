@@ -1,15 +1,21 @@
-import React from "react";
 import {
-  Search,
-  Plus,
-  Download,
-  MoreVertical,
   Bot,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
+  Download,
+  MoreVertical,
+  Search,
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import {
   Table,
@@ -19,14 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { Badge } from "~/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
 import DashboardHeader from "./_components/dashboard-header";
 
 const agents = [
@@ -81,7 +79,7 @@ export default function Dashboard() {
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent bg-secondary/30">
-                <TableHead className="w-[300px] text-[11px] uppercase tracking-wider font-bold h-12">
+                <TableHead className="w-75 text-[11px] uppercase tracking-wider font-bold h-12">
                   Temsilci Adı
                 </TableHead>
                 <TableHead className="text-[11px] uppercase tracking-wider font-bold h-12">
@@ -100,7 +98,7 @@ export default function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {agents.map((agent) => (
+              {agents.map(agent => (
                 <TableRow
                   key={agent.id}
                   className="group hover:bg-secondary/20 transition-colors"

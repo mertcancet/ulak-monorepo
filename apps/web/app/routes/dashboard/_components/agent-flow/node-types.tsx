@@ -1,6 +1,6 @@
-import React, { memo } from "react";
-import { Handle, Position } from "reactflow";
+import { memo } from "react";
 import type { NodeProps } from "reactflow";
+import { Handle, Position } from "reactflow";
 
 export interface CustomNodeData {
   title: string;

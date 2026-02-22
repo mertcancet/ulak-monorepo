@@ -1,11 +1,10 @@
-import React from "react";
 import { AgentHeader } from "./_components/agent/agent-header";
-import { QuickSelectToolbar } from "./_components/agent/quick-select-toolbar";
-import { PromptEditor } from "./_components/agent/prompt-editor";
-import { GreetingSection } from "./_components/agent/greeting-section";
 import { ConfigSidebar } from "./_components/agent/config-sidebar";
-import { TestingPanel } from "./_components/agent/testing-panel";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
+import { GreetingSection } from "./_components/agent/greeting-section";
+import { PromptEditor } from "./_components/agent/prompt-editor";
+import { QuickSelectToolbar } from "./_components/agent/quick-select-toolbar";
+import { TestingPanel } from "./_components/agent/testing-panel";
 
 /**
  * AgentConfigPage

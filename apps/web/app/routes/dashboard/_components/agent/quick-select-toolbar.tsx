@@ -1,5 +1,4 @@
-import React from "react";
-import { Brain, Mic2, Languages, ChevronDown } from "lucide-react";
+import { Brain, ChevronDown, Languages, Mic2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 
 export const QuickSelectToolbar = () => {

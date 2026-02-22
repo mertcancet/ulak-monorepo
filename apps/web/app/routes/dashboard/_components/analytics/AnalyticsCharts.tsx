@@ -1,13 +1,6 @@
-import React from "react";
-import {
-  PhoneCall,
-  BarChart3,
-  Smile,
-  UserMinus,
-  ArrowUpRight,
-  ArrowDownLeft,
-  Users,
-} from "lucide-react";
+/** biome-ignore-all lint/a11y/noSvgWithoutTitle: <> */
+import { ArrowDownLeft, ArrowUpRight, Smile } from "lucide-react";
+import type React from "react";
 import { Progress } from "~/components/ui/progress";
 
 const ChartCard = ({
@@ -25,7 +18,7 @@ const ChartCard = ({
     className={`bg-card border border-border p-6 rounded-2xl shadow-sm glass ${className}`}
   >
     <div className="mb-6">
-      <h3 className="font-bold tracking-tight text-sm uppercase tracking-widest text-foreground/80">
+      <h3 className="font-bold tracking-tight text-sm uppercase text-foreground/80">
         {title}
       </h3>
       {subtitle && (

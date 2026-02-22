@@ -1,30 +1,27 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import ReactFlow, {
   Background,
-  Panel,
   BackgroundVariant,
-  useReactFlow,
-  ReactFlowProvider,
   ConnectionLineType,
+  Panel,
+  ReactFlowProvider,
+  useReactFlow,
 } from "reactflow";
-import type { Connection, Edge, NodeProps, Node } from "reactflow";
 import "reactflow/dist/style.css";
 
-import { useFlowStore } from "~/store/flow-store";
-import { nodeTypes } from "./node-types";
-import { initialNodes, initialEdges } from "./data";
 import {
-  Search,
   Grid3X3,
-  Navigation,
-  Plus,
+  Hand,
+  Maximize,
+  MousePointer2,
+  Search,
   ZoomIn,
   ZoomOut,
-  Maximize,
-  Hand,
-  MousePointer2,
 } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { useFlowStore } from "~/store/flow-store";
+import { nodeTypes } from "./node-types";
 
 const FlowCanvasInner: React.FC = () => {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
@@ -34,7 +31,7 @@ const FlowCanvasInner: React.FC = () => {
   const [showGrid, setShowGrid] = useState(true);
   const [isPanMode, setIsPanMode] = useState(false);
 
-  const onAddNode = () => {
+  const _onAddNode = () => {
     const newNode = {
       id: `node-${Date.now()}`,
       type: "custom",
@@ -86,6 +83,7 @@ const FlowCanvasInner: React.FC = () => {
         <Panel position="bottom-center" className="mb-6">
           <div className="bg-card shadow-xl rounded-full border border-border px-5 py-2.5 flex items-center gap-5 transition-all hover:shadow-2xl">
             <button
+              type="button"
               onClick={() => setIsPanMode(!isPanMode)}
               className={cn(
                 "transition-colors p-1 rounded-md",
@@ -104,6 +102,7 @@ const FlowCanvasInner: React.FC = () => {
             <div className="w-px h-4 bg-border"></div>
 
             <button
+              type="button"
               onClick={() => setShowGrid(!showGrid)}
               className={cn(
                 "transition-colors p-1 rounded-md",
@@ -117,6 +116,7 @@ const FlowCanvasInner: React.FC = () => {
             </button>
 
             <button
+              type="button"
               className="text-muted-foreground hover:text-foreground transition-colors p-1"
               title="Search (Coming Soon)"
             >
@@ -127,6 +127,7 @@ const FlowCanvasInner: React.FC = () => {
 
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={() => zoomOut()}
                 className="text-muted-foreground hover:text-foreground transition-colors p-1"
                 title="Zoom Out"
@@ -134,6 +135,7 @@ const FlowCanvasInner: React.FC = () => {
                 <ZoomOut className="w-4 h-4" />
               </button>
               <button
+                type="button"
                 onClick={() => zoomIn()}
                 className="text-muted-foreground hover:text-foreground transition-colors p-1"
                 title="Zoom In"
@@ -141,6 +143,7 @@ const FlowCanvasInner: React.FC = () => {
                 <ZoomIn className="w-4 h-4" />
               </button>
               <button
+                type="button"
                 onClick={() => fitView({ padding: 0.2, duration: 800 })}
                 className="text-muted-foreground hover:text-foreground transition-colors p-1"
                 title="Fit View"
@@ -165,6 +168,7 @@ const FlowCanvasInner: React.FC = () => {
       </ReactFlow>
 
       <style
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
         dangerouslySetInnerHTML={{
           __html: `
         .react-flow__attribution {

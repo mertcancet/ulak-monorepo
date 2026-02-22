@@ -1,19 +1,19 @@
-import { create } from "zustand";
-import { addEdge, applyNodeChanges, applyEdgeChanges } from "reactflow";
 import type {
   Connection,
   Edge,
   EdgeChange,
   Node,
   NodeChange,
-  OnNodesChange,
-  OnEdgesChange,
   OnConnect,
+  OnEdgesChange,
+  OnNodesChange,
 } from "reactflow";
+import { addEdge, applyEdgeChanges, applyNodeChanges } from "reactflow";
+import { create } from "zustand";
 
 import {
-  initialNodes,
   initialEdges,
+  initialNodes,
 } from "../routes/dashboard/_components/agent-flow/data";
 
 interface FlowState {

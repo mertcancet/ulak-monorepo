@@ -1,5 +1,5 @@
-import React from "react";
-import { TrendingUp, CheckCircle, Clock } from "lucide-react";
+import { CheckCircle, Clock, TrendingUp } from "lucide-react";
+import type React from "react";
 import { cn } from "~/lib/utils";
 
 interface MetricCardProps {

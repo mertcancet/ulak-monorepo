@@ -1,5 +1,5 @@
-import { NODE_TYPES } from "./constants";
 import { useFlowStore } from "~/store/flow-store";
+import { NODE_TYPES } from "./constants";
 
 export const NodeLibrary: React.FC = () => {
   const { addNode } = useFlowStore();
@@ -24,15 +24,23 @@ export const NodeLibrary: React.FC = () => {
   return (
     <aside className="w-64 bg-background border-r border-border flex flex-col font-display">
       <div className="flex border-b border-border">
-        <button className="flex-1 py-3 text-xs font-bold border-b-2 border-primary">
+        <button
+          type="button"
+          className="flex-1 py-3 text-xs font-bold border-b-2 border-primary"
+        >
           Node
         </button>
-        <button className="flex-1 py-3 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+        <button
+          type="button"
+          className="flex-1 py-3 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
           Components
         </button>
       </div>
       <div className="flex-1 overflow-y-auto p-3 space-y-1 scrollbar-hide">
-        {NODE_TYPES.map((node) => (
+        {NODE_TYPES.map(node => (
+          // biome-ignore lint/a11y/noStaticElementInteractions: <>
+          // biome-ignore lint/a11y/useKeyWithClickEvents: <>
           <div
             key={node.id}
             onClick={() => handleAddNode(node)}

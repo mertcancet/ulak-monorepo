@@ -1,4 +1,12 @@
-import React from "react";
+import {
+  Bot,
+  CheckCircle2,
+  ChevronRight,
+  PhoneCall,
+  Timer,
+} from "lucide-react";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import {
   Table,
   TableBody,
@@ -7,15 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { Badge } from "~/components/ui/badge";
-import {
-  Bot,
-  ChevronRight,
-  PhoneCall,
-  Timer,
-  CheckCircle2,
-} from "lucide-react";
-import { Button } from "~/components/ui/button";
 
 const performanceData = [
   {
@@ -102,7 +101,7 @@ export const PerformanceTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {performanceData.map((item) => (
+          {performanceData.map(item => (
             <TableRow
               key={item.id}
               className="group hover:bg-secondary/10 transition-colors border-border/50"

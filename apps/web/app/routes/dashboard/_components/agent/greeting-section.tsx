@@ -1,7 +1,6 @@
-import React from "react";
-import { Timer, ChevronRight } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { ChevronRight, Timer } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 
 export const GreetingSection = () => {
   return (

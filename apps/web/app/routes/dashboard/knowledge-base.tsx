@@ -1,26 +1,20 @@
-import React from "react";
 import {
   BookOpen,
-  Plus,
-  Link as LinkIcon,
   CheckCircle2,
-  Edit,
-  Trash2,
-  Copy,
-  Layout,
-  ExternalLink,
   ChevronDown,
+  Copy,
+  Edit,
+  Link as LinkIcon,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { cn } from "~/lib/utils";
 
 export default function KnowledgeBasePage() {
   return (
     <div className="flex h-full bg-background overflow-hidden">
       {/* Sub-Sidebar: Bilgi Bankası Listesi */}
-      <aside className="w-72 flex-shrink-0 border-r border-border bg-card flex flex-col">
+      <aside className="w-72 shrink-0 border-r border-border bg-card flex flex-col">
         <div className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-muted-foreground" />
@@ -50,7 +44,10 @@ export default function KnowledgeBasePage() {
               <div className="flex items-center gap-3 text-xs text-muted-foreground font-medium">
                 <span className="flex items-center gap-1">
                   ID: know...1ce
-                  <button className="hover:text-foreground transition-colors">
+                  <button
+                    type="button"
+                    className="hover:text-foreground transition-colors"
+                  >
                     <Copy className="w-3.5 h-3.5" />
                   </button>
                 </span>
@@ -138,6 +135,7 @@ export default function KnowledgeBasePage() {
 }
 
 const RotateCw = ({ className }: { className?: string }) => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: <>
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
