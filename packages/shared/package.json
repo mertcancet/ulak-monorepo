@@ -8,11 +8,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@elysiajs/eden": "^1.4.8"
-  },
-  "devDependencies": {
-    "@types/node": "^22"
-  }
+  "license": "ISC"
 }
