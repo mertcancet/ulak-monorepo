@@ -1,3 +1,4 @@
+import { redirect } from "react-router";
 import { Welcome } from "../welcome/welcome";
 
 export function meta() {
@@ -5,6 +6,10 @@ export function meta() {
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
   ];
+}
+
+export function loader() {
+  throw redirect("/dashboard");
 }
 
 export default function Home() {
