@@ -13,7 +13,7 @@ export default function KnowledgeBasePage() {
   );
 
   return (
-    <div className="flex h-full bg-background overflow-hidden">
+    <div className="flex h-full bg-background overflow-hidden animate-in fade-in duration-500">
       {/* Sub-Sidebar: Bilgi Bankası Listesi */}
       <aside className="w-72 shrink-0 border-r border-border bg-card flex flex-col">
         <div className="p-4 h-16 border-b border-border flex items-center justify-between">

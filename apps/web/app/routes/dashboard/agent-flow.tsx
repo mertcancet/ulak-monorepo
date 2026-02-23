@@ -24,7 +24,7 @@ export function meta() {
 
 export default function AgentFlowPage() {
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-display">
+    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-display animate-in fade-in duration-500">
       <style
         // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
         dangerouslySetInnerHTML={{

@@ -68,7 +68,7 @@ const agents = [
 
 export default function Dashboard() {
   return (
-    <>
+    <div className="animate-in fade-in duration-500">
       <DashboardHeader>
         <h1 className="text-lg font-bold tracking-tight">Temsilciler</h1>
         <div className="flex items-center space-x-3">
@@ -206,7 +206,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

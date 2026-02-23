@@ -13,7 +13,7 @@ import { TestingPanel } from "./_components/agent/testing-panel";
  */
 export default function AgentConfigPage() {
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden relative">
+    <div className="flex flex-col h-screen bg-background overflow-hidden relative animate-in fade-in duration-500">
       <AgentHeader />
 
       <main className="flex-1 flex overflow-hidden p-4 gap-4 bg-mesh">
