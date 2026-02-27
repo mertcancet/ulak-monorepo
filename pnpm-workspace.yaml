@@ -13,4 +13,3 @@ onlyBuiltDependencies:
 catalog:
   arktype: ^2.1.29
   "@biomejs/biome": 2.4.4
-  prisma: ^7.4.1

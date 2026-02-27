@@ -1,7 +1,7 @@
 {
   "name": "callingai-monorepo",
   "private": true,
-  "packageManager": "pnpm@10.30.1",
+  "packageManager": "pnpm@10.30.3",
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "dev:web": "pnpm --filter web dev",
@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
-    "lefthook": "^2.1.1",
-    "prisma": "catalog:"
+    "lefthook": "^2.1.1"
   }
 }

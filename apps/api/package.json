@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@elysiajs/openapi": "^1.4.14",
-    "@prisma/adapter-pg": "^7.4.1",
-    "@prisma/client": "^7.4.1",
     "@sinclair/typebox": "^0.34.48",
     "arktype": "catalog:",
     "elysia": "latest",
