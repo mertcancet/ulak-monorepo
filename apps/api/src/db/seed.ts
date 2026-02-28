@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
-import env from "shared/env";
+import env from "~/shared/env";
 import { usersTable } from "./schema/users";
 
 const db = drizzle(env.DATABASE_URL);
