@@ -12,7 +12,8 @@
     "format:api": "biome check --write --unsafe ./apps/api",
     "format:web": "biome check --write --unsafe ./apps/web",
     "check:api": "biome check --reporter=summary ./apps/api",
-    "check:web": "biome check --reporter=summary ./apps/web"
+    "check:web": "biome check --reporter=summary ./apps/web",
+    "dk": "pnpm --filter api drizzle-kit"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
