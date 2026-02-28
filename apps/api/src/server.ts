@@ -1,9 +1,9 @@
 import openapi from "@elysiajs/openapi";
 import type { type } from "arktype";
 import { Elysia } from "elysia";
-import authModule from "modules/auth";
-import errorHandler from "plugins/error-handler";
-import env from "shared/env";
+import authModule from "~/modules/auth";
+import errorHandler from "~/plugins/error-handler";
+import env from "~/shared/env";
 
 const app = new Elysia()
   .use(

@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "paths": {
-      "types/*": ["./src/types/*"],
-      "plugins/*": ["./src/plugins/*"],
-      "modules/*": ["./src/modules/*"],
-      "shared/*": ["./src/shared/*"],
-      "@prisma/*": ["./src/prisma/generated/*"],
+      "~/db": ["./src/db"],
+      "~/db/schema/*": ["./src/db/schema/*"],
+      "~/types/*": ["./src/types/*"],
+      "~/plugins/*": ["./src/plugins/*"],
+      "~/modules/*": ["./src/modules/*"],
+      "~/shared/*": ["./src/shared/*"],
       "@ulak/shared": ["../../packages/shared/src"]
     },
     "target": "es2021",

@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import type { BadRequest } from "types/bad-request";
+import type { BadRequest } from "~/types/bad-request";
 
 const problemDetails = () =>
   new Elysia({

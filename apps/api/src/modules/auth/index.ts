@@ -1,6 +1,6 @@
 import { type } from "arktype";
 import Elysia from "elysia";
-import { badRequestSchema } from "types/bad-request";
+import { badRequestSchema } from "~/types/bad-request";
 
 const Payload = type({
   username: "string.alphanumeric > 0",
