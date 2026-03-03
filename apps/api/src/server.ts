@@ -1,3 +1,4 @@
+import { cors } from "@elysiajs/cors";
 import openapi from "@elysiajs/openapi";
 import type { type } from "arktype";
 import { Elysia } from "elysia";
@@ -27,9 +28,18 @@ const app = new Elysia()
       },
     }),
   )
+  .use(
+    cors({
+      origin: env.CORS_ORIGINS,
+      credentials: true,
+    }),
+  )
   .use(errorHandler())
   .use(authModule())
   .get("/", () => "Hello Elysia")
+  .get("/user", ({ user }) => user, {
+    auth: true,
+  })
   .listen(env.PORT);
 
 console.log(

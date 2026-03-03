@@ -2,7 +2,8 @@
   "compilerOptions": {
     "paths": {
       "~/db": ["./src/db"],
-      "~/db/schema/*": ["./src/db/schema/*"],
+      "~/db/schema": ["./src/db/schema/index"],
+      "~/lib/*": ["./src/lib/*"],
       "~/types/*": ["./src/types/*"],
       "~/plugins/*": ["./src/plugins/*"],
       "~/modules/*": ["./src/modules/*"],

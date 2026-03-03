@@ -1,27 +1,24 @@
-import { type } from "arktype";
 import Elysia from "elysia";
-import { badRequestSchema } from "~/types/bad-request";
-
-const Payload = type({
-  username: "string.alphanumeric > 0",
-  password: "string",
-});
+import auth from "~/lib/auth";
 
 const authModule = () =>
-  new Elysia({ prefix: "/auth", tags: ["Auth"] }).post(
-    "login",
-    () => {
-      return {
-        status: 200,
-        id: "30PKTuqj4FstWTdFpQWS8PcxeHvZ1HFjxOUtAmriWGE=",
-      };
-    },
-    {
-      body: Payload,
-      response: {
-        400: badRequestSchema,
+  new Elysia({ name: "auth", prefix: "/auth", tags: ["Auth"] })
+    .mount(auth.handler)
+    .macro({
+      auth: {
+        async resolve({ status, request: { headers } }) {
+          const session = await auth.api.getSession({
+            headers,
+          });
+
+          if (!session) return status(401);
+
+          return {
+            user: session.user,
+            session: session.session,
+          };
+        },
       },
-    },
-  );
+    });
 
 export default authModule;

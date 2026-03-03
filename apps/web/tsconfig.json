@@ -16,6 +16,7 @@
     "paths": {
       "~/*": ["./app/*"],
       "@ulak/api": ["../../apps/api/src"],
+      "@ulak/auth": ["../../apps/api/src/lib/auth"],
       "@ulak/shared": ["../../packages/shared/src"]
     },
     "esModuleInterop": true,

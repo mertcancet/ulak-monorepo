@@ -8,8 +8,11 @@ ignoredBuiltDependencies:
 onlyBuiltDependencies:
   - esbuild
   - lefthook
-  - prisma
 
 catalog:
   arktype: ^2.1.29
+  better-auth: ^1.4.20
   "@biomejs/biome": 2.4.4
+
+overrides:
+  "@better-auth/drizzle-adapter": "https://pkg.pr.new/better-auth/better-auth/@better-auth/drizzle-adapter@6913"

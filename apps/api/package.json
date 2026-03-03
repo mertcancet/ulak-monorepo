@@ -7,12 +7,16 @@
     "dev": "bun run --watch src/server.ts",
     "build": "bun build --compile --minify-whitespace --minify-syntax --target bun --outfile build/server src/server.ts",
     "seed": "bun run src/db/seed.ts",
-    "drizzle-kit": "drizzle-kit"
+    "drizzle-kit": "drizzle-kit",
+    "better-auth": "pnpm dlx @better-auth/cli@latest"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "https://pkg.pr.new/better-auth/better-auth/@better-auth/drizzle-adapter@6913",
+    "@elysiajs/cors": "^1.4.1",
     "@elysiajs/openapi": "^1.4.14",
     "@sinclair/typebox": "^0.34.48",
     "arktype": "catalog:",
+    "better-auth": "catalog:",
     "drizzle-orm": "1.0.0-beta.15-859cf75",
     "elysia": "latest",
     "openapi-types": "^12.1.3",

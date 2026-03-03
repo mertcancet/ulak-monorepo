@@ -13,10 +13,11 @@
     "format:web": "biome check --write --unsafe ./apps/web",
     "check:api": "biome check --reporter=summary ./apps/api",
     "check:web": "biome check --reporter=summary ./apps/web",
-    "dk": "pnpm --filter api drizzle-kit"
+    "dk": "pnpm --filter api drizzle-kit",
+    "ba": "pnpm --filter api better-auth"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
-    "lefthook": "^2.1.1"
+    "lefthook": "^2.1.2"
   }
 }

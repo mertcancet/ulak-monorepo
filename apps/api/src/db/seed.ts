@@ -1,33 +1,71 @@
-import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/node-postgres";
-import env from "~/shared/env";
-import { usersTable } from "./schema/users";
+// import { drizzle } from "drizzle-orm/node-postgres";
+// import env from "~/shared/env";
+// import { users } from "./schema";
+import auth from "~/lib/auth";
 
-const db = drizzle(env.DATABASE_URL);
+// const db = drizzle(env.DATABASE_URL);
 
 async function main() {
-  const user: typeof usersTable.$inferInsert = {
-    name: "John",
-    age: 30,
-    email: "john@example.com",
-  };
+  console.log("Seed started..");
 
-  await db.insert(usersTable).values(user);
-  console.log("New user created!");
+  await Promise.all([
+    auth.api.signUpEmail({
+      body: {
+        email: "finn@oo.kingdom",
+        password: "HeroOfOoo123!",
+        name: "Finn the Human",
+        image:
+          "https://static.wikia.nocookie.net/adventuretimewithfinnandjake/images/f/f3/Original_Finn.png",
+      },
+    }),
+    auth.api.signUpEmail({
+      body: {
+        email: "jake@oo.kingdom",
+        password: "StretchyDog123!",
+        name: "Jake the Dog",
+        image:
+          "https://static.wikia.nocookie.net/adventuretimewithfinnandjake/images/3/3b/Jakesalad.png",
+      },
+    }),
+    auth.api.signUpEmail({
+      body: {
+        email: "princess.bubblegum@candy.kingdom",
+        password: "SciencePrincess123!",
+        name: "Princess Bubblegum",
+        image:
+          "https://static.wikia.nocookie.net/adventuretimewithfinnandjake/images/0/00/Princess_Bubblegum.png",
+      },
+    }),
+    auth.api.signUpEmail({
+      body: {
+        email: "marceline@nightosphere.demon",
+        password: "VampireQueen123!",
+        name: "Marceline",
+        image:
+          "https://static.wikia.nocookie.net/adventuretimewithfinnandjake/images/6/61/F%26C_S1E7_The_Star_2.jpg",
+      },
+    }),
+    auth.api.signUpEmail({
+      body: {
+        email: "iceking@ice.kingdom",
+        password: "GuntherLover123!",
+        name: "Ice King",
+        image:
+          "https://static.wikia.nocookie.net/adventuretimewithfinnandjake/images/6/64/Original_Ice_King.png",
+      },
+    }),
+    auth.api.signUpEmail({
+      body: {
+        email: "bmo@mo.co",
+        password: "LivingConsole123!",
+        name: "BMO",
+        image:
+          "https://static.wikia.nocookie.net/adventuretimewithfinnandjake/images/8/81/BMO.png",
+      },
+    }),
+  ]);
 
-  const users = await db.select().from(usersTable);
-  console.log("Getting all users from the database: ", users);
-
-  await db
-    .update(usersTable)
-    .set({
-      age: 31,
-    })
-    .where(eq(usersTable.email, user.email));
-  console.log("User info updated!");
-
-  await db.delete(usersTable).where(eq(usersTable.email, user.email));
-  console.log("User deleted!");
+  console.log("Seed finished.");
 }
 
 main();
