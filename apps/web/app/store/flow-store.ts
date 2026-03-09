@@ -16,20 +16,41 @@ import {
   initialNodes,
 } from "../routes/dashboard/_components/agent-flow/data";
 
+export interface Condition {
+  id: string;
+  text: string;
+}
+
+export interface GlobalNodeData {
+  textArea?: string;
+}
+
+export interface FlowNodeData {
+  title?: string;
+  content?: string;
+  color?: string;
+  conditions?: Condition[];
+  isGlobal?: boolean;
+  global?: GlobalNodeData;
+}
+
 interface FlowState {
   nodes: Node[];
   edges: Edge[];
+  selectedNodeId: string | null;
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
   setNodes: (updateFn: (nds: Node[]) => Node[]) => void;
   setEdges: (updateFn: (eds: Edge[]) => Edge[]) => void;
   addNode: (node: Node) => void;
+  setSelectedNodeId: (nodeId: string | null) => void;
 }
 
 export const useFlowStore = create<FlowState>((set, get) => ({
   nodes: initialNodes,
   edges: initialEdges,
+  selectedNodeId: null,
   onNodesChange: (changes: NodeChange[]) => {
     set({
       nodes: applyNodeChanges(changes, get().nodes),
@@ -55,5 +76,8 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     set({
       nodes: [...get().nodes, node],
     });
+  },
+  setSelectedNodeId: (nodeId: string | null) => {
+    set({ selectedNodeId: nodeId });
   },
 }));

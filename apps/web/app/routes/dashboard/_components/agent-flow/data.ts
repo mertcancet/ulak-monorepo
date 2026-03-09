@@ -9,6 +9,7 @@ export const initialNodes: Node[] = [
       title: "Greetings",
       content: "Hi, This is Anna. I'm an AI agent representing Northwell...",
       color: "text-pink-500",
+      isGlobal: false,
     },
   },
   {
@@ -19,6 +20,7 @@ export const initialNodes: Node[] = [
       title: "Identity Confirmation",
       content: "Can I confirm I'm speaking with {{customer_name}}?",
       color: "text-indigo-500",
+      isGlobal: false,
     },
   },
   {
@@ -29,6 +31,7 @@ export const initialNodes: Node[] = [
       title: "Success Path",
       content: "Proceeding to screening questions...",
       color: "text-green-500",
+      isGlobal: false,
     },
   },
 ];

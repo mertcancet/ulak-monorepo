@@ -21,14 +21,21 @@ export const FlowHeader: React.FC = () => {
   const handlePublish = () => {
     // Transform nodes to include their connections
     const enrichedNodes = nodes.map(node => {
-      // Find edges where this node is the source
       const outgoingEdges = edges.filter(edge => edge.source === node.id);
+
+      // Create a mapping of outcome IDs to target node IDs
+      const outcomes: Record<string, string> = {};
+      outgoingEdges.forEach(edge => {
+        const handleId = edge.sourceHandle || "default";
+        outcomes[handleId] = edge.target;
+      });
 
       return {
         ...node,
         data: {
           ...node.data,
-          // Attach target node IDs directly to the node data
+          outcomes,
+          // For backward compatibility or simpler cases
           nextNodes: outgoingEdges.map(edge => edge.target),
         },
       };

@@ -24,26 +24,18 @@ import { useFlowStore } from "~/store/flow-store";
 import { nodeTypes } from "./node-types";
 
 const FlowCanvasInner: React.FC = () => {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
-    useFlowStore();
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    setSelectedNodeId,
+  } = useFlowStore();
 
   const { zoomIn, zoomOut, fitView } = useReactFlow();
   const [showGrid, setShowGrid] = useState(true);
   const [isPanMode, setIsPanMode] = useState(false);
-
-  const _onAddNode = () => {
-    const newNode = {
-      id: `node-${Date.now()}`,
-      type: "custom",
-      position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: {
-        title: "New node",
-        content: "Edit this content...",
-        color: "text-gray-500",
-      },
-    };
-    addNode(newNode);
-  };
 
   return (
     <div className="w-full h-full relative">
@@ -53,6 +45,8 @@ const FlowCanvasInner: React.FC = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeClick={(_, node) => setSelectedNodeId(node.id)}
+        onPaneClick={() => setSelectedNodeId(null)}
         nodeTypes={nodeTypes}
         defaultEdgeOptions={{
           type: "smoothstep",
@@ -182,6 +176,10 @@ const FlowCanvasInner: React.FC = () => {
         }
         .react-flow__handle:hover {
           background: hsl(var(--primary)) !important;
+        }
+        .react-flow__node.selected .flow-node-card {
+          border-color: #3b82f6 !important;
+          box-shadow: 0 0 0 2px #3b82f6;
         }
         .react-flow__edge-path {
           stroke: hsl(var(--border));

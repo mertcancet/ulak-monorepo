@@ -1,16 +1,47 @@
+import { PlusIcon, Split, XIcon } from "lucide-react";
 import { memo } from "react";
 import type { NodeProps } from "reactflow";
 import { Handle, Position } from "reactflow";
+import { useFlowStore } from "~/store/flow-store";
+
+interface Condition {
+  id: string;
+  text: string;
+}
 
 export interface CustomNodeData {
   title: string;
   content: string;
   color: string;
+  conditions?: Condition[];
+  isGlobal?: boolean;
 }
+
+const GlobalNodeTag = ({
+  isGlobal,
+  className,
+}: {
+  isGlobal?: boolean;
+  className?: string;
+}) => {
+  if (!isGlobal) {
+    return null;
+  }
+
+  return (
+    <div
+      className={`absolute -top-5 left-2 z-20 rounded-xs border border-emerald-700/80 bg-emerald-500 px-1.5 py-px text-[6px] font-bold uppercase tracking-[0.08em] text-white shadow-sm ${className}`}
+    >
+      Global Node
+    </div>
+  );
+};
 
 const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
   return (
-    <div className="bg-card p-4 rounded-xl shadow-sm border border-border w-48 text-[10px] transform hover:scale-105 transition-all duration-200 group">
+    <div className="flow-node-card bg-card p-4 rounded-xl shadow-sm border border-border w-48 text-[10px] transform hover:scale-105 transition-all duration-200 group relative">
+      <GlobalNodeTag isGlobal={data.isGlobal} />
+
       <Handle
         type="target"
         position={Position.Left}
@@ -31,6 +62,177 @@ const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
   );
 };
 
+// Yeni: Sadece çıkışı olan bir Tetikleyici Düğümü (Trigger Node)
+const TriggerNode = ({ data }: NodeProps<CustomNodeData>) => {
+  return (
+    <div className="flow-node-card bg-card p-4 rounded-2xl shadow-lg border-2 border-primary/20 w-48 text-[10px] transform hover:scale-105 transition-all duration-200 ring-4 ring-primary/5 relative">
+      <GlobalNodeTag isGlobal={data.isGlobal} />
+
+      <div
+        className={`${data.color} font-black mb-1 uppercase tracking-widest flex items-center gap-2`}
+      >
+        <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+        {data.title}
+      </div>
+      <p className="text-foreground font-medium leading-tight">
+        {data.content}
+      </p>
+
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="w-3 h-3 !bg-primary border-2 !border-background"
+      />
+    </div>
+  );
+};
+
+// Yeni: Birden fazla çıkışı olan Mantık Düğümü (Logic Node)
+const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
+  const setNodes = useFlowStore(state => state.setNodes);
+  const conditions = data.conditions || [];
+
+  const updateConditions = (newConditions: Condition[]) => {
+    setNodes(nds =>
+      nds.map(node => {
+        if (node.id === id) {
+          return {
+            ...node,
+            data: { ...node.data, conditions: newConditions },
+          };
+        }
+        return node;
+      }),
+    );
+  };
+
+  const handleAddCondition = () => {
+    updateConditions([
+      ...conditions,
+      { id: crypto.randomUUID(), text: "New Condition" },
+    ]);
+  };
+
+  const handleUpdateCondition = (condId: string, value: string) => {
+    updateConditions(
+      conditions.map(c => (c.id === condId ? { ...c, text: value } : c)),
+    );
+  };
+
+  const handleRemoveCondition = (condId: string) => {
+    updateConditions(conditions.filter(c => c.id !== condId));
+  };
+
+  return (
+    <div className="relative">
+      <GlobalNodeTag isGlobal={data.isGlobal} className="-top-4" />
+      <div className="flow-node-card bg-card/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/50 w-64 overflow-hidden transform hover:scale-[1.02] transition-all duration-300 ring-1 ring-white/10 group relative">
+        <Handle
+          type="target"
+          position={Position.Left}
+          className="w-3 h-3 !bg-blue-500 border-2 !border-background -left-1.5"
+        />
+
+        {/* Header Section */}
+        <div className="p-4 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border-b border-border/50">
+          <div className="flex items-center justify-between mb-2">
+            <div
+              className={`${data.color} font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2`}
+            >
+              <div className="p-1.5 bg-background rounded-lg shadow-sm">
+                <Split size={14} />
+              </div>
+              {data.title}
+            </div>
+          </div>
+          <p className="text-[10px] text-muted-foreground leading-relaxed font-medium">
+            {data.content}
+          </p>
+        </div>
+
+        {/* Conditions List */}
+        <div className="p-3 bg-secondary/20">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+              Outcomes
+            </span>
+            <button
+              type="button"
+              onClick={handleAddCondition}
+              className="p-1 hover:bg-primary/20 rounded-md transition-colors text-primary"
+            >
+              <PlusIcon size={14} />
+            </button>
+          </div>
+
+          <div className="space-y-1.5">
+            {/* Default Outcomes */}
+            <div className="flex items-center justify-between bg-background/50 hover:bg-background/80 p-2 rounded-xl border border-border/30 relative transition-all group/item">
+              <span className="text-[10px] font-semibold text-green-500">
+                Success
+              </span>
+              <Handle
+                type="source"
+                position={Position.Right}
+                id="success"
+                style={{ right: -6, top: "50%" }}
+                className="w-2.5 h-2.5 !bg-green-500 border-2 !border-background"
+              />
+            </div>
+
+            <div className="flex items-center justify-between bg-background/50 hover:bg-background/80 p-2 rounded-xl border border-border/30 relative transition-all group/item">
+              <span className="text-[10px] font-semibold text-red-500">
+                Fail
+              </span>
+              <Handle
+                type="source"
+                position={Position.Right}
+                id="fail"
+                style={{ right: -6, top: "50%" }}
+                className="w-2.5 h-2.5 !bg-red-500 border-2 !border-background"
+              />
+            </div>
+
+            {/* Custom Dynamic Outcomes */}
+            {conditions.map(condition => (
+              <div
+                key={condition.id}
+                className="flex items-center justify-between bg-primary/5 hover:bg-primary/10 p-2 rounded-xl border border-primary/20 relative transition-all group/item"
+              >
+                <input
+                  type="text"
+                  value={condition.text}
+                  onChange={e =>
+                    handleUpdateCondition(condition.id, e.target.value)
+                  }
+                  className="bg-transparent border-none focus:outline-none w-full text-[10px] font-medium pr-6"
+                  placeholder="Condition..."
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveCondition(condition.id)}
+                  className="opacity-0 group-hover/item:opacity-100 transition-opacity absolute right-2 p-0.5 hover:bg-destructive/20 rounded"
+                >
+                  <XIcon size={10} className="text-destructive" />
+                </button>
+                <Handle
+                  type="source"
+                  position={Position.Right}
+                  id={condition.id}
+                  style={{ right: -6, top: "50%" }}
+                  className="w-2.5 h-2.5 !bg-blue-500 border-2 !border-background"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const nodeTypes = {
   custom: memo(CustomNode),
+  trigger: memo(TriggerNode),
+  logic_split: memo(LogicNode),
 };

@@ -16,6 +16,7 @@ export const NodeLibrary: React.FC = () => {
         title: nodeType.label,
         content: `New ${nodeType.label} node added.`,
         color: nodeType.color,
+        isGlobal: false,
       },
     };
     addNode(newNode);
@@ -39,12 +40,11 @@ export const NodeLibrary: React.FC = () => {
       </div>
       <div className="flex-1 overflow-y-auto p-3 space-y-1 scrollbar-hide">
         {NODE_TYPES.map(node => (
-          // biome-ignore lint/a11y/noStaticElementInteractions: <>
-          // biome-ignore lint/a11y/useKeyWithClickEvents: <>
-          <div
+          <button
+            type="button"
             key={node.id}
             onClick={() => handleAddNode(node)}
-            className="flex items-center gap-3 p-2 hover:bg-secondary rounded-lg cursor-pointer group transition-all"
+            className="w-full flex items-center gap-3 p-2 hover:bg-secondary rounded-lg cursor-pointer group transition-all"
           >
             <span
               className={`material-icons-outlined ${node.color} text-lg group-hover:scale-110 transition-transform`}
@@ -54,8 +54,61 @@ export const NodeLibrary: React.FC = () => {
             <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground transition-colors">
               {node.label}
             </span>
-          </div>
+          </button>
         ))}
+
+        {/* Yeni: Tetikleyici Düğüm */}
+        <button
+          type="button"
+          onClick={() =>
+            addNode({
+              id: `trigger-${Date.now()}`,
+              type: "trigger",
+              position: { x: Math.random() * 200, y: Math.random() * 200 },
+              data: {
+                title: "Call Start",
+                content: "Agent answers the call",
+                color: "text-green-500",
+                isGlobal: false,
+              },
+            })
+          }
+          className="w-full flex items-center gap-3 p-2 hover:bg-secondary rounded-lg cursor-pointer group transition-all"
+        >
+          <span className="material-icons-outlined text-green-500 text-lg group-hover:scale-110 transition-transform">
+            phone_callback
+          </span>
+          <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground transition-colors">
+            Call Start
+          </span>
+        </button>
+
+        {/* Yeni: Mantık Düğümü */}
+        <button
+          type="button"
+          onClick={() =>
+            addNode({
+              id: `logic-${Date.now()}`,
+              type: "logic_split",
+              position: { x: Math.random() * 200, y: Math.random() * 200 },
+              data: {
+                title: "Check Balance",
+                content: "If balance > 0, go to payment, else go to top-up",
+                color: "text-blue-500",
+                conditions: [],
+                isGlobal: false,
+              },
+            })
+          }
+          className="w-full flex items-center gap-3 p-2 hover:bg-secondary rounded-lg cursor-pointer group transition-all"
+        >
+          <span className="material-icons-outlined text-blue-500 text-lg group-hover:scale-110 transition-transform">
+            call_split
+          </span>
+          <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground transition-colors">
+            Logic Split
+          </span>
+        </button>
       </div>
     </aside>
   );
