@@ -90,7 +90,30 @@ const TriggerNode = ({ data }: NodeProps<CustomNodeData>) => {
 // Yeni: Birden fazla çıkışı olan Mantık Düğümü (Logic Node)
 const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
   const setNodes = useFlowStore(state => state.setNodes);
+  const edges = useFlowStore(state => state.edges);
+  const nodes = useFlowStore(state => state.nodes);
   const conditions = data.conditions || [];
+
+  const getTargetsForHandle = (handleId: string) => {
+    const matchingEdges = edges.filter(
+      edge =>
+        edge.source === id && (edge.sourceHandle || "default") === handleId,
+    );
+
+    return matchingEdges.map(edge => {
+      const targetNode = nodes.find(node => node.id === edge.target);
+      const targetData = (targetNode?.data || {}) as Partial<CustomNodeData>;
+      const title = targetData.title?.trim();
+      return title || edge.target;
+    });
+  };
+
+  const outcomes = [
+    ...conditions.map(condition => ({
+      id: condition.id,
+      label: condition.text || "Untitled condition",
+    })),
+  ];
 
   const updateConditions = (newConditions: Condition[]) => {
     setNodes(nds =>
@@ -166,33 +189,6 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
           </div>
 
           <div className="space-y-1.5">
-            {/* Default Outcomes */}
-            <div className="flex items-center justify-between bg-background/50 hover:bg-background/80 p-2 rounded-xl border border-border/30 relative transition-all group/item">
-              <span className="text-[10px] font-semibold text-green-500">
-                Success
-              </span>
-              <Handle
-                type="source"
-                position={Position.Right}
-                id="success"
-                style={{ right: -6, top: "50%" }}
-                className="w-2.5 h-2.5 !bg-green-500 border-2 !border-background"
-              />
-            </div>
-
-            <div className="flex items-center justify-between bg-background/50 hover:bg-background/80 p-2 rounded-xl border border-border/30 relative transition-all group/item">
-              <span className="text-[10px] font-semibold text-red-500">
-                Fail
-              </span>
-              <Handle
-                type="source"
-                position={Position.Right}
-                id="fail"
-                style={{ right: -6, top: "50%" }}
-                className="w-2.5 h-2.5 !bg-red-500 border-2 !border-background"
-              />
-            </div>
-
             {/* Custom Dynamic Outcomes */}
             {conditions.map(condition => (
               <div
@@ -224,6 +220,35 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
                 />
               </div>
             ))}
+          </div>
+
+          <div className="mt-3 border-t border-border/40 pt-2 space-y-1.5">
+            <p className="text-[8px] uppercase tracking-widest text-muted-foreground font-bold">
+              Connections
+            </p>
+            {outcomes.map(outcome => {
+              const targets = getTargetsForHandle(outcome.id);
+
+              return (
+                <div
+                  key={outcome.id}
+                  className="flex items-center justify-between gap-2 text-[9px]"
+                >
+                  <span className="text-muted-foreground truncate">
+                    {outcome.label}
+                  </span>
+                  <span
+                    className={
+                      targets.length > 0
+                        ? "font-semibold text-foreground truncate"
+                        : "text-muted-foreground/80 italic"
+                    }
+                  >
+                    {targets.length > 0 ? targets.join(", ") : "Not connected"}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

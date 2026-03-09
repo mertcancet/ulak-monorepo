@@ -19,6 +19,8 @@ import {
 export interface Condition {
   id: string;
   text: string;
+  nextNodes?: string[];
+  nextNode?: string | null;
 }
 
 export interface GlobalNodeData {
@@ -32,7 +34,53 @@ export interface FlowNodeData {
   conditions?: Condition[];
   isGlobal?: boolean;
   global?: GlobalNodeData;
+  outcomes?: Record<string, string[]>;
+  nextNodes?: string[];
 }
+
+const buildNodeTrackingData = (node: Node, edges: Edge[]) => {
+  const nodeData = (node.data ?? {}) as FlowNodeData;
+  const outgoingEdges = edges.filter(edge => edge.source === node.id);
+  const outcomes: Record<string, string[]> = {};
+
+  outgoingEdges.forEach(edge => {
+    const handleId = edge.sourceHandle ?? "default";
+    if (!outcomes[handleId]) {
+      outcomes[handleId] = [];
+    }
+    outcomes[handleId].push(edge.target);
+  });
+
+  const trackedConditions = nodeData.conditions?.map(condition => {
+    const conditionTargets = outcomes[condition.id] ?? [];
+
+    return {
+      ...condition,
+      nextNodes: conditionTargets,
+      nextNode: conditionTargets[0] ?? null,
+    };
+  });
+
+  return {
+    outcomes,
+    nextNodes: [...new Set(outgoingEdges.map(edge => edge.target))],
+    conditions: trackedConditions,
+  };
+};
+
+const withTrackedConnections = (nodes: Node[], edges: Edge[]) =>
+  nodes.map(node => {
+    const currentData = (node.data ?? {}) as Record<string, unknown>;
+    const trackingData = buildNodeTrackingData(node, edges);
+
+    return {
+      ...node,
+      data: {
+        ...currentData,
+        ...trackingData,
+      },
+    };
+  });
 
 interface FlowState {
   nodes: Node[];
@@ -48,33 +96,44 @@ interface FlowState {
 }
 
 export const useFlowStore = create<FlowState>((set, get) => ({
-  nodes: initialNodes,
+  nodes: withTrackedConnections(initialNodes, initialEdges),
   edges: initialEdges,
   selectedNodeId: null,
   onNodesChange: (changes: NodeChange[]) => {
+    const nextNodes = applyNodeChanges(changes, get().nodes);
     set({
-      nodes: applyNodeChanges(changes, get().nodes),
+      nodes: withTrackedConnections(nextNodes, get().edges),
     });
   },
   onEdgesChange: (changes: EdgeChange[]) => {
+    const nextEdges = applyEdgeChanges(changes, get().edges);
     set({
-      edges: applyEdgeChanges(changes, get().edges),
+      edges: nextEdges,
+      nodes: withTrackedConnections(get().nodes, nextEdges),
     });
   },
   onConnect: (connection: Connection) => {
+    const nextEdges = addEdge(connection, get().edges);
     set({
-      edges: addEdge(connection, get().edges),
+      edges: nextEdges,
+      nodes: withTrackedConnections(get().nodes, nextEdges),
     });
   },
   setNodes: (updateFn: (nds: Node[]) => Node[]) => {
-    set({ nodes: updateFn(get().nodes) });
+    const nextNodes = updateFn(get().nodes);
+    set({ nodes: withTrackedConnections(nextNodes, get().edges) });
   },
   setEdges: (updateFn: (eds: Edge[]) => Edge[]) => {
-    set({ edges: updateFn(get().edges) });
+    const nextEdges = updateFn(get().edges);
+    set({
+      edges: nextEdges,
+      nodes: withTrackedConnections(get().nodes, nextEdges),
+    });
   },
   addNode: (node: Node) => {
+    const nextNodes = [...get().nodes, node];
     set({
-      nodes: [...get().nodes, node],
+      nodes: withTrackedConnections(nextNodes, get().edges),
     });
   },
   setSelectedNodeId: (nodeId: string | null) => {
