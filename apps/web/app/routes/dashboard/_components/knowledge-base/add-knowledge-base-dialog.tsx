@@ -1,4 +1,11 @@
-import { File, FileText, Link, Plus, Upload, X } from "lucide-react";
+import {
+  File as FileIcon,
+  FileText,
+  Link,
+  Plus,
+  Upload,
+  X,
+} from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -16,26 +23,109 @@ import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { cn } from "~/lib/utils";
 
-const AddKnowledgeBaseDialog = () => {
-  const [sourceType, setSourceType] = useState("web");
+export type CreateKnowledgeBaseDialogInput = {
+  knowledgeBaseName: string;
+  sourceType: "website" | "file" | "text";
+  websiteUrl?: string;
+  textContent?: string;
+  files: File[];
+};
+
+type AddKnowledgeBaseDialogProps = {
+  isSubmitting: boolean;
+  onCreate: (input: CreateKnowledgeBaseDialogInput) => Promise<void>;
+};
+
+const AddKnowledgeBaseDialog = ({
+  isSubmitting,
+  onCreate,
+}: AddKnowledgeBaseDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const [sourceType, setSourceType] = useState<"website" | "file" | "text">(
+    "website",
+  );
+  const [knowledgeBaseName, setKnowledgeBaseName] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState("");
+  const [textContent, setTextContent] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [formError, setFormError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      setUploadedFiles(prev => [...prev, ...newFiles]);
-    }
+    if (!e.target.files) return;
+
+    const newFiles = Array.from(e.target.files);
+    setUploadedFiles(prev => [...prev, ...newFiles]);
+  };
+
+  const resetForm = () => {
+    setSourceType("website");
+    setKnowledgeBaseName("");
+    setWebsiteUrl("");
+    setTextContent("");
+    setUploadedFiles([]);
+    setFormError(null);
   };
 
   const removeFile = (index: number) => {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleSubmit = async () => {
+    const trimmedName = knowledgeBaseName.trim();
+
+    if (!trimmedName) {
+      setFormError("Bilgi bankasi adi zorunludur.");
+      return;
+    }
+
+    if (sourceType === "website" && !websiteUrl.trim()) {
+      setFormError("Website URL zorunludur.");
+      return;
+    }
+
+    if (sourceType === "text" && !textContent.trim()) {
+      setFormError("Metin kaynagi icin icerik zorunludur.");
+      return;
+    }
+
+    if (sourceType === "file" && uploadedFiles.length === 0) {
+      setFormError("En az bir dosya secmelisin.");
+      return;
+    }
+
+    setFormError(null);
+
+    try {
+      await onCreate({
+        knowledgeBaseName: trimmedName,
+        sourceType,
+        websiteUrl: websiteUrl.trim(),
+        textContent: textContent.trim(),
+        files: uploadedFiles,
+      });
+
+      resetForm();
+      setOpen(false);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Olusturma islemi basarisiz.";
+      setFormError(message);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={nextOpen => {
+        setOpen(nextOpen);
+        if (!nextOpen && !isSubmitting) {
+          resetForm();
+        }
+      }}
+    >
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="h-8 w-8 ">
+        <Button variant="outline" size="icon" className="h-8 w-8">
           <Plus className="w-4 h-4" />
         </Button>
       </DialogTrigger>
@@ -43,11 +133,11 @@ const AddKnowledgeBaseDialog = () => {
         <div className="p-6 pb-0">
           <DialogHeader>
             <DialogTitle className="text-xl">
-              Yeni Bilgi Bankası Oluştur
+              Yeni Bilgi Bankasi Olustur
             </DialogTitle>
             <DialogDescription className="text-sm mt-1">
-              Bilgi bankanızı geliştirmek için yeni web siteleri, PDF
-              dokümanları veya manuel metinler ekleyin.
+              Bilgi bankani gelistirmek icin website, dosya veya manuel metin
+              kaynagi ekle.
             </DialogDescription>
           </DialogHeader>
 
@@ -57,46 +147,51 @@ const AddKnowledgeBaseDialog = () => {
                 htmlFor="knowledge-base-name"
                 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 ml-1"
               >
-                Bilgi Bankası Adı
+                Bilgi Bankasi Adi
               </Label>
               <Input
                 id="knowledge-base-name"
-                placeholder="Örn: Müşteri Destek Dökümanları"
+                value={knowledgeBaseName}
+                onChange={event => setKnowledgeBaseName(event.target.value)}
+                placeholder="Orn: Musteri Destek Dokumanlari"
                 className="h-11 bg-secondary/30 border-border/50 focus:bg-background transition-all"
+                disabled={isSubmitting}
               />
             </div>
 
             <div className="space-y-3">
               <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 ml-1">
-                Kaynak Türü Seçin
+                Kaynak Turu Sec
               </Label>
               <RadioGroup
                 value={sourceType}
-                onValueChange={setSourceType}
+                onValueChange={value =>
+                  setSourceType(value as "website" | "file" | "text")
+                }
                 className="grid grid-cols-3 gap-3"
               >
                 <Label
-                  htmlFor="web-source"
+                  htmlFor="website-source"
                   className={cn(
                     "flex flex-row items-start text-center gap-3 rounded-2xl border border-transparent p-4 transition-all cursor-pointer h-full",
                     "hover:bg-secondary/40",
                     "[&:has([data-state=checked])]:bg-secondary/90 [&:has([data-state=checked])]:border-border/50",
                   )}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm group-hover:scale-105 transition-transform">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm">
                     <Link className="h-5 w-5 text-foreground/70" />
                   </div>
                   <div className="flex flex-col items-start gap-1 flex-1">
                     <span className="text-[14px] font-semibold text-foreground leading-tight">
-                      Web Sayfası
+                      Website
                     </span>
                     <span className="text-[11px] text-muted-foreground font-normal leading-tight">
-                      Sitenizi tarayın ve bağlayın
+                      Site URL ekle
                     </span>
                   </div>
                   <RadioGroupItem
-                    value="web"
-                    id="web-source"
+                    value="website"
+                    id="website-source"
                     className="sr-only"
                   />
                 </Label>
@@ -109,15 +204,15 @@ const AddKnowledgeBaseDialog = () => {
                     "[&:has([data-state=checked])]:bg-secondary/90 [&:has([data-state=checked])]:border-border/50",
                   )}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm group-hover:scale-105 transition-transform">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm">
                     <Upload className="h-5 w-5 text-foreground/70" />
                   </div>
                   <div className="flex flex-col items-start gap-1 flex-1">
                     <span className="text-[14px] font-semibold text-foreground leading-tight">
-                      Dosya Yükle
+                      Dosya
                     </span>
                     <span className="text-[11px] text-left text-muted-foreground font-normal leading-tight">
-                      PDF, Doc veya TXT (Maks 100MB)
+                      PDF, DOC, TXT
                     </span>
                   </div>
                   <RadioGroupItem
@@ -135,15 +230,15 @@ const AddKnowledgeBaseDialog = () => {
                     "[&:has([data-state=checked])]:bg-secondary/90 [&:has([data-state=checked])]:border-border/50",
                   )}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm group-hover:scale-105 transition-transform">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm">
                     <FileText className="h-5 w-5 text-foreground/70" />
                   </div>
                   <div className="flex flex-col items-start gap-1 flex-1">
                     <span className="text-[14px] font-semibold text-foreground leading-tight">
-                      Metin Ekle
+                      Metin
                     </span>
                     <span className="text-[11px] text-muted-foreground font-normal leading-tight">
-                      Manuel olarak içerik girin
+                      Manuel metin gir
                     </span>
                   </div>
                   <RadioGroupItem
@@ -155,24 +250,23 @@ const AddKnowledgeBaseDialog = () => {
               </RadioGroup>
             </div>
 
-            {/* Conditionally Rendered Sections */}
             <div className="space-y-4 pt-2 border-t border-border/50 animate-in fade-in slide-in-from-top-2 duration-300">
-              {sourceType === "web" && (
+              {sourceType === "website" && (
                 <div className="space-y-2">
                   <Label
                     htmlFor="website-url"
                     className="text-xs font-semibold"
                   >
-                    Web Sitesi URL'si
+                    Website URL
                   </Label>
                   <Input
                     id="website-url"
+                    value={websiteUrl}
+                    onChange={event => setWebsiteUrl(event.target.value)}
                     placeholder="https://example.com"
                     className="h-11"
+                    disabled={isSubmitting}
                   />
-                  <p className="text-[11px] text-muted-foreground">
-                    Sitenizin tüm sayfaları otomatik olarak taranacaktır.
-                  </p>
                 </div>
               )}
 
@@ -184,40 +278,36 @@ const AddKnowledgeBaseDialog = () => {
                     onChange={handleFileChange}
                     className="hidden"
                     multiple
-                    accept=".pdf,.docx,.txt"
+                    accept=".pdf,.doc,.docx,.txt"
+                    disabled={isSubmitting}
                   />
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    onKeyDown={e =>
-                      e.key === "Enter" && fileInputRef.current?.click()
-                    }
-                    className="border-2 border-dashed border-border/50 rounded-xl p-8 flex flex-col items-center justify-center bg-secondary/10 hover:bg-secondary/20 transition-all cursor-pointer group"
-                    tabIndex={0}
+                    className="border-2 border-dashed border-border/50 rounded-xl p-8 flex flex-col items-center justify-center bg-secondary/10 hover:bg-secondary/20 transition-all cursor-pointer"
+                    disabled={isSubmitting}
                   >
-                    <Upload className="w-8 h-8 text-muted-foreground mb-2 group-hover:scale-110 transition-transform" />
-                    <p className="text-sm font-medium">
-                      Dosyaları buraya bırakın veya seçin
-                    </p>
+                    <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                    <p className="text-sm font-medium">Dosya Sec</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Desteklenenler: PDF, DOCX, TXT
+                      Desteklenenler: PDF, DOC, DOCX, TXT
                     </p>
                   </button>
 
                   {uploadedFiles.length > 0 && (
-                    <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
+                    <div className="space-y-2">
                       <Label className="text-[10px] font-bold uppercase text-muted-foreground/80 ml-1">
-                        Seçilen Dosyalar ({uploadedFiles.length})
+                        Secilen Dosyalar ({uploadedFiles.length})
                       </Label>
                       <div className="max-h-[160px] overflow-y-auto space-y-2 pr-1">
                         {uploadedFiles.map((file, index) => (
                           <div
                             key={`${file.name}-${index}`}
-                            className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/40 group/item"
+                            className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/40"
                           >
                             <div className="flex items-center gap-3">
                               <div className="p-2 bg-background rounded border border-border/50">
-                                <File className="w-4 h-4 text-primary/70" />
+                                <FileIcon className="w-4 h-4 text-primary/70" />
                               </div>
                               <div className="flex flex-col">
                                 <span className="text-sm font-medium truncate max-w-[200px]">
@@ -231,11 +321,12 @@ const AddKnowledgeBaseDialog = () => {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover/item:opacity-100 transition-all"
-                              onClick={e => {
-                                e.stopPropagation();
+                              className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                              onClick={event => {
+                                event.stopPropagation();
                                 removeFile(index);
                               }}
+                              disabled={isSubmitting}
                             >
                               <X className="w-4 h-4" />
                             </Button>
@@ -253,33 +344,46 @@ const AddKnowledgeBaseDialog = () => {
                     htmlFor="manual-text"
                     className="text-xs font-semibold"
                   >
-                    Manuel İçerik
+                    Manuel Icerik
                   </Label>
                   <textarea
                     id="manual-text"
                     className="w-full min-h-[120px] rounded-xl border border-border/50 bg-secondary/30 p-3 text-sm focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                    placeholder="Bilgi bankasına eklemek istediğiniz metni buraya yapıştırın..."
+                    placeholder="Bilgi bankasina eklemek istedigin metni buraya yapistir..."
+                    value={textContent}
+                    onChange={event => setTextContent(event.target.value)}
+                    disabled={isSubmitting}
                   />
                 </div>
               )}
             </div>
+
+            {formError && (
+              <p className="text-sm font-medium text-destructive">
+                {formError}
+              </p>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 p-6 pt-2 ">
+        <div className="flex items-center justify-end gap-3 p-6 pt-2">
           <DialogClose asChild>
             <Button
               variant="ghost"
               className="h-10 px-6 font-medium"
-              onClick={() => {
-                setSourceType("web");
-                setUploadedFiles([]);
-              }}
+              onClick={resetForm}
+              disabled={isSubmitting}
             >
-              İptal
+              Iptal
             </Button>
           </DialogClose>
-          <Button className="h-10 px-8 font-semibold ">Oluştur</Button>
+          <Button
+            className="h-10 px-8 font-semibold"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Olusturuluyor..." : "Olustur"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

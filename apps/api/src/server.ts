@@ -3,6 +3,7 @@ import openapi from "@elysiajs/openapi";
 import type { type } from "arktype";
 import { Elysia } from "elysia";
 import authModule from "~/modules/auth";
+import knowledgeBaseModule from "~/modules/knowledge-base";
 import errorHandler from "~/plugins/error-handler";
 import env from "~/shared/env";
 
@@ -36,6 +37,7 @@ const app = new Elysia()
   )
   .use(errorHandler())
   .use(authModule())
+  .use(knowledgeBaseModule())
   .get("/", () => "Hello Elysia")
   .get("/user", ({ user }) => user, {
     auth: true,
