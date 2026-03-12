@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { Form, Link, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,38 +14,50 @@ import { authClient } from "~/lib/auth-client";
 
 export default function Register() {
   const navigate = useNavigate();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
+  useEffect(() => {
+    if (session) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate, session]);
+
   const signUp = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (isPending) {
+    if (isPending || isSessionPending) {
       return;
     }
 
     setErrorMessage(null);
     setIsPending(true);
 
-    await authClient.signUp.email(
-      {
-        email,
-        password,
-        name,
-      },
-      {
-        onSuccess: () => {
-          navigate("/dashboard");
+    try {
+      await authClient.signUp.email(
+        {
+          email,
+          password,
+          name,
         },
-        onError: ({ error }) => {
-          const fallbackMessage = "Kayit basarisiz. Bilgilerini kontrol et.";
-          setErrorMessage(error.message || fallbackMessage);
+        {
+          onSuccess: () => {
+            navigate("/dashboard", { replace: true });
+          },
+          onError: ({ error }) => {
+            const fallbackMessage = "Kayit basarisiz. Bilgilerini kontrol et.";
+            setErrorMessage(error.message || fallbackMessage);
+          },
         },
-      },
-    );
+      );
+    } catch (_error) {
+      setErrorMessage("Sunucuya baglanirken bir hata olustu.");
+    }
 
     setIsPending(false);
   };
@@ -122,7 +134,7 @@ export default function Register() {
 
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isPending || isSessionPending}
                 size="lg"
                 className="h-11 w-full rounded-xl bg-slate-900 text-white hover:bg-slate-800"
               >

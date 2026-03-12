@@ -18,8 +18,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type React from "react";
-import { useRef, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
@@ -27,6 +27,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { authClient } from "~/lib/auth-client";
 import { cn } from "~/lib/utils";
 
 const SidebarItem = ({
@@ -136,8 +137,35 @@ const SidebarSection = ({
 );
 
 const DashboardLayout = () => {
+  const navigate = useNavigate();
   const location = useLocation();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (!isSessionPending && !session) {
+      navigate("/auth/login", { replace: true });
+    }
+  }, [isSessionPending, navigate, session]);
+
+  if (isSessionPending) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background p-6">
+        <p className="text-sm text-muted-foreground">
+          Oturum kontrol ediliyor...
+        </p>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
+
+  const userDisplayName =
+    session.user.name || session.user.email?.split("@")[0] || "User";
+  const userInitial = userDisplayName.charAt(0).toUpperCase();
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -201,7 +229,7 @@ const DashboardLayout = () => {
                   MB
                 </div>
                 <span className="truncate text-xs font-medium">
-                  Mert Bey's Workspace
+                  {userDisplayName} Workspace
                 </span>
               </div>
               <ChevronsUpDown className="w-3 h-3 text-muted-foreground" />
@@ -332,12 +360,12 @@ const DashboardLayout = () => {
                 <Avatar className="w-7 h-7 border border-border">
                   <AvatarImage src="" />
                   <AvatarFallback className="bg-orange-500 text-white text-[10px] font-bold">
-                    M
+                    {userInitial}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col truncate">
                   <span className="text-[11px] font-medium truncate">
-                    mertcancet95@gmail.com
+                    {session.user.email}
                   </span>
                 </div>
               </div>

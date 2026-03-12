@@ -1,10 +1,14 @@
 import type auth from "@ulak/auth";
-import { createAuthClient } from "better-auth/client";
 import { inferAdditionalFields } from "better-auth/client/plugins";
+import { createAuthClient } from "better-auth/react";
+
+const apiBaseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
 export const authClient = createAuthClient({
-  // TODO: Environment
-  baseURL: "http://localhost:3000",
+  baseURL: apiBaseUrl,
   basePath: "/auth",
+  fetchOptions: {
+    credentials: "include",
+  },
   plugins: [inferAdditionalFields<typeof auth>()],
 });

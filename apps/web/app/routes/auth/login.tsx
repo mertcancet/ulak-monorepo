@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { Form, Link, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,33 +14,45 @@ import { authClient } from "~/lib/auth-client";
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
+  useEffect(() => {
+    if (session) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate, session]);
+
   const signIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (isPending) {
+    if (isPending || isSessionPending) {
       return;
     }
 
     setErrorMessage(null);
     setIsPending(true);
 
-    await authClient.signIn.email(
-      { email, password },
-      {
-        onSuccess: () => {
-          navigate("/dashboard");
+    try {
+      await authClient.signIn.email(
+        { email, password },
+        {
+          onSuccess: () => {
+            navigate("/dashboard", { replace: true });
+          },
+          onError: ({ error }) => {
+            const fallbackMessage = "Giris basarisiz. Bilgilerini kontrol et.";
+            setErrorMessage(error.message || fallbackMessage);
+          },
         },
-        onError: ({ error }) => {
-          const fallbackMessage = "Giris basarisiz. Bilgilerini kontrol et.";
-          setErrorMessage(error.message || fallbackMessage);
-        },
-      },
-    );
+      );
+    } catch (_error) {
+      setErrorMessage("Sunucuya baglanirken bir hata olustu.");
+    }
 
     setIsPending(false);
   };
@@ -103,7 +115,7 @@ export default function SignIn() {
 
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isPending || isSessionPending}
                 size="lg"
                 className="h-11 w-full rounded-xl bg-slate-900 text-white hover:bg-slate-800"
               >
