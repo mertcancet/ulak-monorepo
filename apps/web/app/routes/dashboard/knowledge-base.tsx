@@ -7,6 +7,7 @@ import {
   type KnowledgeBaseSource,
   knowledgeBaseApi,
 } from "~/lib/knowledge-base-api";
+import ulakClient from "~/lib/ulak-client";
 import { cn } from "~/lib/utils";
 import AddKnowledgeBaseDialog, {
   type CreateKnowledgeBaseDialogInput,
@@ -70,8 +71,14 @@ export default function KnowledgeBasePage() {
   );
 
   const loadSources = useCallback(async (knowledgeBaseId: string) => {
-    const nextSources = await knowledgeBaseApi.listSources(knowledgeBaseId);
-    setSources(nextSources);
+    // const nextSources = await knowledgeBaseApi.listSources(knowledgeBaseId);
+    const nextSources = await ulakClient["knowledge-base"]
+      ["knowledge-bases"]({ id: knowledgeBaseId })
+      .sources.get();
+
+    // nextSources.data
+
+    setSources(nextSources.data);
   }, []);
 
   const refreshKnowledgeBases = useCallback(

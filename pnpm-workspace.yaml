@@ -12,6 +12,7 @@ onlyBuiltDependencies:
 catalog:
   arktype: ^2.1.29
   better-auth: ^1.4.20
+  elysia: ^1.4.28
   "@biomejs/biome": 2.4.4
 
 overrides:

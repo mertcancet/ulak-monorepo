@@ -15,8 +15,10 @@
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/*": ["./app/*"],
-      "@ulak/api": ["../../apps/api/src"],
+      "@ulak/api": ["../../apps/api/src/server"],
       "@ulak/auth": ["../../apps/api/src/lib/auth"],
+      "~/plugins/*": ["../../apps/api/src/plugins/*"],
+      "~/modules/*": ["../../apps/api/src/modules/*"],
       "@ulak/shared": ["../../packages/shared/src"]
     },
     "esModuleInterop": true,
