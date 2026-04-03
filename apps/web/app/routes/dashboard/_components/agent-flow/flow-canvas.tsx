@@ -15,6 +15,7 @@ import {
   Hand,
   Maximize,
   MousePointer2,
+  Rows3,
   Search,
   ZoomIn,
   ZoomOut,
@@ -31,17 +32,118 @@ const FlowCanvasInner: React.FC = () => {
     onEdgesChange,
     onConnect,
     setSelectedNodeId,
+    setNodes,
   } = useFlowStore();
 
   const { zoomIn, zoomOut, fitView } = useReactFlow();
   const [showGrid, setShowGrid] = useState(true);
   const [isPanMode, setIsPanMode] = useState(false);
+  const renderedEdges = edges.map(edge => ({
+    ...edge,
+    type: "step",
+  }));
+
+  // Auto-layout algorithm: arrange nodes by hierarchy based on edges
+  const handleAutoLayout = () => {
+    if (nodes.length === 0) return;
+
+    // Build graph structure
+    const incomingEdges = new Map<string, string[]>();
+    const outgoingEdges = new Map<string, string[]>();
+
+    nodes.forEach(node => {
+      incomingEdges.set(node.id, []);
+      outgoingEdges.set(node.id, []);
+    });
+
+    edges.forEach(edge => {
+      const incoming = incomingEdges.get(edge.target) || [];
+      incoming.push(edge.source);
+      incomingEdges.set(edge.target, incoming);
+
+      const outgoing = outgoingEdges.get(edge.source) || [];
+      outgoing.push(edge.target);
+      outgoingEdges.set(edge.source, outgoing);
+    });
+
+    // Find root nodes (no incoming edges)
+    const rootNodes = nodes.filter(
+      node => (incomingEdges.get(node.id) || []).length === 0,
+    );
+
+    // BFS to assign layers from roots (left -> right)
+    const layers = new Map<string, number>();
+    const queue = rootNodes.map(node => ({ id: node.id, layer: 0 }));
+
+    while (queue.length > 0) {
+      const next = queue.shift();
+      if (!next) break;
+
+      const { id, layer } = next;
+      if (layers.has(id)) continue;
+
+      layers.set(id, layer);
+      const children = outgoingEdges.get(id) || [];
+      children.forEach(childId => {
+        if (!layers.has(childId)) {
+          queue.push({ id: childId, layer: layer + 1 });
+        }
+      });
+    }
+
+    // Fallback for disconnected/cyclic nodes to keep every node visible
+    nodes.forEach(node => {
+      if (!layers.has(node.id)) {
+        const parentLayers = (incomingEdges.get(node.id) || [])
+          .map(parentId => layers.get(parentId))
+          .filter((value): value is number => typeof value === "number");
+
+        const fallbackLayer =
+          parentLayers.length > 0 ? Math.max(...parentLayers) + 1 : 0;
+        layers.set(node.id, fallbackLayer);
+      }
+    });
+
+    // Group nodes by layer and count positions
+    const layerNodes = new Map<number, string[]>();
+    layers.forEach((layer, nodeId) => {
+      if (!layerNodes.has(layer)) layerNodes.set(layer, []);
+      const bucket = layerNodes.get(layer);
+      if (bucket) {
+        bucket.push(nodeId);
+      }
+    });
+
+    // Calculate positions
+    const LAYER_SPACING_X = 340;
+    const NODE_SPACING_Y = 200;
+    const ORIGIN_X = 120;
+    const ORIGIN_Y = 120;
+
+    const newNodes = nodes.map(node => {
+      const layer = layers.get(node.id) ?? 0;
+      const nodesInLayer = layerNodes.get(layer) || [];
+      const indexInLayer = nodesInLayer.indexOf(node.id);
+
+      const safeIndex = indexInLayer >= 0 ? indexInLayer : 0;
+      const x = layer * LAYER_SPACING_X + ORIGIN_X;
+      const y = safeIndex * NODE_SPACING_Y + ORIGIN_Y;
+
+      return {
+        ...node,
+        position: { x, y },
+      };
+    });
+
+    setNodes(() => newNodes);
+    setTimeout(() => fitView({ padding: 0.2, duration: 600 }), 100);
+  };
 
   return (
     <div className="w-full h-full relative">
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={renderedEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
@@ -49,10 +151,10 @@ const FlowCanvasInner: React.FC = () => {
         onPaneClick={() => setSelectedNodeId(null)}
         nodeTypes={nodeTypes}
         defaultEdgeOptions={{
-          type: "smoothstep",
+          type: "step",
           style: { strokeWidth: 2 },
         }}
-        connectionLineType={ConnectionLineType.SmoothStep}
+        connectionLineType={ConnectionLineType.Step}
         panOnDrag={isPanMode}
         selectionOnDrag={!isPanMode}
         snapToGrid={showGrid}
@@ -119,6 +221,17 @@ const FlowCanvasInner: React.FC = () => {
 
             <div className="w-px h-4 bg-border"></div>
 
+            <button
+              type="button"
+              onClick={handleAutoLayout}
+              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              title="Auto Layout"
+            >
+              <Rows3 className="w-4 h-4" />
+            </button>
+
+            <div className="w-px h-4 bg-border"></div>
+
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -145,18 +258,6 @@ const FlowCanvasInner: React.FC = () => {
                 <Maximize className="w-4 h-4" />
               </button>
             </div>
-          </div>
-        </Panel>
-
-        {/* Flow Indicator (Bottom-Right) */}
-        <Panel position="bottom-right" className="mr-6 mb-6">
-          <div className="flex items-center bg-card px-4 py-2 rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow">
-            <span className="text-[10px] font-bold uppercase text-muted-foreground mr-3 tracking-widest leading-none">
-              Flow
-            </span>
-            <span className="text-sm font-semibold leading-none">
-              Main Flow
-            </span>
           </div>
         </Panel>
       </ReactFlow>

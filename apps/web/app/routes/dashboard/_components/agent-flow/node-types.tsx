@@ -45,7 +45,7 @@ const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
       <Handle
         type="target"
         position={Position.Left}
-        className="w-2 h-2 !bg-border border-2 !border-background hover:!bg-primary transition-colors"
+        className="w-2 h-2 bg-border! border-2 border-background! hover:bg-primary! transition-colors"
       />
 
       <div className={`${data.color} font-bold mb-1 uppercase tracking-tight`}>
@@ -56,7 +56,7 @@ const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
       <Handle
         type="source"
         position={Position.Right}
-        className="w-2 h-2 !bg-border border-2 !border-background hover:!bg-primary transition-colors"
+        className="w-2 h-2 bg-border! border-2 border-background! hover:bg-primary! transition-colors"
       />
     </div>
   );
@@ -81,7 +81,7 @@ const TriggerNode = ({ data }: NodeProps<CustomNodeData>) => {
       <Handle
         type="source"
         position={Position.Right}
-        className="w-3 h-3 !bg-primary border-2 !border-background"
+        className="w-3 h-3 bg-primary! border-2 border-background!"
       />
     </div>
   );
@@ -153,11 +153,11 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
         <Handle
           type="target"
           position={Position.Left}
-          className="w-3 h-3 !bg-blue-500 border-2 !border-background -left-1.5"
+          className="w-3 h-3 bg-blue-500! border-2 border-background! -left-1.5"
         />
 
         {/* Header Section */}
-        <div className="p-4 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border-b border-border/50">
+        <div className="p-4 bg-linear-to-br from-blue-500/10 to-indigo-500/10 border-b border-border/50">
           <div className="flex items-center justify-between mb-2">
             <div
               className={`${data.color} font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2`}
@@ -216,7 +216,7 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
                   position={Position.Right}
                   id={condition.id}
                   style={{ right: -6, top: "50%" }}
-                  className="w-2.5 h-2.5 !bg-blue-500 border-2 !border-background"
+                  className="w-2.5 h-2.5 bg-blue-500! border-2 border-background!"
                 />
               </div>
             ))}
