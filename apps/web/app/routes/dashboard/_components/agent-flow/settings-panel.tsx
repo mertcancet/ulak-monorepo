@@ -1,9 +1,19 @@
+import { Maximize2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
+import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import type { FlowNodeData } from "~/store/flow-store";
 import { useFlowStore } from "~/store/flow-store";
+
+type ExpandableField = "instructions" | "greet_prompt" | "goodbye_prompt";
 
 const toJsonString = (value: unknown) =>
   value == null ? "" : JSON.stringify(value, null, 2);
@@ -36,6 +46,9 @@ export const SettingsPanel: React.FC = () => {
   const [parametersText, setParametersText] = useState(
     toJsonString(selectedNodeData.parameters),
   );
+  const [expandedField, setExpandedField] = useState<ExpandableField | null>(
+    null,
+  );
 
   // Sync local state when selected node changes
   // biome-ignore lint: these dependencies ensure state resets when node/data changes
@@ -43,8 +56,52 @@ export const SettingsPanel: React.FC = () => {
     setHeadersText(toJsonString(selectedNodeData.headers));
     setBodyText(toJsonString(selectedNodeData.body));
     setParametersText(toJsonString(selectedNodeData.parameters));
+    setExpandedField(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedNodeId]);
+
+  const expandedFieldTitle =
+    expandedField === "instructions"
+      ? "Sistem Promptu"
+      : expandedField === "greet_prompt"
+        ? "Karsilama Mesaji"
+        : expandedField === "goodbye_prompt"
+          ? "Veda Mesaji"
+          : "";
+
+  const expandedFieldPlaceholder =
+    expandedField === "instructions"
+      ? "Agent davranisini aciklayan prompt"
+      : expandedField === "greet_prompt"
+        ? "Merhaba, size nasil yardimci olabilirim?"
+        : expandedField === "goodbye_prompt"
+          ? "Gorusme sonunda soylenecek mesaj"
+          : "";
+
+  const expandedFieldValue =
+    expandedField === "instructions"
+      ? (selectedNodeData.instructions ?? "")
+      : expandedField === "greet_prompt"
+        ? (selectedNodeData.greet_prompt ?? "")
+        : expandedField === "goodbye_prompt"
+          ? (selectedNodeData.goodbye_prompt ?? "")
+          : "";
+
+  const updateExpandedFieldValue = (value: string) => {
+    if (expandedField === "instructions") {
+      updateSelectedNodeData({ instructions: value });
+      return;
+    }
+
+    if (expandedField === "greet_prompt") {
+      updateSelectedNodeData({ greet_prompt: value });
+      return;
+    }
+
+    if (expandedField === "goodbye_prompt") {
+      updateSelectedNodeData({ goodbye_prompt: value });
+    }
+  };
 
   const isAgentNode =
     selectedNodeData.title === "Agent" ||
@@ -262,48 +319,81 @@ export const SettingsPanel: React.FC = () => {
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
                     Sistem Promptu
                   </p>
-                  <textarea
-                    value={selectedNodeData.instructions ?? ""}
-                    onChange={event =>
-                      updateSelectedNodeData({
-                        instructions: event.target.value,
-                      })
-                    }
-                    className="w-full min-h-56 px-4 py-3 text-[12px] leading-6 bg-secondary/15 border border-border rounded-xl outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
-                    placeholder="Agent davranisini aciklayan prompt"
-                  />
+                  <div className="relative">
+                    <textarea
+                      value={selectedNodeData.instructions ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          instructions: event.target.value,
+                        })
+                      }
+                      className="w-full min-h-56 px-4 py-3 pr-10 text-[12px] leading-6 bg-secondary/15 border border-border rounded-xl outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                      placeholder="Agent davranisini aciklayan prompt"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setExpandedField("instructions")}
+                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      title="Buyut"
+                      aria-label="Sistem Promptu buyut"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <div>
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
                     Karsilama Mesaji
                   </p>
-                  <textarea
-                    value={selectedNodeData.greet_prompt ?? ""}
-                    onChange={event =>
-                      updateSelectedNodeData({
-                        greet_prompt: event.target.value,
-                      })
-                    }
-                    className="w-full min-h-20 px-3 py-2 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
-                    placeholder="Merhaba, size nasil yardimci olabilirim?"
-                  />
+                  <div className="relative">
+                    <textarea
+                      value={selectedNodeData.greet_prompt ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          greet_prompt: event.target.value,
+                        })
+                      }
+                      className="w-full min-h-20 px-3 py-2 pr-9 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                      placeholder="Merhaba, size nasil yardimci olabilirim?"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setExpandedField("greet_prompt")}
+                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      title="Buyut"
+                      aria-label="Karsilama Mesaji buyut"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <div>
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
                     Veda Mesaji
                   </p>
-                  <textarea
-                    value={selectedNodeData.goodbye_prompt ?? ""}
-                    onChange={event =>
-                      updateSelectedNodeData({
-                        goodbye_prompt: event.target.value,
-                      })
-                    }
-                    className="w-full min-h-20 px-3 py-2 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
-                    placeholder="Gorusme sonunda soylenecek mesaj"
-                  />
+                  <div className="relative">
+                    <textarea
+                      value={selectedNodeData.goodbye_prompt ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          goodbye_prompt: event.target.value,
+                        })
+                      }
+                      className="w-full min-h-20 px-3 py-2 pr-9 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                      placeholder="Gorusme sonunda soylenecek mesaj"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setExpandedField("goodbye_prompt")}
+                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      title="Buyut"
+                      aria-label="Veda Mesaji buyut"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <div>
@@ -550,6 +640,42 @@ export const SettingsPanel: React.FC = () => {
           </>
         )}
       </div>
+
+      <Dialog
+        open={expandedField !== null}
+        onOpenChange={isOpen => {
+          if (!isOpen) {
+            setExpandedField(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-225 p-0 overflow-hidden">
+          <DialogHeader className="px-5 py-4 border-b border-border">
+            <DialogTitle className="text-base">
+              {expandedFieldTitle}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="p-5">
+            <textarea
+              value={expandedFieldValue}
+              onChange={event => updateExpandedFieldValue(event.target.value)}
+              className="w-full min-h-[60vh] px-4 py-3 text-sm leading-7 bg-background border border-border rounded-xl outline-none resize-none focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+              placeholder={expandedFieldPlaceholder}
+            />
+
+            <div className="mt-4 flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setExpandedField(null)}
+              >
+                Kapat
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </aside>
   );
 };
