@@ -1,4 +1,5 @@
 import type React from "react";
+import { useEffect, useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import type { FlowNodeData } from "~/store/flow-store";
@@ -26,6 +27,24 @@ export const SettingsPanel: React.FC = () => {
   const { selectedNodeId, nodes, setNodes } = useFlowStore();
   const selectedNode = nodes.find(node => node.id === selectedNodeId) ?? null;
   const selectedNodeData = (selectedNode?.data ?? {}) as FlowNodeData;
+
+  // Local state for JSON text fields to allow proper editing
+  const [headersText, setHeadersText] = useState(
+    toJsonString(selectedNodeData.headers),
+  );
+  const [bodyText, setBodyText] = useState(toJsonString(selectedNodeData.body));
+  const [parametersText, setParametersText] = useState(
+    toJsonString(selectedNodeData.parameters),
+  );
+
+  // Sync local state when selected node changes
+  // biome-ignore lint: these dependencies ensure state resets when node/data changes
+  useEffect(() => {
+    setHeadersText(toJsonString(selectedNodeData.headers));
+    setBodyText(toJsonString(selectedNodeData.body));
+    setParametersText(toJsonString(selectedNodeData.parameters));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedNodeId]);
 
   const isAgentNode =
     selectedNodeData.title === "Agent" ||
@@ -429,15 +448,19 @@ export const SettingsPanel: React.FC = () => {
                     Headers (JSON)
                   </p>
                   <textarea
-                    value={toJsonString(selectedNodeData.headers)}
-                    onChange={event =>
-                      updateSelectedNodeData({
-                        headers: (parseJsonOrFallback(
-                          event.target.value,
-                          selectedNodeData.headers ?? {},
-                        ) ?? {}) as Record<string, string>,
-                      })
-                    }
+                    value={headersText}
+                    onChange={event => setHeadersText(event.target.value)}
+                    onBlur={() => {
+                      const parsed = parseJsonOrFallback(
+                        headersText,
+                        selectedNodeData.headers ?? {},
+                      );
+                      if (parsed !== null) {
+                        updateSelectedNodeData({
+                          headers: parsed as Record<string, string>,
+                        });
+                      }
+                    }}
                     className="w-full min-h-24 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
                     placeholder='{"Authorization": "Bearer ..."}'
                   />
@@ -448,15 +471,15 @@ export const SettingsPanel: React.FC = () => {
                     Body (JSON)
                   </p>
                   <textarea
-                    value={toJsonString(selectedNodeData.body)}
-                    onChange={event =>
-                      updateSelectedNodeData({
-                        body: parseJsonOrFallback(
-                          event.target.value,
-                          selectedNodeData.body ?? null,
-                        ),
-                      })
-                    }
+                    value={bodyText}
+                    onChange={event => setBodyText(event.target.value)}
+                    onBlur={() => {
+                      const parsed = parseJsonOrFallback(
+                        bodyText,
+                        selectedNodeData.body ?? null,
+                      );
+                      updateSelectedNodeData({ body: parsed });
+                    }}
                     className="w-full min-h-24 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
                     placeholder='{"id": "$order_id"}'
                   />
@@ -467,16 +490,17 @@ export const SettingsPanel: React.FC = () => {
                     Parametreler (JSON Schema)
                   </p>
                   <textarea
-                    value={toJsonString(selectedNodeData.parameters)}
-                    onChange={event =>
-                      updateSelectedNodeData({
-                        parameters:
-                          parseJsonOrFallback(
-                            event.target.value,
-                            selectedNodeData.parameters ?? {},
-                          ) ?? {},
-                      })
-                    }
+                    value={parametersText}
+                    onChange={event => setParametersText(event.target.value)}
+                    onBlur={() => {
+                      const parsed = parseJsonOrFallback(
+                        parametersText,
+                        selectedNodeData.parameters ?? {},
+                      );
+                      if (parsed !== null) {
+                        updateSelectedNodeData({ parameters: parsed });
+                      }
+                    }}
                     className="w-full min-h-32 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
                     placeholder='{"type":"object","properties":{}}'
                   />
