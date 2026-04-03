@@ -28,6 +28,7 @@ export interface GlobalNodeData {
 }
 
 export interface FlowNodeData {
+  id?: string;
   title?: string;
   content?: string;
   color?: string;
@@ -36,6 +37,30 @@ export interface FlowNodeData {
   global?: GlobalNodeData;
   outcomes?: Record<string, string[]>;
   nextNodes?: string[];
+  instructions?: string;
+  allow_interruptions?: boolean;
+  greet_prompt?: string;
+  goodbye_prompt?: string;
+  tools?: string[];
+  llm?: {
+    provider?: string;
+    model?: string;
+    is_realtime?: boolean;
+    voice?: string;
+    api_key?: string;
+  };
+  description?: string;
+  url?: string;
+  method?: string;
+  headers?: Record<string, string>;
+  timeout?: number;
+  max_retry?: number;
+  follow_redirects?: boolean;
+  body?: Record<string, unknown> | null;
+  query_params?: Record<string, unknown> | null;
+  parameters?: Record<string, unknown>;
+  error_message?: string;
+  success_message?: string;
 }
 
 const buildNodeTrackingData = (node: Node, edges: Edge[]) => {
