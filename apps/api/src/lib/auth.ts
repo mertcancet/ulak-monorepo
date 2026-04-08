@@ -1,7 +1,8 @@
 import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
 import { betterAuth } from "better-auth";
 import db from "~/db";
-import { accounts, sessions, users, verifications } from "~/db/schema";
+import * as schema from "~/db/schema";
+
 import env from "~/shared/env";
 
 const auth = betterAuth({
@@ -9,12 +10,7 @@ const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
     usePlural: true,
-    schema: {
-      users: users,
-      sessions: sessions,
-      accounts: accounts,
-      verifications: verifications,
-    },
+    schema,
   }),
   experimental: { joins: true },
   appName: "Ulak",

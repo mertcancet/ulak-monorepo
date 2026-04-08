@@ -1,4 +1,4 @@
-import { defineRelationsPart, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { index, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { users } from "./users";
 
@@ -59,26 +59,4 @@ export const verifications = pgTable(
       .notNull(),
   },
   table => [index().on(table.identifier)],
-);
-
-export const authRelations = defineRelationsPart(
-  { users, sessions, accounts },
-  r => ({
-    users: {
-      sessions: r.many.sessions(),
-      accounts: r.many.accounts(),
-    },
-    sessions: {
-      users: r.one.users({
-        from: r.sessions.userId,
-        to: r.users.id,
-      }),
-    },
-    accounts: {
-      users: r.one.users({
-        from: r.accounts.userId,
-        to: r.users.id,
-      }),
-    },
-  }),
 );

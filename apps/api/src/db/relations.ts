@@ -1,12 +1,30 @@
 import { defineRelations } from "drizzle-orm";
-import * as schema from "~/db/schema";
+import { accounts, sessions, users } from "~/db/schema";
 
-const mainPart = defineRelations(schema);
-
-const relations = {
-  ...mainPart,
-  ...schema.authRelations,
-  ...schema.knowledgeBaseRelations,
-};
+const relations = defineRelations(
+  {
+    users,
+    sessions,
+    accounts,
+  },
+  r => ({
+    users: {
+      sessions: r.many.sessions(),
+      accounts: r.many.accounts(),
+    },
+    sessions: {
+      users: r.one.users({
+        from: r.sessions.userId,
+        to: r.users.id,
+      }),
+    },
+    accounts: {
+      users: r.one.users({
+        from: r.accounts.userId,
+        to: r.users.id,
+      }),
+    },
+  }),
+);
 
 export default relations;

@@ -18,6 +18,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
-    "lefthook": "^2.1.4"
+    "lefthook": "^2.1.5"
   }
 }
