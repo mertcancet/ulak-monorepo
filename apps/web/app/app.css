@@ -283,6 +283,10 @@
   }
 }
 
+button {
+  cursor: pointer;
+}
+
 @layer base {
   @keyframes orbFloatOne {
     0% {

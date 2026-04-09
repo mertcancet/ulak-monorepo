@@ -1,6 +1,13 @@
+import {
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import type { Edge, Node } from "reactflow";
+import { Button } from "~/components/ui/button";
 import { agentsApi } from "~/lib/agents-api";
 import { useFlowStore } from "~/store/flow-store";
 import { initialEdges, initialNodes } from "./_components/agent-flow/data";
@@ -36,6 +43,8 @@ export default function AgentFlowPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showNodeLibrary, setShowNodeLibrary] = useState(true);
+  const [showSettingsPanel, setShowSettingsPanel] = useState(true);
 
   const { nodes, edges, setNodes, setEdges, setSelectedNodeId } =
     useFlowStore();
@@ -128,7 +137,7 @@ export default function AgentFlowPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-display animate-in fade-in duration-500">
+    <div className="bg-background text-foreground font-display animate-in fade-in flex h-screen flex-col overflow-hidden duration-500">
       <style
         // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
         dangerouslySetInnerHTML={{
@@ -153,21 +162,89 @@ export default function AgentFlowPage() {
       />
 
       {errorMessage && (
-        <div className="mx-4 mt-4 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm text-destructive">
+        <div className="border-destructive/30 bg-destructive/5 text-destructive mx-4 mt-4 rounded-lg border px-4 py-2 text-sm">
           {errorMessage}
         </div>
       )}
 
       {successMessage && (
-        <div className="mx-4 mt-4 rounded-lg border border-success/30 bg-success/10 px-4 py-2 text-sm text-success dark:text-success">
+        <div className="border-success/30 bg-success/10 text-success dark:text-success mx-4 mt-4 rounded-lg border px-4 py-2 text-sm">
           {successMessage}
         </div>
       )}
 
-      <main className="flex-1 flex overflow-hidden">
-        <NodeLibrary />
+      <main className="flex flex-1 overflow-hidden">
+        <div
+          className={
+            showNodeLibrary
+              ? "relative h-full w-64 shrink-0 overflow-visible transition-[width] duration-300 ease-out"
+              : "relative h-full w-0 shrink-0 overflow-visible transition-[width] duration-300 ease-out"
+          }
+        >
+          <div className="h-full overflow-hidden">
+            <div
+              className={
+                showNodeLibrary
+                  ? "h-full translate-x-0 opacity-100 transition-all duration-300 ease-out"
+                  : "pointer-events-none h-full -translate-x-4 opacity-0 transition-all duration-300 ease-out"
+              }
+            >
+              <NodeLibrary />
+            </div>
+          </div>
+          <div className="absolute top-2 -right-6 z-20 translate-x-1/2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setShowNodeLibrary(value => !value)}
+              className="border-border bg-background hover:bg-secondary rounded-sm p-0 shadow-sm"
+              title={showNodeLibrary ? "Kütüphaneyi Kapat" : "Kütüphaneyi Aç"}
+            >
+              {showNodeLibrary ? (
+                <PanelLeftClose className="h-3 w-3" />
+              ) : (
+                <PanelLeftOpen className="h-3 w-3" />
+              )}
+            </Button>
+          </div>
+        </div>
         <FlowCanvas />
-        <SettingsPanel />
+        <div
+          className={
+            showSettingsPanel
+              ? "relative h-full w-90 shrink-0 overflow-visible transition-[width] duration-300 ease-out"
+              : "relative h-full w-0 shrink-0 overflow-visible transition-[width] duration-300 ease-out"
+          }
+        >
+          <div className="absolute top-2 -left-6 z-20 -translate-x-1/2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setShowSettingsPanel(value => !value)}
+              className="border-border bg-background hover:bg-secondary rounded-sm p-0 shadow-sm"
+              title={showSettingsPanel ? "Ayarları Kapat" : "Ayarları Aç"}
+            >
+              {showSettingsPanel ? (
+                <PanelRightClose className="h-3 w-3" />
+              ) : (
+                <PanelRightOpen className="h-3 w-3" />
+              )}
+            </Button>
+          </div>
+          <div className="h-full overflow-hidden">
+            <div
+              className={
+                showSettingsPanel
+                  ? "h-full translate-x-0 opacity-100 transition-all duration-300 ease-out"
+                  : "pointer-events-none h-full translate-x-4 opacity-0 transition-all duration-300 ease-out"
+              }
+            >
+              <SettingsPanel />
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );

@@ -136,11 +136,14 @@ const FlowCanvasInner: React.FC = () => {
     });
 
     setNodes(() => newNodes);
-    setTimeout(() => fitView({ padding: 0.2, duration: 600 }), 100);
+    setTimeout(
+      () => fitView({ padding: 0.5, minZoom: 0.5, maxZoom: 1, duration: 600 }),
+      100,
+    );
   };
 
   return (
-    <div className="w-full h-full relative">
+    <div className="relative h-full w-full">
       <ReactFlow
         nodes={nodes}
         edges={renderedEdges}
@@ -162,7 +165,7 @@ const FlowCanvasInner: React.FC = () => {
         minZoom={0.1}
         maxZoom={2}
         fitView
-        fitViewOptions={{ padding: 0.2 }}
+        fitViewOptions={{ padding: 0.5, minZoom: 0.5, maxZoom: 1 }}
         onlyRenderVisibleElements={true}
         className={cn("transition-all", !showGrid && "bg-secondary/10")}
       >
@@ -177,12 +180,12 @@ const FlowCanvasInner: React.FC = () => {
 
         {/* Floating View Controls (Bottom-Center) */}
         <Panel position="bottom-center" className="mb-6">
-          <div className="bg-card shadow-xl rounded-full border border-border px-5 py-2.5 flex items-center gap-5 transition-all hover:shadow-2xl">
+          <div className="bg-card border-border flex items-center gap-5 rounded-full border px-5 py-2.5 shadow-xl transition-all hover:shadow-2xl">
             <button
               type="button"
               onClick={() => setIsPanMode(!isPanMode)}
               className={cn(
-                "transition-colors p-1 rounded-md",
+                "rounded-md p-1 transition-colors",
                 isPanMode
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground",
@@ -190,72 +193,72 @@ const FlowCanvasInner: React.FC = () => {
               title={isPanMode ? "Pan Mode (Hand)" : "Selection Mode (Pointer)"}
             >
               {isPanMode ? (
-                <Hand className="w-4 h-4" />
+                <Hand className="h-4 w-4" />
               ) : (
-                <MousePointer2 className="w-4 h-4" />
+                <MousePointer2 className="h-4 w-4" />
               )}
             </button>
-            <div className="w-px h-4 bg-border"></div>
+            <div className="bg-border h-4 w-px"></div>
 
             <button
               type="button"
               onClick={() => setShowGrid(!showGrid)}
               className={cn(
-                "transition-colors p-1 rounded-md",
+                "rounded-md p-1 transition-colors",
                 showGrid
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground",
               )}
               title="Toggle Grid"
             >
-              <Grid3X3 className="w-4 h-4" />
+              <Grid3X3 className="h-4 w-4" />
             </button>
 
             <button
               type="button"
-              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              className="text-muted-foreground hover:text-foreground p-1 transition-colors"
               title="Search (Coming Soon)"
             >
-              <Search className="w-4 h-4" />
+              <Search className="h-4 w-4" />
             </button>
 
-            <div className="w-px h-4 bg-border"></div>
+            <div className="bg-border h-4 w-px"></div>
 
             <button
               type="button"
               onClick={handleAutoLayout}
-              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              className="text-muted-foreground hover:text-foreground p-1 transition-colors"
               title="Auto Layout"
             >
-              <Rows3 className="w-4 h-4" />
+              <Rows3 className="h-4 w-4" />
             </button>
 
-            <div className="w-px h-4 bg-border"></div>
+            <div className="bg-border h-4 w-px"></div>
 
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => zoomOut()}
-                className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                className="text-muted-foreground hover:text-foreground p-1 transition-colors"
                 title="Zoom Out"
               >
-                <ZoomOut className="w-4 h-4" />
+                <ZoomOut className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 onClick={() => zoomIn()}
-                className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                className="text-muted-foreground hover:text-foreground p-1 transition-colors"
                 title="Zoom In"
               >
-                <ZoomIn className="w-4 h-4" />
+                <ZoomIn className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 onClick={() => fitView({ padding: 0.2, duration: 800 })}
-                className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                className="text-muted-foreground hover:text-foreground p-1 transition-colors"
                 title="Fit View"
               >
-                <Maximize className="w-4 h-4" />
+                <Maximize className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -309,7 +312,7 @@ const FlowCanvasInner: React.FC = () => {
 
 export const FlowCanvas: React.FC = () => {
   return (
-    <section className="flex-1 relative bg-secondary/20 overflow-hidden">
+    <section className="bg-secondary/20 relative flex-1 overflow-hidden">
       <ReactFlowProvider>
         <FlowCanvasInner />
       </ReactFlowProvider>

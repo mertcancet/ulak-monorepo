@@ -18,6 +18,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
-    "lefthook": "^2.1.5"
+    "lefthook": "^2.1.5",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2"
   }
 }

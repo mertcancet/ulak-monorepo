@@ -137,7 +137,7 @@ export const SettingsPanel: React.FC = () => {
   };
 
   return (
-    <aside className="w-90 bg-background border-l border-border flex flex-col font-display">
+    <aside className="w-90 h-full bg-background border-l border-border flex flex-col font-display">
       <div className="px-4 py-3 border-b border-border">
         <h2 className="text-sm font-bold">Dugum Ayarlari</h2>
         <p className="text-[11px] text-muted-foreground mt-0.5">

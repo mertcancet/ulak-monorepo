@@ -23,7 +23,7 @@ export const NodeLibrary: React.FC = () => {
   };
 
   return (
-    <aside className="w-64 bg-background border-r border-border flex flex-col font-display">
+    <aside className="w-64 h-full bg-background border-r border-border flex flex-col font-display">
       <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-hide">
         {NODE_LIBRARY_SECTIONS.map(section => (
           <div key={section.id} className="space-y-1">
