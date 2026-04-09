@@ -9,6 +9,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -156,21 +157,17 @@ export default function Dashboard() {
               onChange={event => setSearchTerm(event.target.value)}
             />
           </div>
-          <button
-            type="button"
-            className="h-9 px-3.5 flex items-center gap-1.5 text-sm font-medium text-foreground bg-secondary hover:bg-muted rounded-lg transition-colors border-0"
-          >
+          <Button type="button" variant="secondary">
             <Download className="w-3.5 h-3.5" />
             İçe Aktar
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="h-9 px-4 flex items-center gap-1.5 text-sm font-semibold text-white bg-foreground hover:bg-foreground/90 rounded-lg transition-colors"
             onClick={handleCreateAgent}
             disabled={isCreating}
           >
             <span>{isCreating ? "Oluşturuluyor..." : "Temsilci Oluştur"}</span>
-          </button>
+          </Button>
         </div>
       </DashboardHeader>
 
