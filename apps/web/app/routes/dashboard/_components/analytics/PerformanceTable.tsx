@@ -24,8 +24,8 @@ const performanceData = [
     avgDuration: "2dk 14sn",
     successRate: 88,
     status: "Aktif",
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
+    color: "text-primary",
+    bg: "bg-primary/10",
   },
   {
     id: 2,
@@ -34,8 +34,8 @@ const performanceData = [
     avgDuration: "1dk 45sn",
     successRate: 64,
     status: "Aktif",
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
+    color: "text-accent",
+    bg: "bg-accent/10",
   },
   {
     id: 3,
@@ -44,8 +44,8 @@ const performanceData = [
     avgDuration: "1dk 12sn",
     successRate: 92,
     status: "Beklemede",
-    color: "text-amber-500",
-    bg: "bg-amber-500/10",
+    color: "text-warning",
+    bg: "bg-warning/10",
   },
 ];
 
@@ -142,7 +142,7 @@ export const PerformanceTable = () => {
                   variant="secondary"
                   className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 ${
                     item.status === "Aktif"
-                      ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                      ? "bg-success/10 text-success border-success/20"
                       : "bg-secondary text-muted-foreground"
                   }`}
                 >

@@ -76,7 +76,7 @@ const SidebarItem = ({
               "flex items-center px-2.5 py-2 rounded-lg transition-all duration-150 group justify-center",
               active
                 ? "bg-brand/10 text-brand"
-                : "text-[#8e8e93] hover:bg-[#f0f0f0] hover:text-[#222222]",
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground",
             )}
           >
             <Icon className="w-4.5 h-4.5" />
@@ -94,7 +94,7 @@ const SidebarItem = ({
           "flex items-center px-3 py-2 rounded-lg transition-all duration-150 group gap-2.5",
           active
             ? "bg-brand/10 text-brand font-medium"
-            : "text-[#45515e] hover:bg-[#f0f0f0] hover:text-[#222222]",
+            : "text-secondary-foreground hover:bg-secondary hover:text-foreground",
         )}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -117,7 +117,7 @@ const SidebarSection = ({
 }) => (
   <div className="space-y-0.5 mb-5">
     {!collapsed && (
-      <h3 className="px-3 text-[10px] font-semibold text-[#8e8e93] uppercase tracking-widest mb-1.5 font-sans">
+      <h3 className="px-3 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5 font-sans">
         {title}
       </h3>
     )}
@@ -140,8 +140,8 @@ const DashboardLayout = () => {
 
   if (isSessionPending) {
     return (
-      <div className="grid min-h-screen place-items-center bg-white p-6">
-        <p className="text-sm text-[#8e8e93] font-sans">
+      <div className="grid min-h-screen place-items-center bg-background p-6">
+        <p className="text-sm text-muted-foreground font-sans">
           Oturum kontrol ediliyor...
         </p>
       </div>
@@ -157,11 +157,11 @@ const DashboardLayout = () => {
   const userInitial = userDisplayName.charAt(0).toUpperCase();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-white">
+    <div className="flex h-screen overflow-hidden bg-background">
       {/* Sidebar — MiniMax: white bg, subtle right border */}
       <aside
         className={cn(
-          "border-r border-[#e5e7eb] bg-white flex flex-col z-20 transition-all duration-300",
+          "border-r border-border bg-background flex flex-col z-20 transition-all duration-300",
           collapsed ? "w-16" : "w-60",
         )}
         onMouseEnter={() => {
@@ -183,7 +183,7 @@ const DashboardLayout = () => {
               <div className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center shadow-brand">
                 <Bot className="text-white w-4 h-4" />
               </div>
-              <span className="text-base font-semibold tracking-tight text-[#181e25] font-display">
+              <span className="text-base font-semibold tracking-tight text-foreground font-display">
                 Calling AI
               </span>
             </div>
@@ -191,7 +191,7 @@ const DashboardLayout = () => {
           <button
             type="button"
             className={cn(
-              "flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#f0f0f0] transition-colors border border-[#e5e7eb] text-[#8e8e93]",
+              "flex items-center justify-center w-8 h-8 rounded-full hover:bg-secondary transition-colors border border-border text-muted-foreground",
             )}
             style={{ zIndex: 30 }}
             onClick={() => setCollapsed(c => !c)}
@@ -209,17 +209,17 @@ const DashboardLayout = () => {
           <div className="px-3 mb-3">
             <button
               type="button"
-              className="w-full flex items-center justify-between h-10 px-3 rounded-lg bg-[#f0f0f0] hover:bg-[#e8e8e8] transition-colors border-0"
+              className="w-full flex items-center justify-between h-10 px-3 rounded-lg bg-secondary hover:bg-muted transition-colors border-0"
             >
               <div className="flex items-center gap-2">
                 <div className="w-5 h-5 rounded bg-brand/15 text-brand flex items-center justify-center text-[9px] font-bold">
                   {userInitial}
                 </div>
-                <span className="truncate text-xs font-medium text-[#222222]">
+                <span className="truncate text-xs font-medium text-foreground">
                   {userDisplayName}
                 </span>
               </div>
-              <ChevronsUpDown className="w-3 h-3 text-[#8e8e93]" />
+              <ChevronsUpDown className="w-3 h-3 text-muted-foreground" />
             </button>
           </div>
         )}
@@ -330,46 +330,46 @@ const DashboardLayout = () => {
         </nav>
 
         {!collapsed && (
-          <div className="p-3 border-t border-[#e5e7eb] space-y-1">
+          <div className="p-3 border-t border-border space-y-1">
             <button
               type="button"
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f0f0f0] transition-colors text-[#45515e]"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-secondary transition-colors text-secondary-foreground"
             >
               <div className="flex items-center gap-2">
                 <Gift className="w-4 h-4" />
                 <span className="text-xs font-medium">Ücretsiz Deneme</span>
               </div>
-              <ChevronDown className="w-3 h-3 text-[#8e8e93]" />
+              <ChevronDown className="w-3 h-3 text-muted-foreground" />
             </button>
 
-            <div className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f0f0f0] transition-colors cursor-pointer">
+            <div className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-secondary transition-colors cursor-pointer">
               <div className="flex items-center gap-2 overflow-hidden">
-                <Avatar className="w-7 h-7 border border-[#e5e7eb]">
+                <Avatar className="w-7 h-7 border border-border">
                   <AvatarImage src="" />
                   <AvatarFallback className="bg-brand text-white text-[10px] font-bold">
                     {userInitial}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col truncate">
-                  <span className="text-[11px] font-medium truncate text-[#222222]">
+                  <span className="text-[11px] font-medium truncate text-foreground">
                     {session.user.email}
                   </span>
                 </div>
               </div>
-              <ChevronsUpDown className="w-3 h-3 text-[#8e8e93] shrink-0" />
+              <ChevronsUpDown className="w-3 h-3 text-muted-foreground shrink-0" />
             </div>
 
-            <div className="flex items-center justify-around pt-2 border-t border-[#f2f3f5]">
+            <div className="flex items-center justify-around pt-2 border-t border-muted">
               <button
                 type="button"
-                className="text-[10px] text-[#8e8e93] hover:text-[#222222] flex items-center gap-1 transition-colors py-1.5"
+                className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors py-1.5"
               >
                 <HelpCircle className="w-3 h-3" />
                 <span>Yardım</span>
               </button>
               <button
                 type="button"
-                className="text-[10px] text-[#8e8e93] hover:text-[#222222] flex items-center gap-1 transition-colors py-1.5"
+                className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors py-1.5"
               >
                 <Bell className="w-3 h-3" />
                 <span>Güncellemeler</span>

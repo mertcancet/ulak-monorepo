@@ -28,7 +28,7 @@ export const TestingPanel = () => {
         <div className="flex space-x-1 bg-background/50 p-1 rounded-lg border border-border flex-1 shadow-inner">
           <button
             type="button"
-            className="flex-1 flex items-center justify-center space-x-2 py-1.5 px-3 bg-white shadow-sm rounded-md text-xs font-bold transition-all"
+            className="flex-1 flex items-center justify-center space-x-2 py-1.5 px-3 bg-background shadow-sm rounded-md text-xs font-bold transition-all"
           >
             <PhoneCall className="w-3.5 h-3.5 text-primary" />
             <span>Ses Testi</span>

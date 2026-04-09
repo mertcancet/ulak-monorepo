@@ -45,25 +45,25 @@ export const FlowHeader: React.FC<FlowHeaderProps> = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#f0f0f0] hover:bg-[#e8e8e8] transition-colors text-[#8e8e93] hover:text-[#222222]"
+            className="flex items-center justify-center w-7 h-7 rounded-lg bg-secondary hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
             onClick={() => navigate("/dashboard")}
             aria-label="Dashboard'a dön"
           >
             <Home className="w-3.5 h-3.5" />
           </button>
-          <span className="text-[#8e8e93] text-xs">/</span>
+          <span className="text-muted-foreground text-xs">/</span>
           <div className="flex items-center gap-1.5">
-            <h1 className="font-semibold text-sm text-[#222222] font-display">
+            <h1 className="font-semibold text-sm text-foreground font-display">
               {agentName}
             </h1>
-            <Edit className="w-3 h-3 text-[#8e8e93] cursor-pointer hover:text-[#222222] transition-colors" />
+            <Edit className="w-3 h-3 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
           </div>
         </div>
-        <div className="flex items-center gap-3 text-[10px] text-[#8e8e93] font-medium pl-9">
+        <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-medium pl-9">
           <span>Agent ID: {shortAgentId}</span>
-          <Copy className="w-2.5 h-2.5 cursor-pointer hover:text-[#222222] transition-colors" />
+          <Copy className="w-2.5 h-2.5 cursor-pointer hover:text-foreground transition-colors" />
           <span>Flow: {flowId}</span>
-          <Copy className="w-2.5 h-2.5 cursor-pointer hover:text-[#222222] transition-colors" />
+          <Copy className="w-2.5 h-2.5 cursor-pointer hover:text-foreground transition-colors" />
           <span>$0.115/dk</span>
           <span className="flex items-center gap-1">
             <Clock className="w-2.5 h-2.5" /> 820-1150ms
@@ -77,13 +77,13 @@ export const FlowHeader: React.FC<FlowHeaderProps> = ({
       <div className="flex items-center gap-3">
         <nav className="flex items-center gap-1 mr-2">
           <a
-            className="px-3 py-1.5 text-sm font-medium text-[#181e25] bg-[rgba(0,0,0,0.05)] rounded-full transition-colors"
+            className="px-3 py-1.5 text-sm font-medium text-foreground bg-[rgba(0,0,0,0.05)] rounded-full transition-colors"
             href="#create"
           >
             Oluştur
           </a>
           <a
-            className="px-3 py-1.5 text-sm font-medium text-[#8e8e93] hover:text-[#222222] rounded-full hover:bg-[rgba(0,0,0,0.05)] transition-colors"
+            className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-[rgba(0,0,0,0.05)] transition-colors"
             href="#sim"
           >
             Simülasyon
@@ -93,32 +93,33 @@ export const FlowHeader: React.FC<FlowHeaderProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             type="button"
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#45515e] bg-white border border-[#e5e7eb] rounded-lg hover:bg-[#f0f0f0] transition-colors"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-secondary-foreground bg-background border border-border rounded-lg hover:bg-secondary transition-colors"
           >
-            <MessageCircle className="w-3 h-3 text-[#8e8e93]" /> Geri bildirim
+            <MessageCircle className="w-3 h-3 text-muted-foreground" /> Geri
+            bildirim
           </button>
-          <div className="flex items-center border border-[#e5e7eb] rounded-lg overflow-hidden">
+          <div className="flex items-center border border-border rounded-lg overflow-hidden">
             <button
               type="button"
-              className="p-1.5 px-2 hover:bg-[#f0f0f0] border-r border-[#e5e7eb] transition-colors text-[#8e8e93] hover:text-[#222222]"
+              className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
             >
               <MoreHorizontal className="w-3 h-3" />
             </button>
             <button
               type="button"
-              className="p-1.5 px-2 hover:bg-[#f0f0f0] border-r border-[#e5e7eb] transition-colors text-[#8e8e93] hover:text-[#222222]"
+              className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
             >
               <Share className="w-3 h-3" />
             </button>
             <button
               type="button"
-              className="p-1.5 px-2 hover:bg-[#f0f0f0] border-r border-[#e5e7eb] transition-colors text-[#8e8e93] hover:text-[#222222]"
+              className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
             >
               <History className="w-3 h-3" />
             </button>
             <button
               type="button"
-              className="p-1.5 px-2 hover:bg-[#f0f0f0] transition-colors text-[#8e8e93] hover:text-[#222222]"
+              className="p-1.5 px-2 hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
             >
               <Play className="w-3 h-3" />
             </button>

@@ -41,7 +41,7 @@ const MetricCard = ({
           className={cn(
             "flex items-center gap-1 text-[11px] font-bold py-0.5 px-2 rounded-full mb-1",
             trendType === "positive"
-              ? "bg-emerald-500/10 text-emerald-500"
+              ? "bg-success/10 text-success"
               : trendType === "negative"
                 ? "bg-destructive/10 text-destructive"
                 : "bg-secondary text-muted-foreground",
@@ -86,7 +86,7 @@ export const MetricCards = () => {
         value="820ms"
         trend="Mükemmel"
         trendType="positive"
-        icon={<CheckCircle className="w-4 h-4 text-emerald-500" />}
+        icon={<CheckCircle className="w-4 h-4 text-success" />}
       />
     </div>
   );

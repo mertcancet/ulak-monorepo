@@ -56,7 +56,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div
         className="pointer-events-none fixed inset-0 overflow-hidden"
         aria-hidden
@@ -83,21 +83,21 @@ export default function Register() {
               />
             </svg>
           </div>
-          <h1 className="font-display text-3xl font-semibold text-[#222222] leading-tight">
+          <h1 className="font-display text-3xl font-semibold text-foreground leading-tight">
             Hesap Oluşturun
           </h1>
-          <p className="mt-2 text-sm text-[#8e8e93] font-sans">
+          <p className="mt-2 text-sm text-muted-foreground font-sans">
             Dakikalar içinde AI call flow'larınızı oluşturmaya başlayın.
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white border border-[#e5e7eb] rounded-2xl shadow-card p-8">
+        <div className="bg-background border border-border rounded-2xl shadow-card p-8">
           <Form onSubmit={signUp} className="space-y-5">
             <div className="space-y-1.5">
               <Label
                 htmlFor="name"
-                className="text-sm font-medium text-[#222222]"
+                className="text-sm font-medium text-foreground"
               >
                 Ad Soyad
               </Label>
@@ -109,14 +109,14 @@ export default function Register() {
                 placeholder="Ahmet Yılmaz"
                 autoComplete="name"
                 required
-                className="h-11 rounded-xl border-[#e5e7eb] bg-white text-sm text-[#222222] placeholder:text-[#8e8e93] focus:border-[#3b82f6] focus:ring-[#3b82f6]"
+                className="h-11 rounded-xl border-border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring"
               />
             </div>
 
             <div className="space-y-1.5">
               <Label
                 htmlFor="email"
-                className="text-sm font-medium text-[#222222]"
+                className="text-sm font-medium text-foreground"
               >
                 E-posta
               </Label>
@@ -128,14 +128,14 @@ export default function Register() {
                 placeholder="isim@sirket.com"
                 autoComplete="email"
                 required
-                className="h-11 rounded-xl border-[#e5e7eb] bg-white text-sm text-[#222222] placeholder:text-[#8e8e93] focus:border-[#3b82f6] focus:ring-[#3b82f6]"
+                className="h-11 rounded-xl border-border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring"
               />
             </div>
 
             <div className="space-y-1.5">
               <Label
                 htmlFor="password"
-                className="text-sm font-medium text-[#222222]"
+                className="text-sm font-medium text-foreground"
               >
                 Şifre
               </Label>
@@ -147,12 +147,12 @@ export default function Register() {
                 placeholder="Güçlü bir şifre oluşturun"
                 autoComplete="new-password"
                 required
-                className="h-11 rounded-xl border-[#e5e7eb] bg-white text-sm text-[#222222] placeholder:text-[#8e8e93] focus:border-[#3b82f6] focus:ring-[#3b82f6]"
+                className="h-11 rounded-xl border-border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring"
               />
             </div>
 
             {errorMessage ? (
-              <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                 {errorMessage}
               </p>
             ) : null}
@@ -160,16 +160,16 @@ export default function Register() {
             <Button
               type="submit"
               disabled={isPending || isSessionPending}
-              className="h-11 w-full rounded-xl bg-[#181e25] text-white text-sm font-semibold hover:bg-[#2d3748] transition-colors"
+              className="h-11 w-full rounded-xl bg-foreground text-white text-sm font-semibold hover:bg-foreground/90 transition-colors"
             >
               {isPending ? "Hesap oluşturuluyor..." : "Hesap Oluştur"}
             </Button>
 
-            <p className="text-center text-sm text-[#8e8e93] font-sans">
+            <p className="text-center text-sm text-muted-foreground font-sans">
               Zaten hesabınız var mı?{" "}
               <Link
                 to="/auth/login"
-                className="font-semibold text-[#181e25] underline decoration-[#e5e7eb] underline-offset-4 hover:decoration-[#181e25] transition-colors"
+                className="font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground transition-colors"
               >
                 Giriş Yapın
               </Link>

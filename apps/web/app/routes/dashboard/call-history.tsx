@@ -27,8 +27,8 @@ const CallHistoryPage = () => {
       sentiment: "Pozitif",
       direction: "Gelen",
       status: "Başarılı",
-      reasonColor: "bg-green-500",
-      sentimentColor: "bg-blue-500",
+      reasonColor: "bg-success",
+      sentimentColor: "bg-primary",
       statusVariant: "success",
     },
     {
@@ -41,8 +41,8 @@ const CallHistoryPage = () => {
       sentiment: "Nötr",
       direction: "Giden",
       status: "Başarılı",
-      reasonColor: "bg-green-500",
-      sentimentColor: "bg-slate-400",
+      reasonColor: "bg-success",
+      sentimentColor: "bg-muted-foreground",
       statusVariant: "success",
     },
     {
@@ -55,8 +55,8 @@ const CallHistoryPage = () => {
       sentiment: "Belirsiz",
       direction: "Gelen",
       status: "Başarısız",
-      reasonColor: "bg-red-500",
-      sentimentColor: "bg-slate-400",
+      reasonColor: "bg-destructive/100",
+      sentimentColor: "bg-muted-foreground",
       statusVariant: "destructive",
     },
     {
@@ -69,8 +69,8 @@ const CallHistoryPage = () => {
       sentiment: "Pozitif",
       direction: "Giden",
       status: "Başarılı",
-      reasonColor: "bg-green-500",
-      sentimentColor: "bg-blue-500",
+      reasonColor: "bg-success",
+      sentimentColor: "bg-primary",
       statusVariant: "success",
     },
   ];
@@ -216,8 +216,8 @@ const CallHistoryPage = () => {
                       )}
                       style={{
                         backgroundColor: call.reasonColor.includes("green")
-                          ? "#10b981"
-                          : "#ef4444",
+                          ? "hsl(var(--success))"
+                          : "hsl(var(--destructive))",
                       }}
                     />
                     {call.reason}
@@ -229,8 +229,8 @@ const CallHistoryPage = () => {
                       className="w-1.5 h-1.5 rounded-full"
                       style={{
                         backgroundColor: call.sentimentColor.includes("blue")
-                          ? "#3b82f6"
-                          : "#94a3b8",
+                          ? "hsl(var(--primary))"
+                          : "hsl(var(--muted-foreground))",
                       }}
                     />
                     {call.sentiment}

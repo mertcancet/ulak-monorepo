@@ -159,7 +159,7 @@ export default function AgentFlowPage() {
       )}
 
       {successMessage && (
-        <div className="mx-4 mt-4 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+        <div className="mx-4 mt-4 rounded-lg border border-success/30 bg-success/10 px-4 py-2 text-sm text-success dark:text-success">
           {successMessage}
         </div>
       )}

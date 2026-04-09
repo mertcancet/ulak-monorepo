@@ -467,7 +467,7 @@ export default function KnowledgeBasePage() {
             )}
 
             {successMessage && (
-              <div className="mx-4 mt-4 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700">
+              <div className="mx-4 mt-4 rounded-lg border border-success/20 bg-success/5 px-3 py-2 text-sm text-success">
                 {successMessage}
               </div>
             )}

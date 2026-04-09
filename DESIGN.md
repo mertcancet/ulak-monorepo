@@ -1,257 +1,261 @@
-# Design System Inspiration of MiniMax
+# Design System Inspired by Mistral AI
 
 ## 1. Visual Theme & Atmosphere
 
-MiniMax's website is a clean, product-showcase platform for a Chinese AI technology company that bridges consumer-friendly appeal with technical credibility. The design language is predominantly white-space-driven with a light, airy feel — pure white backgrounds (`#ffffff`) dominate, letting colorful product cards and AI model illustrations serve as the visual anchors. The overall aesthetic sits at the intersection of Apple's product marketing clarity and a playful, rounded design language that makes AI technology feel approachable.
+Mistral AI's interface is a sun-drenched landscape rendered in code — a warm, bold, unapologetically European design that trades the typical blue-screen AI aesthetic for golden amber, burnt orange, and the feeling of late-afternoon light in southern France. Every surface glows with warmth: backgrounds fade from pale cream to deep amber, shadows carry golden undertones (`rgba(127, 99, 21, ...)`), and the brand's signature orange (`#fa520f`) burns through the page like a signal fire.
 
-The typography system is notably multi-font: DM Sans serves as the primary UI workhorse, Outfit handles display headings with geometric elegance, Poppins appears for mid-tier headings, and Roboto handles data-heavy contexts. This variety reflects a brand in rapid growth — each font serves a distinct communicative purpose rather than competing for attention. The hero heading at 80px weight 500 in both DM Sans and Outfit with a tight 1.10 line-height creates a bold but not aggressive opening statement.
+The design language is maximalist in its warmth but minimalist in its structure. Huge display headlines (82px) crash into the viewport with aggressive negative tracking (-2.05px), creating text blocks that feel like billboards or protest posters — declarations rather than descriptions. The typography uses Arial (likely a custom font with Arial as fallback) at extreme sizes, creating a raw, unadorned voice that says "we build frontier AI" with no decoration needed.
 
-What makes MiniMax distinctive is its pill-button geometry (9999px radius) for navigation and primary actions, combined with softer 8px–24px radiused cards for product showcases. The product cards themselves are richly colorful — vibrant gradients in pink, purple, orange, and blue — creating a "gallery of AI capabilities" feel. Against the white canvas, these colorful cards pop like app icons on a phone home screen, making each AI model/product feel like a self-contained creative tool.
+What makes Mistral distinctive is the complete commitment to a warm color temperature. The signature "block" identity — a gradient system flowing from bright yellow (`#ffd900`) through amber (`#ffa110`) to burnt orange (`#fa520f`) — creates a visual identity that's immediately recognizable. Even the shadows are warm, using amber-tinted blacks instead of cool grays. Combined with dramatic landscape photography in golden tones, the design feels less like a tech company and more like a European luxury brand that happens to build language models.
 
 **Key Characteristics:**
-- White-dominant layout with colorful product card accents
-- Multi-font system: DM Sans (UI), Outfit (display), Poppins (mid-tier), Roboto (data)
-- Pill buttons (9999px radius) for primary navigation and CTAs
-- Generous rounded cards (20px–24px radius) for product showcases
-- Brand blue spectrum: from `#1456f0` (brand-6) through `#3b82f6` (primary-500) to `#60a5fa` (light)
-- Brand pink (`#ea5ec1`) as secondary accent
-- Near-black text (`#222222`, `#18181b`) on white backgrounds
-- Purple-tinted shadows (`rgba(44, 30, 116, 0.16)`) creating subtle brand-colored depth
-- Dark footer section (`#181e25`) with product/company links
+- Golden-amber color universe: every tone from pale cream (#fffaeb) to burnt orange (#fa520f)
+- Massive display typography (82px) with aggressive negative letter-spacing (-2.05px)
+- Warm golden shadow system using amber-tinted rgba values
+- The Mistral "M" block identity — a gradient from yellow to orange
+- Dramatic landscape photography in warm golden tones
+- Uppercase typography used strategically for section labels and CTAs
+- Near-zero border-radius — sharp, architectural geometry
+- French-European confidence: bold, warm, declarative
 
 ## 2. Color Palette & Roles
 
-### Brand Primary
-- **Brand Blue** (`#1456f0`): `--brand-6`, primary brand identity color
-- **Sky Blue** (`#3daeff`): `--col-brand00`, lighter brand variant for accents
-- **Brand Pink** (`#ea5ec1`): `--col-brand02`, secondary brand accent
+### Primary
+- **Mistral Orange** (`#fa520f`): The core brand color — a vivid, saturated orange-red that anchors the entire identity. Used for primary emphasis, the brand block, and the highest-signal moments.
+- **Mistral Flame** (`#fb6424`): A slightly warmer, lighter variant of the brand orange used for secondary brand moments and hover states.
+- **Block Orange** (`#ff8105`): A pure orange used in the gradient block system — warmer and less red than Mistral Orange.
 
-### Blue Scale (Primary)
-- **Primary 200** (`#bfdbfe`): `--color-primary-200`, light blue backgrounds
-- **Primary Light** (`#60a5fa`): `--color-primary-light`, active states, highlights
-- **Primary 500** (`#3b82f6`): `--color-primary-500`, standard blue actions
-- **Primary 600** (`#2563eb`): `--color-primary-600`, hover states
-- **Primary 700** (`#1d4ed8`): `--color-primary-700`, pressed/active states
-- **Brand Deep** (`#17437d`): `--brand-3`, deep blue for emphasis
-
-### Text Colors
-- **Near Black** (`#222222`): `--col-text00`, primary text
-- **Dark** (`#18181b`): Button text, headings
-- **Charcoal** (`#181e25`): Dark surface text, footer background
-- **Dark Gray** (`#45515e`): `--col-text04`, secondary text
-- **Mid Gray** (`#8e8e93`): Tertiary text, muted labels
-- **Light Gray** (`#5f5f5f`): `--brand-2`, helper text
+### Secondary & Accent
+- **Sunshine 900** (`#ff8a00`): Deep golden amber — the darkest sunshine tone, used for strong accent moments.
+- **Sunshine 700** (`#ffa110`): Warm amber-gold — the core sunshine accent for backgrounds and interactive elements.
+- **Sunshine 500** (`#ffb83e`): Medium golden — balanced warmth for mid-level emphasis.
+- **Sunshine 300** (`#ffd06a`): Light golden — for subtle warm tints and secondary backgrounds.
+- **Block Gold** (`#ffe295`): Pale gold — soft background accents and gentle warmth.
+- **Bright Yellow** (`#ffd900`): The brightest tone in the gradient — used at the "top" of the block identity.
 
 ### Surface & Background
-- **Pure White** (`#ffffff`): `--col-bg13`, primary background
-- **Light Gray** (`#f0f0f0`): Secondary button backgrounds
-- **Glass White** (`hsla(0, 0%, 100%, 0.4)`): `--fill-bg-white`, frosted glass overlay
-- **Border Light** (`#f2f3f5`): Subtle section dividers
-- **Border Gray** (`#e5e7eb`): Component borders
+- **Warm Ivory** (`#fffaeb`): The lightest page background — barely tinted with warmth, the foundation canvas.
+- **Cream** (`#fff0c2`): The primary warm surface and secondary button background — noticeably golden.
+- **Pure White** (`#ffffff`): Used for maximum contrast elements and popover surfaces.
+- **Mistral Black** (`#1f1f1f`): The primary dark surface for buttons, text, and dark sections.
+- **Accent Orange** (defined as `hsl(17, 96%, 52%)`): The functional accent color for interactive states.
 
-### Semantic
-- **Success Background** (`#e8ffea`): `--success-bg`, positive state backgrounds
+### Neutrals & Text
+- **Mistral Black** (`#1f1f1f`): Primary text color and dark button backgrounds — a near-black that's warmer than pure #000.
+- **Black Tint** (defined as `hsl(0, 0%, 24%)`): A medium dark gray for secondary text on light backgrounds.
+- **Pure White** (`#ffffff`): Text on dark surfaces and CTA labels.
 
-### Shadows
-- **Standard** (`rgba(0, 0, 0, 0.08) 0px 4px 6px`): Default card shadow
-- **Soft Glow** (`rgba(0, 0, 0, 0.08) 0px 0px 22.576px`): Ambient soft shadow
-- **Brand Purple** (`rgba(44, 30, 116, 0.16) 0px 0px 15px`): Brand-tinted glow
-- **Brand Purple Offset** (`rgba(44, 30, 116, 0.11) 6.5px 2px 17.5px`): Directional brand glow
-- **Card Elevation** (`rgba(36, 36, 36, 0.08) 0px 12px 16px -4px`): Lifted card shadow
+### Semantic & Accent
+- **Input Border** (defined as `hsl(240, 5.9%, 90%)`): A cool-tinted light gray for form borders — one of the few cool tones in the system.
+- **White Overlay** (`oklab(1, 0, 0 / 0.088–0.1)`): Semi-transparent white for frosted glass effects and button overlays.
+
+### Gradient System
+- **Mistral Block Gradient**: The signature identity — a multi-step gradient flowing through Yellow (`#ffd900`) → Gold (`#ffe295`) → Amber (`#ffa110`) → Orange (`#ff8105`) → Flame (`#fb6424`) → Mistral Orange (`#fa520f`). This gradient appears in the logo blocks, section backgrounds, and decorative elements.
+- **Golden Landscape Wash**: Photography and backgrounds use warm amber overlays creating a consistent golden temperature across the page.
+- **Warm Shadow Cascade**: Multi-layered golden shadows that build depth with amber-tinted transparency rather than gray.
 
 ## 3. Typography Rules
 
-### Font Families
-- **Primary UI**: `DM Sans`, with fallbacks: `Helvetica Neue, Helvetica, Arial`
-- **Display**: `Outfit`, with fallbacks: `Helvetica Neue, Helvetica, Arial`
-- **Mid-tier**: `Poppins`
-- **Data/Technical**: `Roboto`, with fallbacks: `Helvetica Neue, Helvetica, Arial`
+### Font Family
+- **Primary**: Likely a custom font (Font Source detected) with `Arial` as fallback, and extended stack: `ui-sans-serif, system-ui, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji`
 
 ### Hierarchy
 
-| Role | Font | Size | Weight | Line Height | Notes |
-|------|------|------|--------|-------------|-------|
-| Display Hero | DM Sans / Outfit | 80px (5.00rem) | 500 | 1.10 (tight) | Hero headlines |
-| Section Heading | Outfit | 31px (1.94rem) | 600 | 1.50 | Feature section titles |
-| Section Heading Alt | Roboto / DM Sans | 32px (2.00rem) | 600 | 0.88 (tight) | Compact headers |
-| Card Title | Outfit | 28px (1.75rem) | 500–600 | 1.71 (relaxed) | Product card headings |
-| Sub-heading | Poppins | 24px (1.50rem) | 500 | 1.50 | Mid-tier headings |
-| Feature Label | Poppins | 18px (1.13rem) | 500 | 1.50 | Feature names |
-| Body Large | DM Sans | 20px (1.25rem) | 500 | 1.50 | Emphasized body |
-| Body | DM Sans | 16px (1.00rem) | 400–500 | 1.50 | Standard body text |
-| Body Bold | DM Sans | 16px (1.00rem) | 700 | 1.50 | Strong emphasis |
-| Nav/Link | DM Sans | 14px (0.88rem) | 400–500 | 1.50 | Navigation, links |
-| Button Small | DM Sans | 13px (0.81rem) | 600 | 1.50 | Compact buttons |
-| Caption | DM Sans / Poppins | 13px (0.81rem) | 400 | 1.70 (relaxed) | Metadata |
-| Small Label | DM Sans | 12px (0.75rem) | 500–600 | 1.25–1.50 | Tags, badges |
-| Micro | DM Sans / Outfit | 10px (0.63rem) | 400–500 | 1.50–1.80 | Tiny annotations |
+| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
+|------|------|------|--------|-------------|----------------|-------|
+| Display / Hero | Arial (custom) | 82px (5.13rem) | 400 | 1.00 (tight) | -2.05px | Maximum impact, billboard scale |
+| Section Heading | Arial (custom) | 56px (3.5rem) | 400 | 0.95 (ultra-tight) | normal | Feature section anchors |
+| Sub-heading Large | Arial (custom) | 48px (3rem) | 400 | 0.95 (ultra-tight) | normal | Secondary section titles |
+| Sub-heading | Arial (custom) | 32px (2rem) | 400 | 1.15 (tight) | normal | Card headings, feature names |
+| Card Title | Arial (custom) | 30px (1.88rem) | 400 | 1.20 (tight) | normal | Mid-level headings |
+| Feature Title | Arial (custom) | 24px (1.5rem) | 400 | 1.33 | normal | Small headings |
+| Body / Button | Arial (custom) | 16px (1rem) | 400 | 1.50 | normal | Standard body, button text |
+| Button Uppercase | Arial (custom) | 16px (1rem) | 400 | 1.50 | normal | Uppercase CTA labels |
+| Caption / Link | Arial (custom) | 14px (0.88rem) | 400 | 1.43 | normal | Metadata, secondary links |
 
 ### Principles
-- **Multi-font purpose**: DM Sans = UI workhorse (body, nav, buttons); Outfit = geometric display (headings, product names); Poppins = friendly mid-tier (sub-headings, features); Roboto = technical/data contexts.
-- **Universal 1.50 line-height**: The overwhelming majority of text uses 1.50 line-height, creating a consistent reading rhythm regardless of font or size. Exceptions: display (1.10 tight) and some captions (1.70 relaxed).
-- **Weight 500 as default emphasis**: Most headings use 500 (medium) rather than bold, creating a modern, approachable tone. 600 for section titles, 700 reserved for strong emphasis.
-- **Compact hierarchy**: The size scale jumps from 80px display straight to 28–32px section, then 16–20px body — a deliberate compression that keeps the visual hierarchy feeling efficient.
+- **Single weight, maximum impact**: The entire system uses weight 400 (regular) — even at 82px. This creates a surprisingly elegant effect where the size alone carries authority without needing bold weight.
+- **Ultra-tight at scale**: Line-heights of 0.95–1.00 at display sizes create text blocks where ascenders nearly touch descenders from the line above — creating dense, poster-like composition.
+- **Aggressive tracking on display**: -2.05px letter-spacing at 82px compresses the hero text into a monolithic block.
+- **Uppercase as emphasis**: Strategic `text-transform: uppercase` on button labels and section markers creates a formal, European signage quality.
+- **No weight variation**: Unlike most systems that use 300–700 weight range, Mistral uses 400 everywhere. Hierarchy comes from size and color, never weight.
 
 ## 4. Component Stylings
 
 ### Buttons
 
-**Pill Primary Dark**
-- Background: `#181e25`
-- Text: `#ffffff`
-- Padding: 11px 20px
-- Radius: 8px
-- Use: Primary CTA ("Get Started", "Learn More")
+**Cream Surface**
+- Background: Cream (`#fff0c2`)
+- Text: Mistral Black (`#1f1f1f`)
+- No visible border
+- The warm, inviting secondary CTA
 
-**Pill Nav**
-- Background: `rgba(0, 0, 0, 0.05)` (subtle tint)
-- Text: `#18181b`
-- Radius: 9999px (full pill)
-- Use: Navigation tabs, filter toggles
+**Dark Solid**
+- Background: Mistral Black (`#1f1f1f`)
+- Text: Pure White (`#ffffff`)
+- Padding: 12px (all sides)
+- No visible border
+- The primary action button — dark on warm
 
-**Pill White**
-- Background: `#ffffff`
-- Text: `rgba(24, 30, 37, 0.8)`
-- Radius: 9999px
-- Opacity: 0.5 (default state)
-- Use: Secondary nav, inactive tabs
+**Ghost / Transparent**
+- Background: transparent with slight dark overlay (`oklab(0, 0, 0 / 0.1)`)
+- Text: Mistral Black (`#1f1f1f`)
+- Opacity: 0.4
+- For secondary/de-emphasized actions
 
-**Secondary Light**
-- Background: `#f0f0f0`
-- Text: `#333333`
-- Padding: 11px 20px
-- Radius: 8px
-- Use: Secondary actions
+**Text / Underline**
+- Background: transparent
+- Text: Mistral Black (`#1f1f1f`)
+- Padding: 8px 0px 0px (top-only)
+- Minimal styling — text link as button
+- For tertiary navigation actions
 
-### Product Cards
-- Background: Vibrant gradients (pink/purple/orange/blue)
-- Radius: 20px–24px (generous rounding)
-- Shadow: `rgba(44, 30, 116, 0.16) 0px 0px 15px` (brand purple glow)
-- Content: Product name, model version, descriptive text
-- Each card has its own color palette matching the product identity
+### Cards & Containers
+- Background: Warm Ivory (`#fffaeb`), Cream (`#fff0c2`), or Pure White
+- Border: minimal to none — containers defined by background color
+- Radius: near-zero — sharp, architectural corners
+- Shadow: warm golden multi-layer (`rgba(127, 99, 21, 0.12) -8px 16px 39px, rgba(127, 99, 21, 0.1) -33px 64px 72px, rgba(127, 99, 21, 0.06) -73px 144px 97px, ...`) — a dramatic, cascading warm shadow
+- Distinctive: the golden shadow creates a "golden hour" lighting effect
 
-### AI Product Cards (Matrix)
-- Background: white with subtle shadow
-- Radius: 13px–16px
-- Shadow: `rgba(0, 0, 0, 0.08) 0px 4px 6px`
-- Icon/illustration centered above product name
-- Product name in DM Sans 14–16px weight 500
-
-### Links
-- **Primary**: `#18181b` or `#181e25`, underline on dark text
-- **Secondary**: `#8e8e93`, muted for less emphasis
-- **On Dark**: `rgba(255, 255, 255, 0.8)` for footer and dark sections
+### Inputs & Forms
+- Border: `hsl(240, 5.9%, 90%)` — the sole cool-toned element
+- Focus: accent color ring
+- Minimal styling consistent with sparse aesthetic
 
 ### Navigation
-- Clean horizontal nav on white background
-- MiniMax logo left-aligned (red accent in logo)
-- DM Sans 14px weight 500 for nav items
-- Pill-shaped active indicators (9999px radius)
-- "Login" text link, minimal right-side actions
-- Sticky header behavior
+- Transparent nav overlaying the warm hero
+- Logo: Mistral "M" wordmark
+- Links: Dark text (white on dark sections)
+- CTA: Dark solid button or cream surface button
+- Minimal, wide-spaced layout
+
+### Image Treatment
+- Dramatic landscape photography in warm golden tones
+- The winding road through golden hills — a recurring visual motif
+- The Mistral "M" rendered at large scale on golden backgrounds
+- Warm color grading on all photography
+- Full-bleed sections with photography
+
+### Distinctive Components
+
+**Mistral Block Identity**
+- A row of colored blocks forming the gradient: yellow → amber → orange → burnt orange
+- Each block gets progressively more orange/red
+- The visual DNA of the brand — recognizable at any size
+
+**Golden Shadow Cards**
+- Cards elevated with warm amber multi-layered shadows
+- 5 layers of shadow from 16px to 400px offset
+- Creates a "floating in golden light" effect unique to Mistral
+
+**Dark Footer Gradient**
+- Footer transitions from warm amber to dark through a dramatic gradient
+- Creates a "sunset" effect as the page ends
 
 ## 5. Layout Principles
 
 ### Spacing System
 - Base unit: 8px
-- Scale: 1px, 2px, 4px, 6px, 8px, 10px, 11px, 14px, 16px, 24px, 32px, 40px, 50px, 64px, 80px
+- Scale: 2px, 4px, 8px, 10px, 12px, 16px, 20px, 24px, 32px, 40px, 48px, 64px, 80px, 98px, 100px
+- Button padding: 12px or 8px 0px (compact)
+- Section vertical spacing: very generous (80px–100px)
 
 ### Grid & Container
-- Max content width centered on page
-- Product card grids: horizontal scroll or 3–4 column layout
-- Full-width white sections with contained content
-- Dark footer at full-width
-
-### Breakpoints
-| Name | Width | Key Changes |
-|------|-------|-------------|
-| Mobile | <768px | Single column, stacked cards |
-| Tablet | 768–1024px | 2-column grids |
-| Desktop | >1024px | Full layout, horizontal card scrolls |
+- Max container width: approximately 1280px, centered
+- Hero: full-width with massive typography overlaying warm backgrounds
+- Feature sections: wide-format layouts with dramatic imagery
+- Card grids: 2–3 column layouts
 
 ### Whitespace Philosophy
-- **Gallery spacing**: Products are presented like gallery items with generous white space between cards, letting each AI model breathe as its own showcase.
-- **Section rhythm**: Large vertical gaps (64px–80px) between major sections create distinct "chapters" of content.
-- **Card breathing**: Product cards use internal padding of 16px–24px with ample whitespace around text.
+- **Bold declarations**: Huge headlines surrounded by generous whitespace create billboard-like impact — each statement gets its own breathing space.
+- **Warm void**: Empty space itself feels warm because the backgrounds are tinted ivory/cream rather than pure white.
+- **Photography as space-filler**: Large landscape images serve double duty as content and decorative whitespace.
 
 ### Border Radius Scale
-- Minimal (4px): Small tags, micro badges
-- Standard (8px): Buttons, small cards
-- Comfortable (11px–13px): Medium cards, panels
-- Generous (16px–20px): Large product cards
-- Large (22px–24px): Hero product cards, major containers
-- Pill (30px–32px): Badge pills, rounded panels
-- Full (9999px): Buttons, nav tabs
+- Near-zero: The dominant radius — sharp, architectural corners on most elements
+- This extreme sharpness contrasts with the warmth of the colors, creating a tension between soft color and hard geometry.
 
 ## 6. Depth & Elevation
 
 | Level | Treatment | Use |
 |-------|-----------|-----|
-| Flat (Level 0) | No shadow | White background, text blocks |
-| Subtle (Level 1) | `rgba(0, 0, 0, 0.08) 0px 4px 6px` | Standard cards, containers |
-| Ambient (Level 2) | `rgba(0, 0, 0, 0.08) 0px 0px 22.576px` | Soft glow around elements |
-| Brand Glow (Level 3) | `rgba(44, 30, 116, 0.16) 0px 0px 15px` | Featured product cards |
-| Elevated (Level 4) | `rgba(36, 36, 36, 0.08) 0px 12px 16px -4px` | Lifted cards, hover states |
+| Flat (Level 0) | No shadow | Page backgrounds, text blocks |
+| Golden Float (Level 1) | Multi-layer warm shadow (5 layers, 12%→0% opacity, amber-tinted) | Feature cards, product showcases, elevated content |
 
-**Shadow Philosophy**: MiniMax uses a distinctive purple-tinted shadow (`rgba(44, 30, 116, ...)`) for featured elements, creating a subtle brand-color glow that connects the shadow system to the blue brand identity. Standard shadows use neutral black but at low opacity (0.08), keeping everything feeling light and airy. The directional shadow variant (6.5px offset) adds dimensional interest to hero product cards.
+**Shadow Philosophy**: Mistral uses a single but extraordinarily complex shadow — **five cascading layers** of amber-tinted shadow (`rgba(127, 99, 21, ...)`) that build from a close 16px offset to a distant 400px offset. The result is a rich, warm, "golden hour" lighting effect that makes elevated elements look like they're bathed in afternoon sunlight. This is the most distinctive shadow system in any major AI brand.
 
 ## 7. Do's and Don'ts
 
 ### Do
-- Use white as the dominant background — let product cards provide the color
-- Apply pill radius (9999px) for navigation tabs and toggle buttons
-- Use generous border radius (20px–24px) for product showcase cards
-- Employ the purple-tinted shadow for featured/hero product cards
-- Keep body text at DM Sans weight 400–500 — heavier weights for buttons only
-- Use Outfit for display headings, DM Sans for everything functional
-- Maintain the universal 1.50 line-height across body text
-- Let colorful product illustrations/gradients serve as the primary visual interest
+- Use the warm color spectrum exclusively: ivory, cream, amber, gold, orange
+- Keep display typography at 82px+ with -2.05px letter-spacing for hero sections
+- Use the Mistral block gradient (yellow → amber → orange) for brand moments
+- Apply warm golden shadows (amber-tinted rgba) for elevated elements
+- Use Mistral Black (#1f1f1f) for text — never pure #000000
+- Keep font weight at 400 throughout — let size and color carry hierarchy
+- Use sharp, architectural corners — near-zero border-radius
+- Apply uppercase on button labels and section markers for European formality
+- Use warm landscape photography with golden color grading
 
 ### Don't
-- Don't add colored backgrounds to main content sections — white is structural
-- Don't use sharp corners (0–4px radius) on product cards — the rounded aesthetic is core
-- Don't apply the brand pink (`#ea5ec1`) to text or buttons — it's for logo and decorative accents only
-- Don't mix more than one display font per section (Outfit OR Poppins, not both)
-- Don't use weight 700 for headings — 500–600 is the range, 700 is reserved for strong emphasis in body text
-- Don't darken shadows beyond 0.16 opacity — the light, airy feel requires restraint
-- Don't use Roboto for headings — it's the data/technical context font only
+- Don't introduce cool colors (blue, green, purple) — the palette is exclusively warm
+- Don't use bold (700+) weight — 400 is the only weight
+- Don't round corners — the sharp geometry is intentional
+- Don't use cool-toned shadows — shadows must carry amber warmth
+- Don't use pure white as a page background — always warm-tinted (#fffaeb minimum)
+- Don't reduce hero text below 48px on desktop — the billboard scale is core
+- Don't use more than 2 font weights — size variation replaces weight variation
+- Don't add gradients outside the warm spectrum — no blue-to-purple, no cool transitions
+- Don't use generic gray for text — even neutrals should be warm-tinted
 
 ## 8. Responsive Behavior
 
 ### Breakpoints
 | Name | Width | Key Changes |
 |------|-------|-------------|
-| Mobile | <768px | Single column, stacked product cards, hamburger nav |
-| Tablet | 768–1024px | 2-column product grids, condensed spacing |
-| Desktop | >1024px | Full horizontal card layouts, expanded spacing |
+| Mobile | <640px | Single column, stacked everything, hero text reduces to ~32px |
+| Tablet | 640–768px | Minor layout adjustments |
+| Small Desktop | 768–1024px | 2-column layouts begin |
+| Desktop | 1024–1280px | Full layout with maximum typography scale |
+
+### Touch Targets
+- Buttons use generous padding (12px minimum)
+- Navigation elements adequately spaced
+- Cards serve as large touch targets
 
 ### Collapsing Strategy
-- Hero: 80px → responsive scaling to ~40px on mobile
-- Product card grid: horizontal scroll → 2-column → single column stacked
-- Navigation: horizontal → hamburger menu
-- Footer: multi-column → stacked sections
-- Spacing: 64–80px gaps → 32–40px on mobile
+- **Navigation**: Collapses to hamburger on mobile
+- **Hero text**: 82px → 56px → 48px → 32px progressive scaling
+- **Feature sections**: Multi-column → stacked
+- **Photography**: Scales proportionally, may crop on mobile
+- **Block identity**: Scales down proportionally
+
+### Image Behavior
+- Landscape photography scales proportionally
+- Warm color grading maintained at all sizes
+- Block gradient elements resize fluidly
+- No art direction changes — same warm composition at all sizes
 
 ## 9. Agent Prompt Guide
 
 ### Quick Color Reference
-- Background: `#ffffff` (primary), `#181e25` (dark/footer)
-- Text: `#222222` (primary), `#45515e` (secondary), `#8e8e93` (muted)
-- Brand Blue: `#1456f0` (brand), `#3b82f6` (primary-500), `#2563eb` (hover)
-- Brand Pink: `#ea5ec1` (accent only)
-- Borders: `#e5e7eb`, `#f2f3f5`
+- Brand Orange: "Mistral Orange (#fa520f)"
+- Page Background: "Warm Ivory (#fffaeb)"
+- Warm Surface: "Cream (#fff0c2)"
+- Primary Text: "Mistral Black (#1f1f1f)"
+- Sunshine Amber: "Sunshine 700 (#ffa110)"
+- Bright Gold: "Bright Yellow (#ffd900)"
+- Text on Dark: "Pure White (#ffffff)"
 
 ### Example Component Prompts
-- "Create a hero section on white background. Headline at 80px Outfit weight 500, line-height 1.10, near-black (#222222) text. Sub-text at 16px DM Sans weight 400, line-height 1.50, #45515e. Dark CTA button (#181e25, 8px radius, 11px 20px padding, white text)."
-- "Design a product card grid: white cards with 20px border-radius, shadow rgba(44,30,116,0.16) 0px 0px 15px. Product name at 28px Outfit weight 600. Internal gradient background for the product illustration area."
-- "Build navigation bar: white background, DM Sans 14px weight 500 for links, #18181b text. Pill-shaped active tab (9999px radius, rgba(0,0,0,0.05) background). MiniMax logo left-aligned."
-- "Create an AI product matrix: 4-column grid of cards with 13px radius, subtle shadow rgba(0,0,0,0.08) 0px 4px 6px. Centered icon above product name in DM Sans 16px weight 500."
-- "Design footer on dark (#181e25) background. Product links in DM Sans 14px, rgba(255,255,255,0.8). Multi-column layout."
+- "Create a hero section on Warm Ivory (#fffaeb) with a massive headline at 82px Arial weight 400, line-height 1.0, letter-spacing -2.05px. Mistral Black (#1f1f1f) text. Add a dark solid CTA button (#1f1f1f bg, white text, 12px padding, sharp corners) and a cream secondary button (#fff0c2 bg)."
+- "Design a feature card on Cream (#fff0c2) with sharp corners (no border-radius). Apply the golden shadow system: rgba(127, 99, 21, 0.12) -8px 16px 39px as the primary layer. Title at 32px weight 400, body at 16px."
+- "Build the Mistral block identity: a row of colored blocks from Bright Yellow (#ffd900) through Sunshine 700 (#ffa110) to Mistral Orange (#fa520f). Sharp corners, no gaps."
+- "Create a dark footer section on Mistral Black (#1f1f1f) with Pure White (#ffffff) text. Footer links at 14px. Add a warm gradient from Sunshine 700 (#ffa110) at the top fading to Mistral Black."
 
 ### Iteration Guide
-1. Start with white — color comes from product cards and illustrations only
-2. Pill buttons (9999px) for nav/tabs, standard radius (8px) for CTA buttons
-3. Purple-tinted shadows for featured cards, neutral shadows for everything else
-4. DM Sans handles 70% of text — Outfit is display-only, Poppins is mid-tier only
-5. Keep weights moderate (500–600 for headings) — the brand tone is confident but approachable
-6. Large radius cards (20–24px) for products, smaller radius (8–13px) for UI elements
+1. Keep the warm temperature — "shift toward amber" not "shift toward gray"
+2. Use size for hierarchy — 82px → 56px → 48px → 32px → 24px → 16px
+3. Never add border-radius — sharp corners only
+4. Shadows are always warm: "golden shadow with amber tones"
+5. Font weight is always 400 — describe emphasis through size and color

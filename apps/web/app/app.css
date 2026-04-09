@@ -3,17 +3,17 @@
 @plugin "tailwindcss-animate";
 
 @theme {
-  /* MiniMax Design System Fonts */
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Outfit", "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Poppins", "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-data: "Roboto", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  /* Mistral-inspired warm typography */
+  --font-sans: Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-display: Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-heading: Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-data: Arial, ui-sans-serif, system-ui, sans-serif;
 
-  /* MiniMax Brand Colors */
-  --color-brand: #1456f0;
-  --color-brand-light: #3daeff;
-  --color-brand-pink: #ea5ec1;
-  --color-brand-deep: #17437d;
+  /* Mistral warm brand colors */
+  --color-brand: #fa520f;
+  --color-brand-light: #fb6424;
+  --color-brand-pink: #ff8a00;
+  --color-brand-deep: #c53f0b;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -43,6 +43,13 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -50,78 +57,82 @@
 
 @layer base {
   :root {
-    /* MiniMax: Pure white dominant background */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 13%; /* #222222 near-black */
+    /* Mistral warm daylight palette */
+    --background: 48 100% 96%; /* #fffaeb */
+    --foreground: 0 0% 12%; /* #1f1f1f */
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 13%;
+    --card: 44 100% 88%; /* #fff0c2 */
+    --card-foreground: 0 0% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 13%;
+    --popover-foreground: 0 0% 12%;
 
-    /* MiniMax brand blue: #3b82f6 → primary-500 */
-    --primary: 217 91% 60%;
+    /* Mistral orange */
+    --primary: 17 96% 52%; /* #fa520f */
     --primary-foreground: 0 0% 100%;
 
-    /* MiniMax: #f0f0f0 secondary surfaces */
-    --secondary: 0 0% 94%;
-    --secondary-foreground: 0 0% 27%; /* #45515e */
+    --secondary: 44 100% 88%; /* #fff0c2 */
+    --secondary-foreground: 0 0% 12%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 56%; /* #8e8e93 */
+    --muted: 43 100% 92%; /* #ffe295 */
+    --muted-foreground: 0 0% 24%;
 
-    /* MiniMax: subtle blue accent */
-    --accent: 217 91% 96%;
-    --accent-foreground: 217 91% 40%;
+    --accent: 36 100% 53%; /* #ffa110 */
+    --accent-foreground: 0 0% 12%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* MiniMax: #e5e7eb borders */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 217 91% 60%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 17 96% 52%;
 
-    /* MiniMax: 8px base radius → standard card */
-    --radius: 0.5rem;
+    /* Mistral prefers sharp corners */
+    --radius: 0.125rem;
 
-    --success: 142 71% 45%;
+    --success: 142 60% 40%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-    --info: 199 89% 48%;
+    --warning: 36 100% 53%;
+    --warning-foreground: 0 0% 12%;
+    --info: 17 96% 52%;
     --info-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 224 40% 7%;
-    --foreground: 220 14% 96%;
+    --background: 0 0% 12%;
+    --foreground: 48 100% 96%;
 
-    --card: 224 40% 10%;
-    --card-foreground: 220 14% 96%;
+    --card: 0 0% 16%;
+    --card-foreground: 48 100% 96%;
 
-    --popover: 224 40% 10%;
-    --popover-foreground: 220 14% 96%;
+    --popover: 0 0% 16%;
+    --popover-foreground: 48 100% 96%;
 
-    --primary: 217 91% 65%;
+    --primary: 17 96% 52%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 224 71% 15%;
-    --secondary-foreground: 220 14% 80%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 48 100% 92%;
 
-    --muted: 224 71% 15%;
-    --muted-foreground: 220 9% 55%;
+    --muted: 0 0% 24%;
+    --muted-foreground: 43 80% 82%;
 
-    --accent: 217 91% 20%;
-    --accent-foreground: 217 91% 75%;
+    --accent: 36 100% 53%;
+    --accent-foreground: 0 0% 12%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 224 40% 15%;
-    --input: 224 40% 15%;
-    --ring: 217 91% 65%;
+    --border: 0 0% 28%;
+    --input: 0 0% 28%;
+    --ring: 17 96% 52%;
+
+    --success: 142 60% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 36 100% 58%;
+    --warning-foreground: 0 0% 12%;
+    --info: 17 96% 58%;
+    --info-foreground: 0 0% 100%;
   }
 }
 
@@ -162,34 +173,37 @@
     border-radius: 2px;
   }
 
-  /* MiniMax glass — light frosted white */
+  /* Warm frosted surface */
   .glass {
     backdrop-filter: blur(12px);
-    background: hsla(0, 0%, 100%, 0.4);
-    border: 1px solid #e5e7eb;
+    background: hsla(48, 100%, 96%, 0.45);
+    border: 1px solid hsl(var(--border));
   }
 
-  /* MiniMax brand glow shadow */
+  /* Warm Mistral glow shadow */
   .shadow-brand {
-    box-shadow: rgba(44, 30, 116, 0.16) 0px 0px 15px;
+    box-shadow: rgba(127, 99, 21, 0.16) 0px 0px 18px;
   }
 
   .shadow-brand-offset {
-    box-shadow: rgba(44, 30, 116, 0.11) 6.5px 2px 17.5px;
+    box-shadow: rgba(127, 99, 21, 0.12) 6px 4px 22px;
   }
 
   .shadow-card {
-    box-shadow: rgba(36, 36, 36, 0.08) 0px 12px 16px -4px;
+    box-shadow:
+      rgba(127, 99, 21, 0.12) -8px 16px 39px,
+      rgba(127, 99, 21, 0.1) -33px 64px 72px,
+      rgba(127, 99, 21, 0.06) -73px 144px 97px;
   }
 
-  /* MiniMax gradient — brand blue primary */
+  /* Mistral warm block gradient */
   .gradient-primary {
-    background: linear-gradient(135deg, #1456f0, #3b82f6);
+    background: linear-gradient(135deg, #ffd900, #ffa110, #ff8105, #fa520f);
   }
 
-  /* MiniMax gradient text — brand blue */
+  /* Mistral gradient text */
   .gradient-text {
-    background: linear-gradient(to right, #1456f0, #3daeff);
+    background: linear-gradient(to right, #ffa110, #fa520f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -47,7 +47,7 @@ const TabHeader = ({
           </span>
           <span className="text-border">•</span>
           <span className="flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-success" />
             Olusturuldu: {createdAtLabel}
           </span>
           <span className="text-border">•</span>
@@ -55,7 +55,7 @@ const TabHeader = ({
           {knowledgeBase?.isActive === false && (
             <>
               <span className="text-border">•</span>
-              <span className="text-amber-500">Pasif</span>
+              <span className="text-warning">Pasif</span>
             </>
           )}
           <span className="text-border">•</span>

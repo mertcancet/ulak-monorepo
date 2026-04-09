@@ -171,7 +171,7 @@ const FlowCanvasInner: React.FC = () => {
             variant={BackgroundVariant.Dots}
             gap={20}
             size={1}
-            color="#cbd5e1"
+            color="hsl(var(--border))"
           />
         )}
 
@@ -279,8 +279,8 @@ const FlowCanvasInner: React.FC = () => {
           background: hsl(var(--primary)) !important;
         }
         .react-flow__node.selected .flow-node-card {
-          border-color: #3b82f6 !important;
-          box-shadow: 0 0 0 2px #3b82f6;
+          border-color: hsl(var(--ring)) !important;
+          box-shadow: 0 0 0 2px hsl(var(--ring));
         }
         .react-flow__edge-path {
           stroke: hsl(var(--border));
@@ -289,7 +289,7 @@ const FlowCanvasInner: React.FC = () => {
         }
         .react-flow__edge:hover .react-flow__edge-path,
         .react-flow__edge.selected .react-flow__edge-path {
-          stroke: #3b82f6 !important;
+          stroke: hsl(var(--ring)) !important;
           stroke-width: 3;
         }
         .react-flow__edge.animated path {
