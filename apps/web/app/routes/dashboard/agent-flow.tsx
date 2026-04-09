@@ -35,6 +35,7 @@ export default function AgentFlowPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const { nodes, edges, setNodes, setEdges, setSelectedNodeId } =
     useFlowStore();
@@ -59,6 +60,7 @@ export default function AgentFlowPage() {
 
       setIsLoading(true);
       setErrorMessage(null);
+      setSuccessMessage(null);
 
       try {
         const detail = await agentsApi.getAgent(agentId);
@@ -102,16 +104,20 @@ export default function AgentFlowPage() {
 
     setIsSaving(true);
     setErrorMessage(null);
+    setSuccessMessage(null);
 
     try {
+      const serializedFlow = {
+        nodes: structuredClone(nodes),
+        edges: structuredClone(edges),
+      };
+
       const updated = await agentsApi.updateAgent(agentId, {
-        flow: {
-          nodes,
-          edges,
-        },
+        flow: serializedFlow,
       });
 
       setAgentName(updated.name);
+      setSuccessMessage("Canvas kaydedildi.");
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Agent akisi kaydedilemedi.",
@@ -149,6 +155,12 @@ export default function AgentFlowPage() {
       {errorMessage && (
         <div className="mx-4 mt-4 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm text-destructive">
           {errorMessage}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="mx-4 mt-4 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+          {successMessage}
         </div>
       )}
 

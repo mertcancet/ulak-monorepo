@@ -189,14 +189,30 @@ const agentsModule = () =>
           );
         }
 
-        await db
-          .update(agents)
-          .set({
-            name: body.name,
-            description: body.description,
-            isActive: body.isActive,
-          })
-          .where(eq(agents.id, agent.id));
+        const nextAgentUpdate: {
+          name?: string;
+          description?: string;
+          isActive?: boolean;
+        } = {};
+
+        if (body.name !== undefined) {
+          nextAgentUpdate.name = body.name;
+        }
+
+        if (body.description !== undefined) {
+          nextAgentUpdate.description = body.description;
+        }
+
+        if (body.isActive !== undefined) {
+          nextAgentUpdate.isActive = body.isActive;
+        }
+
+        if (Object.keys(nextAgentUpdate).length > 0) {
+          await db
+            .update(agents)
+            .set(nextAgentUpdate)
+            .where(eq(agents.id, agent.id));
+        }
 
         if (body.flow !== undefined) {
           await db
