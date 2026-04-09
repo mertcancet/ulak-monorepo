@@ -1,0 +1,4 @@
+apps/web/.react-router/
+apps/**/build/
+apps/**/dist/
+node_modules/

@@ -180,14 +180,14 @@ const FlowCanvasInner: React.FC = () => {
 
         {/* Floating View Controls (Bottom-Center) */}
         <Panel position="bottom-center" className="mb-6">
-          <div className="bg-card border-border flex items-center gap-5 rounded-full border px-5 py-2.5 shadow-xl transition-all hover:shadow-2xl">
+          <div className="border-border bg-card flex items-center gap-5 rounded-full border px-5 py-2.5 shadow-xl transition-all hover:shadow-2xl">
             <button
               type="button"
               onClick={() => setIsPanMode(!isPanMode)}
               className={cn(
                 "rounded-md p-1 transition-colors",
                 isPanMode
-                  ? "text-primary bg-primary/10"
+                  ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground",
               )}
               title={isPanMode ? "Pan Mode (Hand)" : "Selection Mode (Pointer)"}
@@ -206,7 +206,7 @@ const FlowCanvasInner: React.FC = () => {
               className={cn(
                 "rounded-md p-1 transition-colors",
                 showGrid
-                  ? "text-primary bg-primary/10"
+                  ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground",
               )}
               title="Toggle Grid"
