@@ -21,7 +21,6 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -74,18 +73,13 @@ const SidebarItem = ({
           <Link
             to={href}
             className={cn(
-              "flex items-center px-3 py-2 rounded-lg transition-all duration-200 group justify-center",
+              "flex items-center px-2.5 py-2 rounded-lg transition-all duration-150 group justify-center",
               active
-                ? "bg-primary/10 text-primary font-semibold shadow-sm"
-                : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+                ? "bg-brand/10 text-brand"
+                : "text-[#8e8e93] hover:bg-[#f0f0f0] hover:text-[#222222]",
             )}
           >
-            <Icon
-              className={cn(
-                "w-5 h-5",
-                active ? "text-primary" : "group-hover:text-foreground",
-              )}
-            />
+            <Icon className="w-4.5 h-4.5" />
           </Link>
         </TooltipTrigger>
         <TooltipContent side="right">{label}</TooltipContent>
@@ -97,21 +91,16 @@ const SidebarItem = ({
       <Link
         to={href}
         className={cn(
-          "flex items-center px-3 py-2 rounded-lg transition-all duration-200 group space-x-3",
+          "flex items-center px-3 py-2 rounded-lg transition-all duration-150 group gap-2.5",
           active
-            ? "border-border border"
-            : "text-muted-foreground border border-white hover:bg-secondary hover:text-foreground",
+            ? "bg-brand/10 text-brand font-medium"
+            : "text-[#45515e] hover:bg-[#f0f0f0] hover:text-[#222222]",
         )}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <Icon
-          className={cn(
-            "w-5 h-5",
-            active ? "text-primary" : "group-hover:text-foreground",
-          )}
-        />
-        <span className="text-sm">{label}</span>
+        <Icon className="w-4.5 h-4.5 shrink-0" />
+        <span className="text-sm font-sans">{label}</span>
       </Link>
     </div>
   );
@@ -126,9 +115,9 @@ const SidebarSection = ({
   children: React.ReactNode;
   collapsed?: boolean;
 }) => (
-  <div className="space-y-1 mb-6">
+  <div className="space-y-0.5 mb-5">
     {!collapsed && (
-      <h3 className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
+      <h3 className="px-3 text-[10px] font-semibold text-[#8e8e93] uppercase tracking-widest mb-1.5 font-sans">
         {title}
       </h3>
     )}
@@ -151,8 +140,8 @@ const DashboardLayout = () => {
 
   if (isSessionPending) {
     return (
-      <div className="grid min-h-screen place-items-center bg-background p-6">
-        <p className="text-sm text-muted-foreground">
+      <div className="grid min-h-screen place-items-center bg-white p-6">
+        <p className="text-sm text-[#8e8e93] font-sans">
           Oturum kontrol ediliyor...
         </p>
       </div>
@@ -168,12 +157,12 @@ const DashboardLayout = () => {
   const userInitial = userDisplayName.charAt(0).toUpperCase();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar */}
+    <div className="flex h-screen overflow-hidden bg-white">
+      {/* Sidebar — MiniMax: white bg, subtle right border */}
       <aside
         className={cn(
-          "border-r border-border bg-card flex flex-col z-20 transition-all duration-300",
-          collapsed ? "w-16" : "w-64",
+          "border-r border-[#e5e7eb] bg-white flex flex-col z-20 transition-all duration-300",
+          collapsed ? "w-16" : "w-60",
         )}
         onMouseEnter={() => {
           // Optionally, you can auto-expand on hover
@@ -190,11 +179,11 @@ const DashboardLayout = () => {
           )}
         >
           {!collapsed && (
-            <div className="p-4 flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center shadow-lg shadow-primary/20">
-                <Bot className="text-white w-5 h-5" />
+            <div className="p-4 flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center shadow-brand">
+                <Bot className="text-white w-4 h-4" />
               </div>
-              <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-foreground to-foreground/70">
+              <span className="text-base font-semibold tracking-tight text-[#181e25] font-display">
                 Calling AI
               </span>
             </div>
@@ -202,45 +191,43 @@ const DashboardLayout = () => {
           <button
             type="button"
             className={cn(
-              "flex items-center justify-center w-8 h-8 rounded-full hover:bg-secondary transition-colors",
-              "border border-border",
+              "flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#f0f0f0] transition-colors border border-[#e5e7eb] text-[#8e8e93]",
             )}
             style={{ zIndex: 30 }}
             onClick={() => setCollapsed(c => !c)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {/* Left arrow when expanded, right arrow when collapsed */}
             {collapsed ? (
-              <ArrowLeftRight className="h-4 w-4" />
+              <ArrowLeftRight className="h-3.5 w-3.5" />
             ) : (
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-3.5 w-3.5" />
             )}
           </button>
         </div>
 
         {!collapsed && (
-          <div className="px-4 mb-4">
-            <Button
-              variant="outline"
-              className="w-full justify-between h-10 px-3 bg-secondary/50 border-border hover:bg-secondary transition-colors"
+          <div className="px-3 mb-3">
+            <button
+              type="button"
+              className="w-full flex items-center justify-between h-10 px-3 rounded-lg bg-[#f0f0f0] hover:bg-[#e8e8e8] transition-colors border-0"
             >
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-primary/20 text-primary rounded flex items-center justify-center text-[10px] font-bold">
-                  MB
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded bg-brand/15 text-brand flex items-center justify-center text-[9px] font-bold">
+                  {userInitial}
                 </div>
-                <span className="truncate text-xs font-medium">
-                  {userDisplayName} Workspace
+                <span className="truncate text-xs font-medium text-[#222222]">
+                  {userDisplayName}
                 </span>
               </div>
-              <ChevronsUpDown className="w-3 h-3 text-muted-foreground" />
-            </Button>
+              <ChevronsUpDown className="w-3 h-3 text-[#8e8e93]" />
+            </button>
           </div>
         )}
 
         <nav
           className={cn(
             "flex-1 py-2 overflow-y-auto scrollbar-thin",
-            collapsed ? "px-1" : "px-4",
+            collapsed ? "px-1" : "px-3",
           )}
         >
           <SidebarSection title="İnşa Et" collapsed={collapsed}>
@@ -343,46 +330,46 @@ const DashboardLayout = () => {
         </nav>
 
         {!collapsed && (
-          <div className="p-4 border-t border-border space-y-2">
-            <Button
-              variant="ghost"
-              className="w-full justify-between px-3 text-muted-foreground hover:text-foreground"
+          <div className="p-3 border-t border-[#e5e7eb] space-y-1">
+            <button
+              type="button"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f0f0f0] transition-colors text-[#45515e]"
             >
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2">
                 <Gift className="w-4 h-4" />
-                <span className="text-xs">Ücretsiz Deneme</span>
+                <span className="text-xs font-medium">Ücretsiz Deneme</span>
               </div>
-              <ChevronDown className="w-3 h-3" />
-            </Button>
+              <ChevronDown className="w-3 h-3 text-[#8e8e93]" />
+            </button>
 
-            <div className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer">
-              <div className="flex items-center space-x-2 overflow-hidden">
-                <Avatar className="w-7 h-7 border border-border">
+            <div className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f0f0f0] transition-colors cursor-pointer">
+              <div className="flex items-center gap-2 overflow-hidden">
+                <Avatar className="w-7 h-7 border border-[#e5e7eb]">
                   <AvatarImage src="" />
-                  <AvatarFallback className="bg-orange-500 text-white text-[10px] font-bold">
+                  <AvatarFallback className="bg-brand text-white text-[10px] font-bold">
                     {userInitial}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col truncate">
-                  <span className="text-[11px] font-medium truncate">
+                  <span className="text-[11px] font-medium truncate text-[#222222]">
                     {session.user.email}
                   </span>
                 </div>
               </div>
-              <ChevronsUpDown className="w-3 h-3 text-muted-foreground shrink-0" />
+              <ChevronsUpDown className="w-3 h-3 text-[#8e8e93] shrink-0" />
             </div>
 
-            <div className="flex items-center justify-around py-2 border-t border-border pt-4">
+            <div className="flex items-center justify-around pt-2 border-t border-[#f2f3f5]">
               <button
                 type="button"
-                className="text-[10px] text-muted-foreground hover:text-foreground flex items-center space-x-1 transition-colors"
+                className="text-[10px] text-[#8e8e93] hover:text-[#222222] flex items-center gap-1 transition-colors py-1.5"
               >
                 <HelpCircle className="w-3 h-3" />
                 <span>Yardım</span>
               </button>
               <button
                 type="button"
-                className="text-[10px] text-muted-foreground hover:text-foreground flex items-center space-x-1 transition-colors"
+                className="text-[10px] text-[#8e8e93] hover:text-[#222222] flex items-center gap-1 transition-colors py-1.5"
               >
                 <Bell className="w-3 h-3" />
                 <span>Güncellemeler</span>

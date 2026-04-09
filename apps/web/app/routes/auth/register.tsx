@@ -1,13 +1,6 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { Form, Link, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { authClient } from "~/lib/auth-client";
@@ -63,96 +56,126 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#f8fafc_0%,#eef2ff_35%,#e2e8f0_100%)] px-4 py-8 sm:px-6">
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <span className="floating-orb floating-orb-1" />
-        <span className="floating-orb floating-orb-2" />
-        <span className="floating-orb floating-orb-3" />
-        <span className="floating-orb floating-orb-4" />
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+      <div
+        className="pointer-events-none fixed inset-0 overflow-hidden"
+        aria-hidden
+      >
+        <div className="absolute -top-32 -left-32 w-120 h-120 rounded-full bg-brand/6 blur-[100px]" />
+        <div className="absolute -bottom-32 -right-32 w-100 h-100 rounded-full bg-brand-light/8 blur-[100px]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-md items-center justify-center">
-        <Card className="w-full border-white/40 bg-white/55 shadow-[0_30px_80px_-35px_rgba(15,23,42,0.6)] backdrop-blur-xl">
-          <CardHeader className="space-y-2 text-center">
-            <CardTitle className="text-3xl text-slate-900">
-              Create Account
-            </CardTitle>
-            <CardDescription className="text-sm text-slate-600">
-              Start building your AI call flows in minutes.
-            </CardDescription>
-          </CardHeader>
+      <div className="relative z-10 w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl gradient-primary shadow-brand mb-4">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
+                fill="white"
+              />
+            </svg>
+          </div>
+          <h1 className="font-display text-3xl font-semibold text-[#222222] leading-tight">
+            Hesap Oluşturun
+          </h1>
+          <p className="mt-2 text-sm text-[#8e8e93] font-sans">
+            Dakikalar içinde AI call flow'larınızı oluşturmaya başlayın.
+          </p>
+        </div>
 
-          <CardContent>
-            <Form onSubmit={signUp} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder="John Doe"
-                  autoComplete="name"
-                  required
-                  className="h-11 rounded-xl border-white/70 bg-white/80 text-sm placeholder:text-slate-400"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="name@company.com"
-                  autoComplete="email"
-                  required
-                  className="h-11 rounded-xl border-white/70 bg-white/80 text-sm placeholder:text-slate-400"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="Create a secure password"
-                  autoComplete="new-password"
-                  required
-                  className="h-11 rounded-xl border-white/70 bg-white/80 text-sm placeholder:text-slate-400"
-                />
-              </div>
-
-              {errorMessage ? (
-                <p className="rounded-xl border border-red-200/80 bg-red-50/70 px-3 py-2 text-sm text-red-700">
-                  {errorMessage}
-                </p>
-              ) : null}
-
-              <Button
-                type="submit"
-                disabled={isPending || isSessionPending}
-                size="lg"
-                className="h-11 w-full rounded-xl bg-slate-900 text-white hover:bg-slate-800"
+        {/* Card */}
+        <div className="bg-white border border-[#e5e7eb] rounded-2xl shadow-card p-8">
+          <Form onSubmit={signUp} className="space-y-5">
+            <div className="space-y-1.5">
+              <Label
+                htmlFor="name"
+                className="text-sm font-medium text-[#222222]"
               >
-                {isPending ? "Creating account..." : "Create Account"}
-              </Button>
+                Ad Soyad
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Ahmet Yılmaz"
+                autoComplete="name"
+                required
+                className="h-11 rounded-xl border-[#e5e7eb] bg-white text-sm text-[#222222] placeholder:text-[#8e8e93] focus:border-[#3b82f6] focus:ring-[#3b82f6]"
+              />
+            </div>
 
-              <p className="text-center text-sm text-slate-600">
-                Already have an account?{" "}
-                <Link
-                  to="/auth/login"
-                  className="font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 hover:decoration-slate-900"
-                >
-                  Sign in
-                </Link>
+            <div className="space-y-1.5">
+              <Label
+                htmlFor="email"
+                className="text-sm font-medium text-[#222222]"
+              >
+                E-posta
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="isim@sirket.com"
+                autoComplete="email"
+                required
+                className="h-11 rounded-xl border-[#e5e7eb] bg-white text-sm text-[#222222] placeholder:text-[#8e8e93] focus:border-[#3b82f6] focus:ring-[#3b82f6]"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-[#222222]"
+              >
+                Şifre
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Güçlü bir şifre oluşturun"
+                autoComplete="new-password"
+                required
+                className="h-11 rounded-xl border-[#e5e7eb] bg-white text-sm text-[#222222] placeholder:text-[#8e8e93] focus:border-[#3b82f6] focus:ring-[#3b82f6]"
+              />
+            </div>
+
+            {errorMessage ? (
+              <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {errorMessage}
               </p>
-            </Form>
-          </CardContent>
-        </Card>
+            ) : null}
+
+            <Button
+              type="submit"
+              disabled={isPending || isSessionPending}
+              className="h-11 w-full rounded-xl bg-[#181e25] text-white text-sm font-semibold hover:bg-[#2d3748] transition-colors"
+            >
+              {isPending ? "Hesap oluşturuluyor..." : "Hesap Oluştur"}
+            </Button>
+
+            <p className="text-center text-sm text-[#8e8e93] font-sans">
+              Zaten hesabınız var mı?{" "}
+              <Link
+                to="/auth/login"
+                className="font-semibold text-[#181e25] underline decoration-[#e5e7eb] underline-offset-4 hover:decoration-[#181e25] transition-colors"
+              >
+                Giriş Yapın
+              </Link>
+            </p>
+          </Form>
+        </div>
       </div>
     </div>
   );
