@@ -1,15 +1,117 @@
+import { Maximize2 } from "lucide-react";
 import type React from "react";
+import { useEffect, useState } from "react";
+import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import type { FlowNodeData } from "~/store/flow-store";
 import { useFlowStore } from "~/store/flow-store";
-import { SETTINGS_MENU_ITEMS } from "./constants";
+
+type ExpandableField = "instructions" | "greet_prompt" | "goodbye_prompt";
+
+const toJsonString = (value: unknown) =>
+  value == null ? "" : JSON.stringify(value, null, 2);
+
+const parseJsonOrFallback = (
+  value: string,
+  fallback: unknown,
+): Record<string, unknown> | null => {
+  if (!value.trim()) {
+    return fallback as Record<string, unknown> | null;
+  }
+
+  try {
+    return JSON.parse(value) as Record<string, unknown>;
+  } catch {
+    return fallback as Record<string, unknown> | null;
+  }
+};
 
 export const SettingsPanel: React.FC = () => {
   const { selectedNodeId, nodes, setNodes } = useFlowStore();
   const selectedNode = nodes.find(node => node.id === selectedNodeId) ?? null;
   const selectedNodeData = (selectedNode?.data ?? {}) as FlowNodeData;
-  const selectedConditions = selectedNodeData.conditions ?? [];
+
+  // Local state for JSON text fields to allow proper editing
+  const [headersText, setHeadersText] = useState(
+    toJsonString(selectedNodeData.headers),
+  );
+  const [bodyText, setBodyText] = useState(toJsonString(selectedNodeData.body));
+  const [parametersText, setParametersText] = useState(
+    toJsonString(selectedNodeData.parameters),
+  );
+  const [expandedField, setExpandedField] = useState<ExpandableField | null>(
+    null,
+  );
+
+  // Sync local state when selected node changes
+  // biome-ignore lint: these dependencies ensure state resets when node/data changes
+  useEffect(() => {
+    setHeadersText(toJsonString(selectedNodeData.headers));
+    setBodyText(toJsonString(selectedNodeData.body));
+    setParametersText(toJsonString(selectedNodeData.parameters));
+    setExpandedField(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedNodeId]);
+
+  const expandedFieldTitle =
+    expandedField === "instructions"
+      ? "Sistem Promptu"
+      : expandedField === "greet_prompt"
+        ? "Karsilama Mesaji"
+        : expandedField === "goodbye_prompt"
+          ? "Veda Mesaji"
+          : "";
+
+  const expandedFieldPlaceholder =
+    expandedField === "instructions"
+      ? "Agent davranisini aciklayan prompt"
+      : expandedField === "greet_prompt"
+        ? "Merhaba, size nasil yardimci olabilirim?"
+        : expandedField === "goodbye_prompt"
+          ? "Gorusme sonunda soylenecek mesaj"
+          : "";
+
+  const expandedFieldValue =
+    expandedField === "instructions"
+      ? (selectedNodeData.instructions ?? "")
+      : expandedField === "greet_prompt"
+        ? (selectedNodeData.greet_prompt ?? "")
+        : expandedField === "goodbye_prompt"
+          ? (selectedNodeData.goodbye_prompt ?? "")
+          : "";
+
+  const updateExpandedFieldValue = (value: string) => {
+    if (expandedField === "instructions") {
+      updateSelectedNodeData({ instructions: value });
+      return;
+    }
+
+    if (expandedField === "greet_prompt") {
+      updateSelectedNodeData({ greet_prompt: value });
+      return;
+    }
+
+    if (expandedField === "goodbye_prompt") {
+      updateSelectedNodeData({ goodbye_prompt: value });
+    }
+  };
+
+  const isAgentNode =
+    selectedNodeData.title === "Agent" ||
+    selectedNode?.id.startsWith("agent") ||
+    false;
+
+  const isHttpToolNode =
+    selectedNodeData.title === "HTTP Tool" ||
+    selectedNode?.id.includes("http") ||
+    false;
 
   const updateSelectedNodeData = (patch: Partial<FlowNodeData>) => {
     if (!selectedNodeId) {
@@ -34,403 +136,546 @@ export const SettingsPanel: React.FC = () => {
     );
   };
 
-  const addCondition = () => {
-    updateSelectedNodeData({
-      conditions: [
-        ...selectedConditions,
-        { id: crypto.randomUUID(), text: "New Condition" },
-      ],
-    });
-  };
-
-  const updateCondition = (conditionId: string, text: string) => {
-    updateSelectedNodeData({
-      conditions: selectedConditions.map(condition =>
-        condition.id === conditionId ? { ...condition, text } : condition,
-      ),
-    });
-  };
-
-  const removeCondition = (conditionId: string) => {
-    updateSelectedNodeData({
-      conditions: selectedConditions.filter(
-        condition => condition.id !== conditionId,
-      ),
-    });
-  };
-
   return (
-    <aside className="w-[320px] bg-background border-l border-border flex flex-col font-display">
-      <div className="flex border-b border-border">
-        <button
-          type="button"
-          className="flex-1 py-3 text-xs font-bold border-b-2 border-primary transition-colors"
-        >
-          Global Settings
-        </button>
-        <button
-          type="button"
-          className="flex-1 py-3 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Test Agent
-        </button>
+    <aside className="w-90 bg-background border-l border-border flex flex-col font-display">
+      <div className="px-4 py-3 border-b border-border">
+        <h2 className="text-sm font-bold">Dugum Ayarlari</h2>
+        <p className="text-[11px] text-muted-foreground mt-0.5">
+          Canvas uzerinden secilen dugumu buradan duzenleyebilirsin.
+        </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 scrollbar-hide space-y-6">
-        {/* Selected Node Settings */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="material-icons-outlined text-lg text-primary">
-                account_tree
-              </span>
-              <span className="text-sm font-semibold">
-                Selected Node Settings
-              </span>
-            </div>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-              {selectedNode ? "Live" : "No Selection"}
-            </span>
+      <div className="flex-1 overflow-y-auto p-4 scrollbar-hide space-y-4">
+        {!selectedNode && (
+          <div className="p-4 border border-dashed border-border rounded-xl bg-secondary/20">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Duzenlemek icin once canvas uzerinde bir node sec.
+            </p>
           </div>
+        )}
 
-          {selectedNode ? (
-            <div className="space-y-3 p-3 border border-border rounded-xl bg-secondary/20">
+        {selectedNode && (
+          <>
+            <section className="space-y-3 p-3 border border-border rounded-xl bg-secondary/20">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
                   Node ID
                 </span>
-                <span className="text-[10px] font-semibold truncate max-w-40">
+                <span className="text-[10px] font-semibold truncate max-w-52">
                   {selectedNode.id}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                  Node Type
-                </span>
-                <span className="text-[10px] font-semibold capitalize px-2 py-0.5 rounded bg-background border border-border">
-                  {selectedNode.type ?? "custom"}
-                </span>
-              </div>
-
-              <div className="rounded-lg border border-border bg-background px-2.5 py-2">
-                <div className="flex  items-center justify-between gap-3 ">
-                  <div className="min-w-0">
-                    <p className="text-[11px] font-semibold uppercase tracking-wider">
-                      Global Node
-                    </p>
-                    <p className="text-[10px] text-muted-foreground leading-tight">
-                      Show a global tag on this node in flow canvas.
-                    </p>
-                  </div>
-                  <Switch
-                    size="sm"
-                    checked={Boolean(selectedNodeData.isGlobal)}
-                    onCheckedChange={checked => {
-                      const isGlobal = Boolean(checked);
-                      updateSelectedNodeData({
-                        isGlobal,
-                        global: isGlobal
-                          ? (selectedNodeData.global ?? { textArea: "" })
-                          : selectedNodeData.global,
-                      });
-                    }}
-                    aria-label="Toggle global node"
-                  />
-                </div>
-                {selectedNodeData.isGlobal && (
-                  <div>
-                    <textarea
-                      className="w-full mt-2 min-h-20 px-3 py-2 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
-                      placeholder="Describe the condition to jump to this node"
-                      value={selectedNodeData.global?.textArea ?? ""}
-                      onChange={event =>
-                        updateSelectedNodeData({
-                          global: {
-                            ...(selectedNodeData.global ?? {}),
-                            textArea: event.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-
               <div>
-                {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
-                <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
-                  Title
-                </label>
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  Baslik
+                </p>
                 <Input
                   type="text"
                   value={selectedNodeData.title ?? ""}
                   onChange={event =>
                     updateSelectedNodeData({ title: event.target.value })
                   }
-                  placeholder="Node title"
+                  placeholder="Node basligi"
                 />
               </div>
 
               <div>
-                {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
-                <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
-                  Content
-                </label>
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  Kisa Aciklama
+                </p>
                 <textarea
                   value={selectedNodeData.content ?? ""}
                   onChange={event =>
                     updateSelectedNodeData({ content: event.target.value })
                   }
                   className="w-full min-h-20 px-3 py-2 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
-                  placeholder="Node content"
+                  placeholder="Node aciklamasi"
                 />
               </div>
+            </section>
 
-              {selectedNode.type === "logic_split" && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      Conditions
-                    </span>
+            {isAgentNode && (
+              <section className="space-y-3 p-3 border border-border rounded-xl">
+                <h3 className="text-sm font-semibold">Agent Ayarlari</h3>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                      Saglayici
+                    </p>
+                    <Input
+                      type="text"
+                      value={selectedNodeData.llm?.provider ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          llm: {
+                            ...(selectedNodeData.llm ?? {}),
+                            provider: event.target.value,
+                          },
+                        })
+                      }
+                      placeholder="google"
+                    />
+                  </div>
+
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                      Ses
+                    </p>
+                    <Input
+                      type="text"
+                      value={selectedNodeData.llm?.voice ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          llm: {
+                            ...(selectedNodeData.llm ?? {}),
+                            voice: event.target.value,
+                          },
+                        })
+                      }
+                      placeholder="Autonoe"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Model
+                  </p>
+                  <Input
+                    type="text"
+                    value={selectedNodeData.llm?.model ?? ""}
+                    onChange={event =>
+                      updateSelectedNodeData({
+                        llm: {
+                          ...(selectedNodeData.llm ?? {}),
+                          model: event.target.value,
+                        },
+                      })
+                    }
+                    placeholder="gemini-2.5-flash..."
+                  />
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    API Anahtari
+                  </p>
+                  <Input
+                    type="password"
+                    value={selectedNodeData.llm?.api_key ?? ""}
+                    onChange={event =>
+                      updateSelectedNodeData({
+                        llm: {
+                          ...(selectedNodeData.llm ?? {}),
+                          api_key: event.target.value,
+                        },
+                      })
+                    }
+                    placeholder="API anahtarini gir"
+                  />
+                </div>
+
+                <div className="rounded-lg border border-border bg-secondary/20 px-2.5 py-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-semibold uppercase tracking-wider">
+                        Gercek Zamanli
+                      </p>
+                      <p className="text-[10px] text-muted-foreground leading-tight">
+                        is_realtime ve allow_interruptions ayarlarini yonet.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Switch
+                        size="sm"
+                        checked={Boolean(selectedNodeData.llm?.is_realtime)}
+                        onCheckedChange={checked =>
+                          updateSelectedNodeData({
+                            llm: {
+                              ...(selectedNodeData.llm ?? {}),
+                              is_realtime: Boolean(checked),
+                            },
+                          })
+                        }
+                        aria-label="Gercek zamanli"
+                      />
+                      <Switch
+                        size="sm"
+                        checked={Boolean(selectedNodeData.allow_interruptions)}
+                        onCheckedChange={checked =>
+                          updateSelectedNodeData({
+                            allow_interruptions: Boolean(checked),
+                          })
+                        }
+                        aria-label="Kesilebilir"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Sistem Promptu
+                  </p>
+                  <div className="relative">
+                    <textarea
+                      value={selectedNodeData.instructions ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          instructions: event.target.value,
+                        })
+                      }
+                      className="w-full min-h-56 px-4 py-3 pr-10 text-[12px] leading-6 bg-secondary/15 border border-border rounded-xl outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                      placeholder="Agent davranisini aciklayan prompt"
+                    />
                     <button
                       type="button"
-                      onClick={addCondition}
-                      className="text-[10px] font-semibold px-2 py-1 rounded border border-border hover:bg-background transition-colors"
+                      onClick={() => setExpandedField("instructions")}
+                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      title="Buyut"
+                      aria-label="Sistem Promptu buyut"
                     >
-                      Add
+                      <Maximize2 className="w-4 h-4" />
                     </button>
                   </div>
-
-                  <div className="space-y-2">
-                    {selectedConditions.length === 0 && (
-                      <p className="text-[10px] text-muted-foreground">
-                        No custom condition yet.
-                      </p>
-                    )}
-
-                    {selectedConditions.map(condition => (
-                      <div
-                        key={condition.id}
-                        className="flex items-center gap-2"
-                      >
-                        <Input
-                          type="text"
-                          value={condition.text}
-                          onChange={event =>
-                            updateCondition(condition.id, event.target.value)
-                          }
-                          placeholder="Condition"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeCondition(condition.id)}
-                          className="h-8 px-2 text-[10px] font-semibold rounded border border-border hover:bg-destructive/10 hover:text-destructive transition-colors"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className="p-3 border border-dashed border-border rounded-xl bg-secondary/20">
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                To edit node-specific settings, click a node on the flow canvas.
-              </p>
-            </div>
-          )}
-        </section>
 
-        {/* Agent Settings Section */}
-        <section>
-          <button
-            type="button"
-            className="w-full flex items-center justify-between group mb-4"
-          >
-            <div className="flex items-center gap-2">
-              <span className="material-icons-outlined text-lg text-muted-foreground group-hover:text-primary transition-colors">
-                smart_toy
-              </span>
-              <span className="text-sm font-semibold">Agent Settings</span>
-            </div>
-            <span className="material-icons-outlined text-sm text-muted-foreground transition-transform group-hover:translate-y-0.5">
-              expand_more
-            </span>
-          </button>
-
-          <div className="space-y-4">
-            {/* Voice & Language */}
-            <div>
-              {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
-              <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
-                Voice & Language
-              </label>
-              <div className="flex gap-2">
-                <div className="flex-1 flex items-center justify-between px-2 py-1.5 bg-secondary/50 rounded border border-border cursor-pointer hover:bg-secondary transition-colors">
-                  <div className="flex items-center gap-2">
-                    <img
-                      alt="US Flag"
-                      className="w-4 h-3 rounded-sm object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMV7smRidOxuHSCKBKdXdQPIL7yQJOSNy7lUrwBFqMqYxLxGYtWUgdVMQK_IxFK5N0AbufE1oRjoUcx6jRU8eyWy8VxtiUbVdqt317MytXgZQaN1DVsGZBPbTbAsgbjzhKf0NNdGxM-R6JKysasPhPFZ1sKjdMGdAfJJh0YpFpP3z2RdtG4kjW7AyL5ll-gPNgCYTy54qFMm5UUGa-aArUcIf1_83FfGr1CYoGKBWqf0QSQKZ9sYq6W0ByJSdCIz6PBT6l4QKrp3s"
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Karsilama Mesaji
+                  </p>
+                  <div className="relative">
+                    <textarea
+                      value={selectedNodeData.greet_prompt ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          greet_prompt: event.target.value,
+                        })
+                      }
+                      className="w-full min-h-20 px-3 py-2 pr-9 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                      placeholder="Merhaba, size nasil yardimci olabilirim?"
                     />
-                    <span className="text-xs">English</span>
+                    <button
+                      type="button"
+                      onClick={() => setExpandedField("greet_prompt")}
+                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      title="Buyut"
+                      aria-label="Karsilama Mesaji buyut"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
                   </div>
-                  <span className="material-icons-outlined text-[14px] text-muted-foreground">
-                    expand_more
-                  </span>
                 </div>
-                <div className="flex-[1.2] flex items-center justify-between px-2 py-1.5 bg-secondary/50 rounded border border-border cursor-pointer hover:bg-secondary transition-colors">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 bg-orange-200 rounded-full flex items-center justify-center text-[8px] font-bold text-orange-700">
-                      C
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Veda Mesaji
+                  </p>
+                  <div className="relative">
+                    <textarea
+                      value={selectedNodeData.goodbye_prompt ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          goodbye_prompt: event.target.value,
+                        })
+                      }
+                      className="w-full min-h-20 px-3 py-2 pr-9 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                      placeholder="Gorusme sonunda soylenecek mesaj"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setExpandedField("goodbye_prompt")}
+                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      title="Buyut"
+                      aria-label="Veda Mesaji buyut"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Kullanilabilir Tool ID Listesi (virgulle)
+                  </p>
+                  <Input
+                    type="text"
+                    value={(selectedNodeData.tools ?? []).join(", ")}
+                    onChange={event =>
+                      updateSelectedNodeData({
+                        tools: event.target.value
+                          .split(",")
+                          .map(item => item.trim())
+                          .filter(Boolean),
+                      })
+                    }
+                    placeholder="cancel_order, fetch_order_status"
+                  />
+                </div>
+              </section>
+            )}
+
+            {isHttpToolNode && (
+              <section className="space-y-3 p-3 border border-border rounded-xl">
+                <h3 className="text-sm font-semibold">HTTP Tool Ayarlari</h3>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                      Tool ID
+                    </p>
+                    <Input
+                      type="text"
+                      value={selectedNodeData.id ?? ""}
+                      onChange={event =>
+                        updateSelectedNodeData({ id: event.target.value })
+                      }
+                      placeholder="cancel_order"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                      Method
+                    </p>
+                    <select
+                      value={selectedNodeData.method ?? "GET"}
+                      onChange={event =>
+                        updateSelectedNodeData({ method: event.target.value })
+                      }
+                      className="w-full h-9 px-3 text-xs bg-background border border-border rounded-lg outline-none"
+                    >
+                      <option value="GET">GET</option>
+                      <option value="POST">POST</option>
+                      <option value="PUT">PUT</option>
+                      <option value="PATCH">PATCH</option>
+                      <option value="DELETE">DELETE</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Aciklama
+                  </p>
+                  <textarea
+                    value={selectedNodeData.description ?? ""}
+                    onChange={event =>
+                      updateSelectedNodeData({
+                        description: event.target.value,
+                      })
+                    }
+                    className="w-full min-h-20 px-3 py-2 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                    placeholder="Tool ne icin kullaniliyor?"
+                  />
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    URL
+                  </p>
+                  <Input
+                    type="text"
+                    value={selectedNodeData.url ?? ""}
+                    onChange={event =>
+                      updateSelectedNodeData({ url: event.target.value })
+                    }
+                    placeholder="https://..."
+                  />
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                      Timeout
+                    </p>
+                    <Input
+                      type="number"
+                      value={selectedNodeData.timeout ?? 10}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          timeout: Number(event.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                      Max Retry
+                    </p>
+                    <Input
+                      type="number"
+                      value={selectedNodeData.max_retry ?? 0}
+                      onChange={event =>
+                        updateSelectedNodeData({
+                          max_retry: Number(event.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="pt-6">
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        size="sm"
+                        checked={Boolean(selectedNodeData.follow_redirects)}
+                        onCheckedChange={checked =>
+                          updateSelectedNodeData({
+                            follow_redirects: Boolean(checked),
+                          })
+                        }
+                        aria-label="Yonlendirme"
+                      />
+                      <span className="text-[11px] text-muted-foreground">
+                        Redirect
+                      </span>
                     </div>
-                    <span className="text-xs">Cimo</span>
                   </div>
-                  <span className="material-icons-outlined text-[14px] text-muted-foreground">
-                    expand_more
-                  </span>
                 </div>
-                <button
-                  type="button"
-                  className="p-1.5 bg-secondary/50 rounded border border-border hover:bg-secondary transition-colors text-muted-foreground"
-                >
-                  <span className="material-icons-outlined text-sm">
-                    settings
-                  </span>
-                </button>
-              </div>
-            </div>
 
-            {/* Execution Mode */}
-            <div>
-              {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
-              <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
-                Execution Mode
-              </label>
-              <div className="space-y-2">
-                <ExecutionModeButton
-                  variant="flex"
-                  title="Flex Mode"
-                  description="All nodes combined into a single context. Actions decided with flexibility."
-                  icon="auto_awesome"
-                  iconBg="bg-teal-500/10 text-teal-600 dark:text-teal-400"
-                />
-                <ExecutionModeButton
-                  variant="rigid"
-                  active
-                  title="Rigid Mode"
-                  description="The agent follows the defined nodes and transitions step by step."
-                  icon="mediation"
-                  iconBg="bg-primary/10 text-primary"
-                />
-              </div>
-            </div>
-
-            {/* Global Prompt */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
-                <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Global Prompt
-                </label>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 px-2 py-0.5 bg-secondary border border-border rounded cursor-pointer hover:bg-secondary/80 transition-colors">
-                    <span className="material-icons-outlined text-[12px] text-indigo-500">
-                      psychology
-                    </span>
-                    <span className="text-[10px] font-bold">GPT 4.1</span>
-                    <span className="material-icons-outlined text-[12px] text-muted-foreground">
-                      expand_more
-                    </span>
-                  </div>
-                  <span className="material-icons-outlined text-sm text-muted-foreground cursor-pointer hover:text-foreground">
-                    settings
-                  </span>
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Headers (JSON)
+                  </p>
+                  <textarea
+                    value={headersText}
+                    onChange={event => setHeadersText(event.target.value)}
+                    onBlur={() => {
+                      const parsed = parseJsonOrFallback(
+                        headersText,
+                        selectedNodeData.headers ?? {},
+                      );
+                      if (parsed !== null) {
+                        updateSelectedNodeData({
+                          headers: parsed as Record<string, string>,
+                        });
+                      }
+                    }}
+                    className="w-full min-h-24 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                    placeholder='{"Authorization": "Bearer ..."}'
+                  />
                 </div>
-              </div>
-              <div className="relative">
-                <textarea
-                  className="w-full h-48 bg-secondary/30 border border-border rounded-xl p-3 text-[11px] font-mono leading-relaxed text-foreground resize-none outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/30 transition-all font-display"
-                  spellCheck="false"
-                  defaultValue={`## Objective
-You are an AI agent Anna.
-Current time is {{current_time}}
-{{customer_name}}= "evie wang"
-{{dob}}="01/01/1997"
-{{customer zip}}="94061"
-You are calling to follow up on a recent patient visit to screen for potential complications or needs.`}
-                />
-              </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Body (JSON)
+                  </p>
+                  <textarea
+                    value={bodyText}
+                    onChange={event => setBodyText(event.target.value)}
+                    onBlur={() => {
+                      const parsed = parseJsonOrFallback(
+                        bodyText,
+                        selectedNodeData.body ?? null,
+                      );
+                      updateSelectedNodeData({ body: parsed });
+                    }}
+                    className="w-full min-h-24 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                    placeholder='{"id": "$order_id"}'
+                  />
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Parametreler (JSON Schema)
+                  </p>
+                  <textarea
+                    value={parametersText}
+                    onChange={event => setParametersText(event.target.value)}
+                    onBlur={() => {
+                      const parsed = parseJsonOrFallback(
+                        parametersText,
+                        selectedNodeData.parameters ?? {},
+                      );
+                      if (parsed !== null) {
+                        updateSelectedNodeData({ parameters: parsed });
+                      }
+                    }}
+                    className="w-full min-h-32 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                    placeholder='{"type":"object","properties":{}}'
+                  />
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Hata Mesaji
+                  </p>
+                  <Input
+                    type="text"
+                    value={selectedNodeData.error_message ?? ""}
+                    onChange={event =>
+                      updateSelectedNodeData({
+                        error_message: event.target.value,
+                      })
+                    }
+                    placeholder="Islem basarisiz oldu."
+                  />
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    Basari Mesaji
+                  </p>
+                  <Input
+                    type="text"
+                    value={selectedNodeData.success_message ?? ""}
+                    onChange={event =>
+                      updateSelectedNodeData({
+                        success_message: event.target.value,
+                      })
+                    }
+                    placeholder="Islem tamamlandi."
+                  />
+                </div>
+              </section>
+            )}
+
+            {!isAgentNode && !isHttpToolNode && (
+              <section className="p-3 border border-border rounded-xl bg-secondary/20">
+                <p className="text-xs text-muted-foreground">
+                  Bu node tipi icin ozel bir form tanimli degil.
+                </p>
+              </section>
+            )}
+          </>
+        )}
+      </div>
+
+      <Dialog
+        open={expandedField !== null}
+        onOpenChange={isOpen => {
+          if (!isOpen) {
+            setExpandedField(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-225 p-0 overflow-hidden">
+          <DialogHeader className="px-5 py-4 border-b border-border">
+            <DialogTitle className="text-base">
+              {expandedFieldTitle}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="p-5">
+            <textarea
+              value={expandedFieldValue}
+              onChange={event => updateExpandedFieldValue(event.target.value)}
+              className="w-full min-h-[60vh] px-4 py-3 text-sm leading-7 bg-background border border-border rounded-xl outline-none resize-none focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+              placeholder={expandedFieldPlaceholder}
+            />
+
+            <div className="mt-4 flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setExpandedField(null)}
+              >
+                Kapat
+              </Button>
             </div>
           </div>
-        </section>
-
-        {/* Global Action Menu Items */}
-        <section className="space-y-px border-t border-border pt-4">
-          {SETTINGS_MENU_ITEMS.map(item => (
-            <div
-              key={item.id}
-              className="flex items-center justify-between py-2 px-2 cursor-pointer group hover:bg-secondary rounded-lg transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <span className="material-icons-outlined text-lg text-muted-foreground group-hover:text-primary transition-colors">
-                  {item.icon}
-                </span>
-                <span className="text-xs font-semibold">{item.label}</span>
-              </div>
-              <span className="material-icons-outlined text-sm text-muted-foreground group-hover:translate-x-0.5 transition-transform">
-                chevron_right
-              </span>
-            </div>
-          ))}
-        </section>
-      </div>
+        </DialogContent>
+      </Dialog>
     </aside>
   );
 };
-
-interface ExecutionModeButtonProps {
-  variant: "flex" | "rigid";
-  active?: boolean;
-  title: string;
-  description: string;
-  icon: string;
-  iconBg: string;
-}
-
-const ExecutionModeButton: React.FC<ExecutionModeButtonProps> = ({
-  active,
-  title,
-  description,
-  icon,
-  iconBg,
-}) => (
-  <div
-    className={`p-3 border rounded-xl cursor-pointer transition-all ${
-      active
-        ? "border-primary bg-primary/5 shadow-sm shadow-primary/5"
-        : "border-border bg-background hover:border-primary/30"
-    }`}
-  >
-    <div className="flex gap-3">
-      <div
-        className={`w-8 h-8 rounded-full ${iconBg} flex items-center justify-center shrink-0`}
-      >
-        <span className="material-icons-outlined text-base">{icon}</span>
-      </div>
-      <div>
-        <div
-          className={`text-[11px] font-bold ${active ? "text-primary" : ""}`}
-        >
-          {title}
-        </div>
-        <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">
-          {description}
-        </p>
-      </div>
-    </div>
-  </div>
-);

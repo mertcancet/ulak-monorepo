@@ -3,7 +3,7 @@ import { DEFAULT_PROMPT } from "./constants";
 
 export const PromptEditor = () => {
   return (
-    <div className="flex-1 bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden glass">
+    <div className="flex-1 bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
       <div className="p-4 border-b border-border flex justify-between items-center bg-secondary/20">
         <div className="flex items-center space-x-2">
           <div className="w-1.5 h-4 bg-primary rounded-full" />

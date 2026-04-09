@@ -23,12 +23,12 @@ const MessagesSquare = ({ className }: { className?: string }) => (
 
 export const TestingPanel = () => {
   return (
-    <div className="w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-lg overflow-hidden glass relative">
-      <div className="p-2 border-b border-border flex items-center justify-between bg-secondary/30 backdrop-blur-sm">
+    <div className="overflow-hidden w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-lg relative">
+      <div className="p-2 border-b border-border flex rounded-t-xl items-center justify-between bg-secondary/30 backdrop-blur-sm">
         <div className="flex space-x-1 bg-background/50 p-1 rounded-lg border border-border flex-1 shadow-inner">
           <button
             type="button"
-            className="flex-1 flex items-center justify-center space-x-2 py-1.5 px-3 bg-white shadow-sm rounded-md text-xs font-bold transition-all"
+            className="flex-1 flex items-center justify-center space-x-2 py-1.5 px-3 bg-background shadow-sm rounded-md text-xs font-bold transition-all"
           >
             <PhoneCall className="w-3.5 h-3.5 text-primary" />
             <span>Ses Testi</span>
@@ -73,7 +73,7 @@ export const TestingPanel = () => {
 
         <Button
           size="lg"
-          className="px-10 h-12 font-bold gradient-primary shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform active:scale-[0.98]"
+          className="px-10 h-12 font-bold bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:scale-[1.02] transition-transform active:scale-[0.98]"
         >
           Testi Başlat
         </Button>

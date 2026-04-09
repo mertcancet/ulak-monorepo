@@ -15,7 +15,7 @@ const ChartCard = ({
   className?: string;
 }) => (
   <div
-    className={`bg-card border border-border p-6 rounded-2xl shadow-sm glass ${className}`}
+    className={`bg-card border border-border p-6 rounded-2xl shadow-sm ${className}`}
   >
     <div className="mb-6">
       <h3 className="font-bold tracking-tight text-sm uppercase text-foreground/80">
@@ -196,11 +196,11 @@ export const AnalyticsCharts = () => {
         className="md:col-span-4 flex flex-col items-center"
       >
         <div className="mt-4 flex flex-col items-center gap-6">
-          <div className="w-24 h-24 rounded-full bg-emerald-500/10 flex items-center justify-center ring-4 ring-emerald-500/5 shadow-inner">
-            <Smile className="w-10 h-10 text-emerald-500" />
+          <div className="w-24 h-24 rounded-full bg-success/10 flex items-center justify-center ring-4 ring-success/10 shadow-inner">
+            <Smile className="w-10 h-10 text-success" />
           </div>
           <div className="text-center">
-            <p className="text-2xl font-black text-emerald-500 tracking-tight">
+            <p className="text-2xl font-black text-success tracking-tight">
               Pozitif
             </p>
             <p className="text-[10px] font-bold text-muted-foreground uppercase mt-1">
@@ -208,8 +208,8 @@ export const AnalyticsCharts = () => {
             </p>
           </div>
           <div className="grid grid-cols-3 gap-2 w-full mt-4">
-            <div className="p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10 text-center">
-              <p className="text-xs font-black text-emerald-600">82%</p>
+            <div className="p-3 bg-success/5 rounded-xl border border-success/10 text-center">
+              <p className="text-xs font-black text-success">82%</p>
               <p className="text-[9px] font-bold text-muted-foreground uppercase mt-1">
                 Poz
               </p>
@@ -252,14 +252,14 @@ export const AnalyticsCharts = () => {
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center gap-3">
-            <div className="w-full bg-indigo-500/10 rounded-t-xl relative group transition-all hover:bg-indigo-500/20">
-              <div className="absolute bottom-0 w-full bg-indigo-500 rounded-t-xl h-[45%] transition-all" />
+            <div className="w-full bg-primary/10 rounded-t-xl relative group transition-all hover:bg-primary/20">
+              <div className="absolute bottom-0 w-full bg-primary rounded-t-xl h-[45%] transition-all" />
               <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-black opacity-0 group-hover:opacity-100 transition-opacity">
                 45%
               </div>
             </div>
             <div className="flex items-center gap-1.5">
-              <ArrowUpRight className="w-3.5 h-3.5 text-indigo-500" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-primary" />
               <span className="text-[10px] font-bold text-muted-foreground uppercase">
                 Giden
               </span>
@@ -269,9 +269,7 @@ export const AnalyticsCharts = () => {
         <div className="mt-12 space-y-4">
           <div className="flex justify-between items-end mb-1">
             <span className="text-xs font-bold">Cevaplama Oranı</span>
-            <span className="text-[10px] font-black text-emerald-500">
-              +2.4%
-            </span>
+            <span className="text-[10px] font-black text-success">+2.4%</span>
           </div>
           <Progress value={92} className="h-2" />
           <p className="text-[9px] font-medium text-muted-foreground/80 leading-relaxed italic">

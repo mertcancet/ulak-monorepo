@@ -2,6 +2,7 @@ import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
 import { betterAuth } from "better-auth";
 import db from "~/db";
 import * as schema from "~/db/schema";
+import { ensureDefaultAgentForUser } from "~/modules/agents/default-agent";
 
 import env from "~/shared/env";
 
@@ -28,6 +29,19 @@ const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async user => {
+          if (!user?.id) {
+            return;
+          }
+
+          await ensureDefaultAgentForUser(user.id);
+        },
+      },
+    },
   },
 });
 

@@ -76,15 +76,17 @@ export default function KnowledgeBasePage() {
       ["knowledge-bases"]({ id: knowledgeBaseId })
       .sources.get();
 
-    // nextSources.data
-
-    setSources(nextSources.data);
+    const safeSources = Array.isArray(nextSources.data) ? nextSources.data : [];
+    setSources(safeSources);
   }, []);
 
   const refreshKnowledgeBases = useCallback(
     async (businessId: string, preferredKnowledgeBaseId?: string | null) => {
-      const nextKnowledgeBases =
+      const nextKnowledgeBasesRaw =
         await knowledgeBaseApi.listKnowledgeBases(businessId);
+      const nextKnowledgeBases = Array.isArray(nextKnowledgeBasesRaw)
+        ? nextKnowledgeBasesRaw
+        : [];
 
       setKnowledgeBases(nextKnowledgeBases);
 
@@ -113,7 +115,10 @@ export default function KnowledgeBasePage() {
       setErrorMessage(null);
 
       try {
-        const nextBusinesses = await knowledgeBaseApi.listBusinesses();
+        const nextBusinessesRaw = await knowledgeBaseApi.listBusinesses();
+        const nextBusinesses = Array.isArray(nextBusinessesRaw)
+          ? nextBusinessesRaw
+          : [];
 
         if (cancelled) return;
 
@@ -467,7 +472,7 @@ export default function KnowledgeBasePage() {
             )}
 
             {successMessage && (
-              <div className="mx-4 mt-4 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700">
+              <div className="mx-4 mt-4 rounded-lg border border-success/20 bg-success/5 px-3 py-2 text-sm text-success">
                 {successMessage}
               </div>
             )}

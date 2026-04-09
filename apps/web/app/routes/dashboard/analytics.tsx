@@ -20,11 +20,11 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="md:col-span-4 space-y-6">
-            <div className="bg-card border border-border p-8 rounded-2xl shadow-sm glass h-full flex flex-col justify-center items-center text-center">
-              <div className="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-6 ring-4 ring-indigo-500/5">
-                <UserMinus className="w-8 h-8 text-indigo-500" />
+            <div className="bg-card border border-border p-8 rounded-2xl shadow-sm h-full flex flex-col justify-center items-center text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 ring-4 ring-primary/10">
+                <UserMinus className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-4xl font-black text-indigo-500 tracking-tighter mb-2">
+              <h3 className="text-4xl font-black text-primary tracking-tighter mb-2">
                 8.4%
               </h3>
               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
@@ -33,14 +33,14 @@ export default function AnalyticsPage() {
               <div className="mt-8 pt-8 border-t border-border w-full">
                 <div className="flex justify-between items-center text-[10px] font-bold text-muted-foreground mb-4">
                   <span>TREND (SON 30 GÜN)</span>
-                  <span className="text-emerald-500">-1.2%</span>
+                  <span className="text-success">-1.2%</span>
                 </div>
                 <div className="h-10 flex items-end gap-1">
                   {[40, 60, 45, 70, 50, 80, 55, 65, 45, 60].map((h, i) => (
                     <div
                       // biome-ignore lint/suspicious/noArrayIndexKey: <>
                       key={i}
-                      className="flex-1 bg-indigo-500/20 rounded-t-sm hover:bg-indigo-500/40 transition-colors"
+                      className="flex-1 bg-primary/20 rounded-t-sm hover:bg-primary/40 transition-colors"
                       style={{ height: `${h}%` }}
                     />
                   ))}

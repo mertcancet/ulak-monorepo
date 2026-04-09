@@ -6,7 +6,6 @@ import {
   Rocket,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import DashboardHeader from "../dashboard-header";
 import { AgentMeta } from "./agent-meta";
 import { AGENT_MOCK_DATA } from "./constants";
@@ -37,22 +36,20 @@ export const AgentHeader = () => {
         <AgentMeta />
       </div>
       <div className="flex items-center space-x-3">
-        <Tabs defaultValue="configure" className="mr-6">
-          <TabsList className="bg-transparent h-14 border-b-0 gap-8">
-            <TabsTrigger
-              value="configure"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 h-14 text-sm font-semibold"
-            >
-              Yapılandır
-            </TabsTrigger>
-            <TabsTrigger
-              value="simulation"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 h-14 text-sm font-semibold text-muted-foreground"
-            >
-              Simülasyon
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <nav className="flex items-center gap-1 mr-2">
+          <a
+            className="px-3 py-1.5 text-sm font-medium text-foreground bg-[rgba(0,0,0,0.05)] rounded-full transition-colors"
+            href="#configure"
+          >
+            Yapılandır
+          </a>
+          <a
+            className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-[rgba(0,0,0,0.05)] transition-colors"
+            href="#simulation"
+          >
+            Simülasyon
+          </a>
+        </nav>
 
         <div className="flex items-center space-x-2">
           <Button
@@ -69,10 +66,7 @@ export const AgentHeader = () => {
           >
             <HistoryIcon className="h-4 w-4" />
           </Button>
-          <Button
-            size="sm"
-            className="h-9 gap-2 font-bold gradient-primary shadow-lg shadow-primary/20"
-          >
+          <Button size="sm" variant="outline">
             <Rocket className="h-3.5 w-3.5" />
             <span>Yayınla</span>
           </Button>
