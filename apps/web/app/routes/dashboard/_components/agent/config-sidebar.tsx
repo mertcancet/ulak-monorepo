@@ -18,7 +18,7 @@ const ConfigSectionItem = ({
   <button
     type="button"
     className={cn(
-      "w-full flex items-center justify-between p-4 transition-all duration-200 group hover:bg-secondary/50",
+      "group hover:bg-secondary/50 flex w-full items-center justify-between p-4 transition-all duration-200",
       active
         ? "bg-secondary text-foreground"
         : "text-muted-foreground hover:text-foreground",
@@ -27,7 +27,7 @@ const ConfigSectionItem = ({
     <div className="flex items-center space-x-3">
       <Icon
         className={cn(
-          "w-5 h-5",
+          "h-5 w-5",
           active
             ? "text-primary"
             : "text-muted-foreground group-hover:text-foreground",
@@ -35,15 +35,15 @@ const ConfigSectionItem = ({
       />
       <span className="text-sm font-medium">{label}</span>
     </div>
-    <ChevronDown className="w-4 h-4 text-muted-foreground/50" />
+    <ChevronDown className="text-muted-foreground/50 h-4 w-4" />
   </button>
 );
 
 export const ConfigSidebar = () => {
   return (
-    <div className="w-80 flex flex-col bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-card border-border flex w-80 flex-col overflow-hidden rounded-xl border shadow-sm">
       <ScrollArea className="h-full">
-        <div className="divide-y divide-border">
+        <div className="divide-border divide-y">
           {CONFIG_SECTIONS.map((section, index) => (
             <ConfigSectionItem
               key={section.label}

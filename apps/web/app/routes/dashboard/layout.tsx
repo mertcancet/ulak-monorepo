@@ -73,13 +73,13 @@ const SidebarItem = ({
           <Link
             to={href}
             className={cn(
-              "flex items-center px-2.5 py-2 rounded-lg transition-all duration-150 group justify-center",
+              "group flex items-center justify-center rounded-lg px-2.5 py-2 transition-all duration-150",
               active
                 ? "bg-brand/10 text-brand"
                 : "text-muted-foreground hover:bg-secondary hover:text-foreground",
             )}
           >
-            <Icon className="w-4.5 h-4.5" />
+            <Icon className="h-4.5 w-4.5" />
           </Link>
         </TooltipTrigger>
         <TooltipContent side="right">{label}</TooltipContent>
@@ -91,7 +91,7 @@ const SidebarItem = ({
       <Link
         to={href}
         className={cn(
-          "flex items-center px-3 py-2 rounded-lg transition-all duration-150 group gap-2.5",
+          "group flex items-center gap-2.5 rounded-lg px-3 py-2 transition-all duration-150",
           active
             ? "bg-brand/10 text-brand font-medium"
             : "text-secondary-foreground hover:bg-secondary hover:text-foreground",
@@ -99,8 +99,8 @@ const SidebarItem = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <Icon className="w-4.5 h-4.5 shrink-0" />
-        <span className="text-sm font-sans">{label}</span>
+        <Icon className="h-4.5 w-4.5 shrink-0" />
+        <span className="font-sans text-sm">{label}</span>
       </Link>
     </div>
   );
@@ -115,9 +115,9 @@ const SidebarSection = ({
   children: React.ReactNode;
   collapsed?: boolean;
 }) => (
-  <div className="space-y-0.5 mb-5">
+  <div className="mb-5 space-y-0.5">
     {!collapsed && (
-      <h3 className="px-3 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5 font-sans">
+      <h3 className="text-muted-foreground mb-1.5 px-3 font-sans text-[10px] font-semibold tracking-widest uppercase">
         {title}
       </h3>
     )}
@@ -141,8 +141,8 @@ const DashboardLayout = () => {
 
   if (isSessionPending) {
     return (
-      <div className="grid min-h-screen place-items-center bg-background p-6">
-        <p className="text-sm text-muted-foreground font-sans">
+      <div className="bg-background grid min-h-screen place-items-center p-6">
+        <p className="text-muted-foreground font-sans text-sm">
           Oturum kontrol ediliyor...
         </p>
       </div>
@@ -158,12 +158,12 @@ const DashboardLayout = () => {
   const userInitial = userDisplayName.charAt(0).toUpperCase();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="bg-background flex h-screen overflow-hidden">
       {!hideSidebar && (
         /* Sidebar — MiniMax: white bg, subtle right border */
         <aside
           className={cn(
-            "border-r border-border bg-background flex flex-col z-20 transition-all duration-300",
+            "border-border bg-background z-20 flex flex-col border-r transition-all duration-300",
             collapsed ? "w-16" : "w-60",
           )}
           onMouseEnter={() => {
@@ -181,11 +181,11 @@ const DashboardLayout = () => {
             )}
           >
             {!collapsed && (
-              <div className="p-4 flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center shadow-brand">
-                  <Bot className="text-white w-4 h-4" />
+              <div className="flex items-center gap-2.5 p-4">
+                <div className="gradient-primary shadow-brand flex h-8 w-8 items-center justify-center rounded-xl">
+                  <Bot className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-base font-semibold tracking-tight text-foreground font-display">
+                <span className="text-foreground font-display text-base font-semibold tracking-tight">
                   Calling AI
                 </span>
               </div>
@@ -193,7 +193,7 @@ const DashboardLayout = () => {
             <button
               type="button"
               className={cn(
-                "flex items-center justify-center w-8 h-8 rounded-full hover:bg-secondary transition-colors border border-border text-muted-foreground",
+                "hover:bg-secondary border-border text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full border transition-colors",
               )}
               style={{ zIndex: 30 }}
               onClick={() => setCollapsed(c => !c)}
@@ -208,27 +208,27 @@ const DashboardLayout = () => {
           </div>
 
           {!collapsed && (
-            <div className="px-3 mb-3">
+            <div className="mb-3 px-3">
               <button
                 type="button"
-                className="w-full flex items-center justify-between h-10 px-3 rounded-lg bg-secondary hover:bg-muted transition-colors border-0"
+                className="bg-secondary hover:bg-muted flex h-10 w-full items-center justify-between rounded-lg border-0 px-3 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded bg-brand/15 text-brand flex items-center justify-center text-[9px] font-bold">
+                  <div className="bg-brand/15 text-brand flex h-5 w-5 items-center justify-center rounded text-[9px] font-bold">
                     {userInitial}
                   </div>
-                  <span className="truncate text-xs font-medium text-foreground">
+                  <span className="text-foreground truncate text-xs font-medium">
                     {userDisplayName}
                   </span>
                 </div>
-                <ChevronsUpDown className="w-3 h-3 text-muted-foreground" />
+                <ChevronsUpDown className="text-muted-foreground h-3 w-3" />
               </button>
             </div>
           )}
 
           <nav
             className={cn(
-              "flex-1 py-2 overflow-y-auto scrollbar-thin",
+              "scrollbar-thin flex-1 overflow-y-auto py-2",
               collapsed ? "px-1" : "px-3",
             )}
           >
@@ -332,48 +332,48 @@ const DashboardLayout = () => {
           </nav>
 
           {!collapsed && (
-            <div className="p-3 border-t border-border space-y-1">
+            <div className="border-border space-y-1 border-t p-3">
               <button
                 type="button"
-                className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-secondary transition-colors text-secondary-foreground"
+                className="hover:bg-secondary text-secondary-foreground flex w-full items-center justify-between rounded-lg px-3 py-2 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <Gift className="w-4 h-4" />
+                  <Gift className="h-4 w-4" />
                   <span className="text-xs font-medium">Ücretsiz Deneme</span>
                 </div>
-                <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                <ChevronDown className="text-muted-foreground h-3 w-3" />
               </button>
 
-              <div className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-secondary transition-colors cursor-pointer">
+              <div className="hover:bg-secondary flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 transition-colors">
                 <div className="flex items-center gap-2 overflow-hidden">
-                  <Avatar className="w-7 h-7 border border-border">
+                  <Avatar className="border-border h-7 w-7 border">
                     <AvatarImage src="" />
-                    <AvatarFallback className="bg-brand text-white text-[10px] font-bold">
+                    <AvatarFallback className="bg-brand text-[10px] font-bold text-white">
                       {userInitial}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col truncate">
-                    <span className="text-[11px] font-medium truncate text-foreground">
+                    <span className="text-foreground truncate text-[11px] font-medium">
                       {session.user.email}
                     </span>
                   </div>
                 </div>
-                <ChevronsUpDown className="w-3 h-3 text-muted-foreground shrink-0" />
+                <ChevronsUpDown className="text-muted-foreground h-3 w-3 shrink-0" />
               </div>
 
-              <div className="flex items-center justify-around pt-2 border-t border-muted">
+              <div className="border-muted flex items-center justify-around border-t pt-2">
                 <button
                   type="button"
-                  className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors py-1.5"
+                  className="text-muted-foreground hover:text-foreground flex items-center gap-1 py-1.5 text-[10px] transition-colors"
                 >
-                  <HelpCircle className="w-3 h-3" />
+                  <HelpCircle className="h-3 w-3" />
                   <span>Yardım</span>
                 </button>
                 <button
                   type="button"
-                  className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors py-1.5"
+                  className="text-muted-foreground hover:text-foreground flex items-center gap-1 py-1.5 text-[10px] transition-colors"
                 >
-                  <Bell className="w-3 h-3" />
+                  <Bell className="h-3 w-3" />
                   <span>Güncellemeler</span>
                 </button>
               </div>
@@ -383,7 +383,7 @@ const DashboardLayout = () => {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative ">
+      <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
         <Outlet />
       </main>
     </div>

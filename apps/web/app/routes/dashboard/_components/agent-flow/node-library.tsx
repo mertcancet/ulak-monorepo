@@ -23,11 +23,11 @@ export const NodeLibrary: React.FC = () => {
   };
 
   return (
-    <aside className="w-64 h-full bg-background border-r border-border flex flex-col font-display">
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-hide">
+    <aside className="bg-background border-border font-display flex h-full w-64 flex-col border-r">
+      <div className="scrollbar-hide flex-1 space-y-3 overflow-y-auto p-3">
         {NODE_LIBRARY_SECTIONS.map(section => (
           <div key={section.id} className="space-y-1">
-            <p className="px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="text-muted-foreground px-2 text-[10px] font-semibold tracking-widest uppercase">
               {section.label}
             </p>
 
@@ -36,21 +36,21 @@ export const NodeLibrary: React.FC = () => {
                 type="button"
                 key={node.id}
                 onClick={() => handleAddNode(node)}
-                className="w-full flex items-center gap-3 p-2 hover:bg-secondary rounded-lg cursor-pointer group transition-all"
+                className="hover:bg-secondary group flex w-full cursor-pointer items-center gap-3 rounded-lg p-2 transition-all"
               >
                 <span
-                  className={`material-icons-outlined ${node.color} text-lg group-hover:scale-110 transition-transform`}
+                  className={`material-icons-outlined ${node.color} text-lg transition-transform group-hover:scale-110`}
                 >
                   {node.icon}
                 </span>
-                <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground transition-colors">
+                <span className="text-foreground/80 group-hover:text-foreground text-xs font-medium transition-colors">
                   {node.label}
                 </span>
               </button>
             ))}
 
             {section.dividerAfter && (
-              <div className="my-2 border-t border-border" />
+              <div className="border-border my-2 border-t" />
             )}
           </div>
         ))}

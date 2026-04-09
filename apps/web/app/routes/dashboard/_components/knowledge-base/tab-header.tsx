@@ -30,10 +30,10 @@ const TabHeader = ({
   };
 
   return (
-    <div className="flex items-center justify-between mb-8 px-4 border-b border-border h-16">
+    <div className="border-border mb-8 flex h-16 items-center justify-between border-b px-4">
       <div>
-        <h1 className="text-xl font-bold text-foreground mb-2">{title}</h1>
-        <div className="flex items-center gap-3 text-xs text-muted-foreground font-medium">
+        <h1 className="text-foreground mb-2 text-xl font-bold">{title}</h1>
+        <div className="text-muted-foreground flex items-center gap-3 text-xs font-medium">
           <span className="flex items-center gap-1">
             ID: {shortId}
             <button
@@ -42,12 +42,12 @@ const TabHeader = ({
               onClick={handleCopyId}
               disabled={!knowledgeBase}
             >
-              <Copy className="w-3.5 h-3.5" />
+              <Copy className="h-3.5 w-3.5" />
             </button>
           </span>
           <span className="text-border">•</span>
           <span className="flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-success" />
+            <CheckCircle2 className="text-success h-3.5 w-3.5" />
             Olusturuldu: {createdAtLabel}
           </span>
           <span className="text-border">•</span>
@@ -66,11 +66,11 @@ const TabHeader = ({
         <Button
           variant="outline"
           size="icon"
-          className="h-10 w-10 text-muted-foreground hover:text-destructive hover:bg-destructive/10 border-border transition-colors"
+          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 border-border h-10 w-10 transition-colors"
           onClick={onDeleteKnowledgeBase}
           disabled={!knowledgeBase || isDeletingKnowledgeBase}
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="h-4 w-4" />
         </Button>
       </div>
     </div>

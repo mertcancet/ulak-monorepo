@@ -343,14 +343,14 @@ export default function KnowledgeBasePage() {
   );
 
   return (
-    <div className="flex h-full bg-background overflow-hidden animate-in fade-in duration-500">
+    <div className="bg-background animate-in fade-in flex h-full overflow-hidden duration-500">
       {/* Sub-Sidebar: Bilgi Bankasi Listesi */}
-      <aside className="w-72 shrink-0 border-r border-border bg-card flex flex-col">
-        <div className="p-4 h-16 border-b border-border flex items-center justify-between">
+      <aside className="border-border bg-card flex w-72 shrink-0 flex-col border-r">
+        <div className="border-border flex h-16 items-center justify-between border-b p-4">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-muted-foreground" />
-            <h2 className="font-semibold text-sm">Bilgi Bankasi</h2>
-            <span className="text-[11px] text-muted-foreground">
+            <BookOpen className="text-muted-foreground h-4 w-4" />
+            <h2 className="text-sm font-semibold">Bilgi Bankasi</h2>
+            <span className="text-muted-foreground text-[11px]">
               ({businesses.length} business)
             </span>
           </div>
@@ -360,50 +360,50 @@ export default function KnowledgeBasePage() {
           />
         </div>
 
-        <div className="p-4 space-y-2 border-b border-border">
+        <div className="border-border space-y-2 border-b p-4">
           {knowledgeBases.length > 0 ? (
             knowledgeBases.map(knowledgeBase => (
               <button
                 key={knowledgeBase.id}
                 onClick={() => setSelectedKnowledgeBaseId(knowledgeBase.id)}
                 className={cn(
-                  "p-2 cursor-pointer w-full rounded-lg flex items-start flex-col border border-border text-left",
+                  "border-border flex w-full cursor-pointer flex-col items-start rounded-lg border p-2 text-left",
                   selectedKnowledgeBaseId === knowledgeBase.id &&
                     "bg-secondary",
                 )}
               >
-                <span className="text-sm font-medium text-foreground truncate w-full">
+                <span className="text-foreground w-full truncate text-sm font-medium">
                   {knowledgeBase.name}
                 </span>
-                <span className="text-[11px] text-muted-foreground truncate w-full">
+                <span className="text-muted-foreground w-full truncate text-[11px]">
                   {knowledgeBase.id.slice(0, 8)}...
                 </span>
               </button>
             ))
           ) : (
-            <div className="rounded-lg border border-dashed border-border p-3 text-xs text-muted-foreground">
+            <div className="border-border text-muted-foreground rounded-lg border border-dashed p-3 text-xs">
               Henuz bilgi bankasi yok. Sol ustteki + ile olustur.
             </div>
           )}
         </div>
 
-        <div className="p-4 space-y-2">
+        <div className="space-y-2 p-4">
           <button
             onClick={() => setActiveTab("text")}
             className={cn(
-              "p-2 cursor-pointer w-full rounded-lg flex items-center gap-2 border border-border",
+              "border-border flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2",
               activeTab === "text" && "bg-secondary",
             )}
           >
             <BookText
               className={cn(
-                "w-4 h-4 text-muted-foreground",
+                "text-muted-foreground h-4 w-4",
                 activeTab === "text" && "text-foreground",
               )}
             />
             <span
               className={cn(
-                "text-sm font-medium text-muted-foreground",
+                "text-muted-foreground text-sm font-medium",
                 activeTab === "text" && "text-foreground",
               )}
             >
@@ -413,19 +413,19 @@ export default function KnowledgeBasePage() {
           <button
             onClick={() => setActiveTab("file")}
             className={cn(
-              "p-2 cursor-pointer w-full rounded-lg flex items-center gap-2 border border-border",
+              "border-border flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2",
               activeTab === "file" && "bg-secondary",
             )}
           >
             <File
               className={cn(
-                "w-4 h-4 text-muted-foreground",
+                "text-muted-foreground h-4 w-4",
                 activeTab === "file" && "text-foreground",
               )}
             />
             <span
               className={cn(
-                "text-sm font-medium text-muted-foreground",
+                "text-muted-foreground text-sm font-medium",
                 activeTab === "file" && "text-foreground",
               )}
             >
@@ -435,19 +435,19 @@ export default function KnowledgeBasePage() {
           <button
             onClick={() => setActiveTab("website")}
             className={cn(
-              "p-2  cursor-pointer w-full rounded-lg flex items-center gap-2 border border-border",
+              "border-border flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2",
               activeTab === "website" && "bg-secondary",
             )}
           >
             <Link
               className={cn(
-                "w-4 h-4 text-muted-foreground",
+                "text-muted-foreground h-4 w-4",
                 activeTab === "website" && "text-foreground",
               )}
             />
             <span
               className={cn(
-                "text-sm font-medium text-muted-foreground",
+                "text-muted-foreground text-sm font-medium",
                 activeTab === "website" && "text-foreground",
               )}
             >
@@ -458,27 +458,27 @@ export default function KnowledgeBasePage() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 bg-background overflow-y-auto scrollbar-thin">
+      <main className="bg-background scrollbar-thin flex-1 overflow-y-auto">
         {isBootstrapping ? (
-          <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
             Yukleniyor...
           </div>
         ) : (
           <>
             {errorMessage && (
-              <div className="mx-4 mt-4 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              <div className="border-destructive/20 bg-destructive/5 text-destructive mx-4 mt-4 rounded-lg border px-3 py-2 text-sm">
                 {errorMessage}
               </div>
             )}
 
             {successMessage && (
-              <div className="mx-4 mt-4 rounded-lg border border-success/20 bg-success/5 px-3 py-2 text-sm text-success">
+              <div className="border-success/20 bg-success/5 text-success mx-4 mt-4 rounded-lg border px-3 py-2 text-sm">
                 {successMessage}
               </div>
             )}
 
             {!selectedKnowledgeBase ? (
-              <div className="h-full flex items-center justify-center text-sm text-muted-foreground px-6 text-center">
+              <div className="text-muted-foreground flex h-full items-center justify-center px-6 text-center text-sm">
                 Gosterilecek bilgi bankasi yok. Yeni bir bilgi bankasi olusturup
                 kaynak ekleyebilirsin.
               </div>

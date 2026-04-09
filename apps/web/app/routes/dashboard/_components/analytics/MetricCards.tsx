@@ -19,17 +19,17 @@ const MetricCard = ({
   trendType,
   icon,
 }: MetricCardProps) => (
-  <div className="bg-card border border-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
-    <div className="flex justify-between items-start mb-4">
+  <div className="bg-card border-border group relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md">
+    <div className="mb-4 flex items-start justify-between">
       <div>
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">
+        <p className="text-muted-foreground mb-1 text-xs font-bold tracking-widest uppercase">
           {title}
         </p>
-        <p className="text-[10px] text-muted-foreground/60 font-medium">
+        <p className="text-muted-foreground/60 text-[10px] font-medium">
           {subtitle}
         </p>
       </div>
-      <div className="p-2 bg-secondary/50 rounded-xl group-hover:bg-primary/10 transition-colors">
+      <div className="bg-secondary/50 group-hover:bg-primary/10 rounded-xl p-2 transition-colors">
         {icon}
       </div>
     </div>
@@ -39,7 +39,7 @@ const MetricCard = ({
       {trend && (
         <span
           className={cn(
-            "flex items-center gap-1 text-[11px] font-bold py-0.5 px-2 rounded-full mb-1",
+            "mb-1 flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold",
             trendType === "positive"
               ? "bg-success/10 text-success"
               : trendType === "negative"
@@ -47,7 +47,7 @@ const MetricCard = ({
                 : "bg-secondary text-muted-foreground",
           )}
         >
-          {trendType === "positive" && <TrendingUp className="w-3 h-3" />}
+          {trendType === "positive" && <TrendingUp className="h-3 w-3" />}
           {trend}
         </span>
       )}
@@ -55,7 +55,7 @@ const MetricCard = ({
 
     {/* Subtle progress background */}
     <div
-      className="absolute bottom-0 left-0 h-1 bg-primary/20 transition-all duration-1000"
+      className="bg-primary/20 absolute bottom-0 left-0 h-1 transition-all duration-1000"
       style={{ width: "40%" }}
     />
   </div>
@@ -63,14 +63,14 @@ const MetricCard = ({
 
 export const MetricCards = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
       <MetricCard
         title="Toplam Çağrı Sayısı"
         subtitle="Tüm asistanlar"
         value="1,284"
         trend="+12%"
         trendType="positive"
-        icon={<TrendingUp className="w-4 h-4 text-primary" />}
+        icon={<TrendingUp className="text-primary h-4 w-4" />}
       />
       <MetricCard
         title="Ortalama Çağrı Süresi"
@@ -78,7 +78,7 @@ export const MetricCards = () => {
         value="2dk 14sn"
         trend="-4s"
         trendType="positive"
-        icon={<Clock className="w-4 h-4 text-primary" />}
+        icon={<Clock className="text-primary h-4 w-4" />}
       />
       <MetricCard
         title="Gecikme Süresi (Latency)"
@@ -86,7 +86,7 @@ export const MetricCards = () => {
         value="820ms"
         trend="Mükemmel"
         trendType="positive"
-        icon={<CheckCircle className="w-4 h-4 text-success" />}
+        icon={<CheckCircle className="text-success h-4 w-4" />}
       />
     </div>
   );

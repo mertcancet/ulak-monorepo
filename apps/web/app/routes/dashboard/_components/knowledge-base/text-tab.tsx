@@ -72,13 +72,13 @@ const TextTab = ({
           <>
             <Label
               htmlFor="text-source"
-              className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 ml-1"
+              className="text-muted-foreground/80 ml-1 text-[11px] font-bold tracking-wider uppercase"
             >
               Metin Kaynagi
             </Label>
             <select
               id="text-source"
-              className="w-full mt-2 rounded-md border border-border bg-card px-3 py-2 text-sm"
+              className="border-border bg-card mt-2 w-full rounded-md border px-3 py-2 text-sm"
               value={selectedSourceId ?? ""}
               onChange={event => {
                 const nextSource = textSources.find(
@@ -99,7 +99,7 @@ const TextTab = ({
             <Textarea
               id="text"
               placeholder="Metni buraya girin veya görüntüleyin..."
-              className="w-full min-h-[260px] mt-4 p-3 text-base"
+              className="mt-4 min-h-[260px] w-full p-3 text-base"
               value={text}
               onChange={e => setText(e.target.value)}
             />
@@ -115,7 +115,7 @@ const TextTab = ({
                   !selectedSource || deletingSourceId === selectedSource.id
                 }
               >
-                <Trash2 className="w-4 h-4" /> Sil
+                <Trash2 className="h-4 w-4" /> Sil
               </Button>
               <Button
                 onClick={() => {
@@ -133,11 +133,11 @@ const TextTab = ({
             </div>
           </>
         ) : (
-          <div className="mt-12 flex flex-col items-center justify-center p-12 border-2 border-dashed border-border rounded-2xl bg-secondary/20">
-            <h4 className="text-sm font-semibold text-foreground mb-1">
+          <div className="border-border bg-secondary/20 mt-12 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-12">
+            <h4 className="text-foreground mb-1 text-sm font-semibold">
               Metin Kaynagi Yok
             </h4>
-            <p className="text-xs text-muted-foreground text-center max-w-xs leading-relaxed">
+            <p className="text-muted-foreground max-w-xs text-center text-xs leading-relaxed">
               Yeni metin kaynagi eklemek icin sol ustteki + butonunu kullan.
             </p>
           </div>

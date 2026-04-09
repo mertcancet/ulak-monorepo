@@ -38,48 +38,48 @@ const WebsiteTab = ({
             {websites.map(source => (
               <div
                 key={source.id}
-                className="group bg-card border border-border rounded-xl p-4 hover:shadow-md transition-all"
+                className="group bg-card border-border rounded-xl border p-4 transition-all hover:shadow-md"
               >
                 <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center border border-accent/20">
-                      <LinkIcon className="w-5 h-5 text-accent" />
+                  <div className="flex min-w-0 items-center gap-4">
+                    <div className="bg-accent/10 border-accent/20 flex h-10 w-10 items-center justify-center rounded-lg border">
+                      <LinkIcon className="text-accent h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-sm font-semibold text-foreground truncate max-w-[380px]">
+                      <h3 className="text-foreground max-w-[380px] truncate text-sm font-semibold">
                         {source.title}
                       </h3>
-                      <p className="text-xs text-muted-foreground truncate max-w-[380px]">
+                      <p className="text-muted-foreground max-w-[380px] truncate text-xs">
                         {source.websiteUrl ?? "URL bilgisi yok"}
                       </p>
                     </div>
                   </div>
                   <button
                     type="button"
-                    className="cursor-pointer text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md p-2 transition-colors"
+                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer rounded-md p-2 transition-colors"
                     title="Sil"
                     aria-label="Sil"
                     onClick={() => onDeleteSource(source.id)}
                     disabled={deletingSourceId === source.id}
                   >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="h-5 w-5" />
                   </button>
                 </div>
-                <div className="mt-2 text-[11px] text-muted-foreground">
+                <div className="text-muted-foreground mt-2 text-[11px]">
                   Durum: {source.processingStatus}
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="mt-12 flex flex-col items-center justify-center p-12 border-2 border-dashed border-border rounded-2xl bg-secondary/20">
-            <div className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center mb-4">
-              <LinkIcon className="w-5 h-5 text-muted-foreground" />
+          <div className="border-border bg-secondary/20 mt-12 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-12">
+            <div className="bg-card border-border mb-4 flex h-12 w-12 items-center justify-center rounded-full border">
+              <LinkIcon className="text-muted-foreground h-5 w-5" />
             </div>
-            <h4 className="text-sm font-semibold text-foreground mb-1">
+            <h4 className="text-foreground mb-1 text-sm font-semibold">
               Website Kaynagi Yok
             </h4>
-            <p className="text-xs text-muted-foreground text-center max-w-xs leading-relaxed">
+            <p className="text-muted-foreground max-w-xs text-center text-xs leading-relaxed">
               Yeni website kaynagi eklemek icin sol ustteki + butonunu kullan.
             </p>
           </div>

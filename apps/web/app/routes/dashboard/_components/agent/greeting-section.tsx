@@ -4,43 +4,43 @@ import { Button } from "~/components/ui/button";
 
 export const GreetingSection = () => {
   return (
-    <div className="bg-card border border-border rounded-xl p-4 shadow-sm shadow-black/5">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-card border-border rounded-xl border p-4 shadow-sm shadow-black/5">
+      <div className="mb-4 flex items-center justify-between">
         <h2 className="text-sm font-bold tracking-tight">Karşılama Mesajı</h2>
         <Badge
           variant="outline"
-          className="text-[10px] font-bold gap-1.5 border-border bg-secondary/50 py-0.5"
+          className="border-border bg-secondary/50 gap-1.5 py-0.5 text-[10px] font-bold"
         >
-          <Timer className="w-2.5 h-2.5" />
+          <Timer className="h-2.5 w-2.5" />
           Konuşma Öncesi Duraklatma: 0s
         </Badge>
       </div>
       <div className="grid grid-cols-2 gap-3">
         <Button
           variant="outline"
-          className="h-auto py-3 px-4 flex flex-col items-start gap-1 justify-center bg-background/50 border-border hover:bg-secondary hover:border-primary/30 transition-all group"
+          className="bg-background/50 border-border hover:bg-secondary hover:border-primary/30 group flex h-auto flex-col items-start justify-center gap-1 px-4 py-3 transition-all"
         >
-          <div className="flex items-center justify-between w-full">
-            <span className="text-xs font-bold text-foreground/80">
+          <div className="flex w-full items-center justify-between">
+            <span className="text-foreground/80 text-xs font-bold">
               Önce AI Konuşur
             </span>
-            <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="text-muted-foreground h-3 w-3 transition-transform group-hover:translate-x-0.5" />
           </div>
-          <span className="text-[10px] text-muted-foreground font-medium">
+          <span className="text-muted-foreground text-[10px] font-medium">
             Statik karşılama mesajı
           </span>
         </Button>
         <Button
           variant="outline"
-          className="h-auto py-3 px-4 flex flex-col items-start gap-1 justify-center bg-background/50 border-border hover:bg-secondary hover:border-primary/30 transition-all group"
+          className="bg-background/50 border-border hover:bg-secondary hover:border-primary/30 group flex h-auto flex-col items-start justify-center gap-1 px-4 py-3 transition-all"
         >
-          <div className="flex items-center justify-between w-full">
-            <span className="text-xs font-bold text-foreground/80">
+          <div className="flex w-full items-center justify-between">
+            <span className="text-foreground/80 text-xs font-bold">
               Dinamik Mesaj
             </span>
-            <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="text-muted-foreground h-3 w-3 transition-transform group-hover:translate-x-0.5" />
           </div>
-          <span className="text-[10px] text-muted-foreground font-medium">
+          <span className="text-muted-foreground text-[10px] font-medium">
             API üzerinden tetiklenen mesaj
           </span>
         </Button>

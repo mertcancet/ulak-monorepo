@@ -126,16 +126,16 @@ const AddKnowledgeBaseDialog = ({
     >
       <DialogTrigger asChild>
         <Button variant="outline" size="icon" className="h-8 w-8">
-          <Plus className="w-4 h-4" />
+          <Plus className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] md:max-w-[800px] p-0 overflow-hidden border-none shadow-2xl">
+      <DialogContent className="overflow-hidden border-none p-0 shadow-2xl sm:max-w-[600px] md:max-w-[800px]">
         <div className="p-6 pb-0">
           <DialogHeader>
             <DialogTitle className="text-xl">
               Yeni Bilgi Bankasi Olustur
             </DialogTitle>
-            <DialogDescription className="text-sm mt-1">
+            <DialogDescription className="mt-1 text-sm">
               Bilgi bankani gelistirmek icin website, dosya veya manuel metin
               kaynagi ekle.
             </DialogDescription>
@@ -145,7 +145,7 @@ const AddKnowledgeBaseDialog = ({
             <div className="space-y-2">
               <Label
                 htmlFor="knowledge-base-name"
-                className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 ml-1"
+                className="text-muted-foreground/80 ml-1 text-[11px] font-bold tracking-wider uppercase"
               >
                 Bilgi Bankasi Adi
               </Label>
@@ -154,13 +154,13 @@ const AddKnowledgeBaseDialog = ({
                 value={knowledgeBaseName}
                 onChange={event => setKnowledgeBaseName(event.target.value)}
                 placeholder="Orn: Musteri Destek Dokumanlari"
-                className="h-11 bg-secondary/30 border-border/50 focus:bg-background transition-all"
+                className="bg-secondary/30 border-border/50 focus:bg-background h-11 transition-all"
                 disabled={isSubmitting}
               />
             </div>
 
             <div className="space-y-3">
-              <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 ml-1">
+              <Label className="text-muted-foreground/80 ml-1 text-[11px] font-bold tracking-wider uppercase">
                 Kaynak Turu Sec
               </Label>
               <RadioGroup
@@ -173,19 +173,19 @@ const AddKnowledgeBaseDialog = ({
                 <Label
                   htmlFor="website-source"
                   className={cn(
-                    "flex flex-row items-start text-center gap-3 rounded-2xl border border-transparent p-4 transition-all cursor-pointer h-full",
+                    "flex h-full cursor-pointer flex-row items-start gap-3 rounded-2xl border border-transparent p-4 text-center transition-all",
                     "hover:bg-secondary/40",
                     "[&:has([data-state=checked])]:bg-secondary/90 [&:has([data-state=checked])]:border-border/50",
                   )}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm">
-                    <Link className="h-5 w-5 text-foreground/70" />
+                  <div className="border-border/50 bg-background flex h-12 w-12 shrink-0 items-center justify-center rounded-full border shadow-sm">
+                    <Link className="text-foreground/70 h-5 w-5" />
                   </div>
-                  <div className="flex flex-col items-start gap-1 flex-1">
-                    <span className="text-[14px] font-semibold text-foreground leading-tight">
+                  <div className="flex flex-1 flex-col items-start gap-1">
+                    <span className="text-foreground text-[14px] leading-tight font-semibold">
                       Website
                     </span>
-                    <span className="text-[11px] text-muted-foreground font-normal leading-tight">
+                    <span className="text-muted-foreground text-[11px] leading-tight font-normal">
                       Site URL ekle
                     </span>
                   </div>
@@ -199,19 +199,19 @@ const AddKnowledgeBaseDialog = ({
                 <Label
                   htmlFor="file-source"
                   className={cn(
-                    "flex flex-row items-start text-center gap-3 rounded-2xl border border-transparent p-4 transition-all cursor-pointer h-full",
+                    "flex h-full cursor-pointer flex-row items-start gap-3 rounded-2xl border border-transparent p-4 text-center transition-all",
                     "hover:bg-secondary/40",
                     "[&:has([data-state=checked])]:bg-secondary/90 [&:has([data-state=checked])]:border-border/50",
                   )}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm">
-                    <Upload className="h-5 w-5 text-foreground/70" />
+                  <div className="border-border/50 bg-background flex h-12 w-12 shrink-0 items-center justify-center rounded-full border shadow-sm">
+                    <Upload className="text-foreground/70 h-5 w-5" />
                   </div>
-                  <div className="flex flex-col items-start gap-1 flex-1">
-                    <span className="text-[14px] font-semibold text-foreground leading-tight">
+                  <div className="flex flex-1 flex-col items-start gap-1">
+                    <span className="text-foreground text-[14px] leading-tight font-semibold">
                       Dosya
                     </span>
-                    <span className="text-[11px] text-left text-muted-foreground font-normal leading-tight">
+                    <span className="text-muted-foreground text-left text-[11px] leading-tight font-normal">
                       PDF, DOC, TXT
                     </span>
                   </div>
@@ -225,19 +225,19 @@ const AddKnowledgeBaseDialog = ({
                 <Label
                   htmlFor="text-source"
                   className={cn(
-                    "flex flex-row items-start text-center gap-3 rounded-2xl border border-transparent p-4 transition-all cursor-pointer h-full",
+                    "flex h-full cursor-pointer flex-row items-start gap-3 rounded-2xl border border-transparent p-4 text-center transition-all",
                     "hover:bg-secondary/40",
                     "[&:has([data-state=checked])]:bg-secondary/90 [&:has([data-state=checked])]:border-border/50",
                   )}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background shadow-sm">
-                    <FileText className="h-5 w-5 text-foreground/70" />
+                  <div className="border-border/50 bg-background flex h-12 w-12 shrink-0 items-center justify-center rounded-full border shadow-sm">
+                    <FileText className="text-foreground/70 h-5 w-5" />
                   </div>
-                  <div className="flex flex-col items-start gap-1 flex-1">
-                    <span className="text-[14px] font-semibold text-foreground leading-tight">
+                  <div className="flex flex-1 flex-col items-start gap-1">
+                    <span className="text-foreground text-[14px] leading-tight font-semibold">
                       Metin
                     </span>
-                    <span className="text-[11px] text-muted-foreground font-normal leading-tight">
+                    <span className="text-muted-foreground text-[11px] leading-tight font-normal">
                       Manuel metin gir
                     </span>
                   </div>
@@ -250,7 +250,7 @@ const AddKnowledgeBaseDialog = ({
               </RadioGroup>
             </div>
 
-            <div className="space-y-4 pt-2 border-t border-border/50 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="border-border/50 animate-in fade-in slide-in-from-top-2 space-y-4 border-t pt-2 duration-300">
               {sourceType === "website" && (
                 <div className="space-y-2">
                   <Label
@@ -284,36 +284,36 @@ const AddKnowledgeBaseDialog = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-border/50 rounded-xl p-8 flex flex-col items-center justify-center bg-secondary/10 hover:bg-secondary/20 transition-all cursor-pointer"
+                    className="border-border/50 bg-secondary/10 hover:bg-secondary/20 flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-all"
                     disabled={isSubmitting}
                   >
-                    <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                    <Upload className="text-muted-foreground mb-2 h-8 w-8" />
                     <p className="text-sm font-medium">Dosya Sec</p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-muted-foreground mt-1 text-xs">
                       Desteklenenler: PDF, DOC, DOCX, TXT
                     </p>
                   </button>
 
                   {uploadedFiles.length > 0 && (
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-bold uppercase text-muted-foreground/80 ml-1">
+                      <Label className="text-muted-foreground/80 ml-1 text-[10px] font-bold uppercase">
                         Secilen Dosyalar ({uploadedFiles.length})
                       </Label>
-                      <div className="max-h-[160px] overflow-y-auto space-y-2 pr-1">
+                      <div className="max-h-[160px] space-y-2 overflow-y-auto pr-1">
                         {uploadedFiles.map((file, index) => (
                           <div
                             key={`${file.name}-${index}`}
-                            className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/40"
+                            className="bg-secondary/30 border-border/40 flex items-center justify-between rounded-lg border p-3"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="p-2 bg-background rounded border border-border/50">
-                                <FileIcon className="w-4 h-4 text-primary/70" />
+                              <div className="bg-background border-border/50 rounded border p-2">
+                                <FileIcon className="text-primary/70 h-4 w-4" />
                               </div>
                               <div className="flex flex-col">
-                                <span className="text-sm font-medium truncate max-w-[200px]">
+                                <span className="max-w-[200px] truncate text-sm font-medium">
                                   {file.name}
                                 </span>
-                                <span className="text-[10px] text-muted-foreground">
+                                <span className="text-muted-foreground text-[10px]">
                                   {(file.size / 1024 / 1024).toFixed(2)} MB
                                 </span>
                               </div>
@@ -321,14 +321,14 @@ const AddKnowledgeBaseDialog = ({
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                              className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8"
                               onClick={event => {
                                 event.stopPropagation();
                                 removeFile(index);
                               }}
                               disabled={isSubmitting}
                             >
-                              <X className="w-4 h-4" />
+                              <X className="h-4 w-4" />
                             </Button>
                           </div>
                         ))}
@@ -348,7 +348,7 @@ const AddKnowledgeBaseDialog = ({
                   </Label>
                   <textarea
                     id="manual-text"
-                    className="w-full min-h-[120px] rounded-xl border border-border/50 bg-secondary/30 p-3 text-sm focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                    className="border-border/50 bg-secondary/30 focus:bg-background focus:ring-primary/20 min-h-[120px] w-full rounded-xl border p-3 text-sm transition-all focus:ring-2 focus:outline-none"
                     placeholder="Bilgi bankasina eklemek istedigin metni buraya yapistir..."
                     value={textContent}
                     onChange={event => setTextContent(event.target.value)}
@@ -359,7 +359,7 @@ const AddKnowledgeBaseDialog = ({
             </div>
 
             {formError && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-destructive text-sm font-medium">
                 {formError}
               </p>
             )}

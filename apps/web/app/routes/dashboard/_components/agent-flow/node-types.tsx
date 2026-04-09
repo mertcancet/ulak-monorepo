@@ -30,7 +30,7 @@ const GlobalNodeTag = ({
 
   return (
     <div
-      className={`absolute -top-5 left-2 z-20 rounded-xs border border-success/80 bg-success px-1.5 py-px text-[6px] font-bold uppercase tracking-[0.08em] text-white shadow-sm ${className}`}
+      className={`border-success/80 bg-success absolute -top-5 left-2 z-20 rounded-xs border px-1.5 py-px text-[6px] font-bold tracking-[0.08em] text-white uppercase shadow-sm ${className}`}
     >
       Global Node
     </div>
@@ -39,16 +39,16 @@ const GlobalNodeTag = ({
 
 const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
   return (
-    <div className="flow-node-card bg-card p-4 rounded-xl shadow-sm border border-border w-48 text-[10px] transform hover:scale-105 transition-all duration-200 group relative">
+    <div className="flow-node-card bg-card border-border group relative w-48 transform rounded-xl border p-4 text-[10px] shadow-sm transition-all duration-200 hover:scale-105">
       <GlobalNodeTag isGlobal={data.isGlobal} />
 
       <Handle
         type="target"
         position={Position.Left}
-        className="w-2 h-2 bg-border! border-2 border-background! hover:bg-primary! transition-colors"
+        className="bg-border! border-background! hover:bg-primary! h-2 w-2 border-2 transition-colors"
       />
 
-      <div className={`${data.color} font-bold mb-1 uppercase tracking-tight`}>
+      <div className={`${data.color} mb-1 font-bold tracking-tight uppercase`}>
         {data.title}
       </div>
       <p className="text-muted-foreground leading-tight">{data.content}</p>
@@ -56,7 +56,7 @@ const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
       <Handle
         type="source"
         position={Position.Right}
-        className="w-2 h-2 bg-border! border-2 border-background! hover:bg-primary! transition-colors"
+        className="bg-border! border-background! hover:bg-primary! h-2 w-2 border-2 transition-colors"
       />
     </div>
   );
@@ -65,23 +65,23 @@ const CustomNode = ({ data }: NodeProps<CustomNodeData>) => {
 // Yeni: Sadece çıkışı olan bir Tetikleyici Düğümü (Trigger Node)
 const TriggerNode = ({ data }: NodeProps<CustomNodeData>) => {
   return (
-    <div className="flow-node-card bg-card p-4 rounded-2xl shadow-lg border-2 border-primary/20 w-48 text-[10px] transform hover:scale-105 transition-all duration-200 ring-4 ring-primary/5 relative">
+    <div className="flow-node-card bg-card border-primary/20 ring-primary/5 relative w-48 transform rounded-2xl border-2 p-4 text-[10px] shadow-lg ring-4 transition-all duration-200 hover:scale-105">
       <GlobalNodeTag isGlobal={data.isGlobal} />
 
       <div
-        className={`${data.color} font-black mb-1 uppercase tracking-widest flex items-center gap-2`}
+        className={`${data.color} mb-1 flex items-center gap-2 font-black tracking-widest uppercase`}
       >
-        <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+        <span className="bg-primary h-2 w-2 animate-pulse rounded-full" />
         {data.title}
       </div>
-      <p className="text-foreground font-medium leading-tight">
+      <p className="text-foreground leading-tight font-medium">
         {data.content}
       </p>
 
       <Handle
         type="source"
         position={Position.Right}
-        className="w-3 h-3 bg-primary! border-2 border-background!"
+        className="bg-primary! border-background! h-3 w-3 border-2"
       />
     </div>
   );
@@ -149,40 +149,40 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
   return (
     <div className="relative">
       <GlobalNodeTag isGlobal={data.isGlobal} className="-top-4" />
-      <div className="flow-node-card bg-card/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/50 w-64 overflow-hidden transform hover:scale-[1.02] transition-all duration-300 ring-1 ring-white/10 group relative">
+      <div className="flow-node-card bg-card/90 border-border/50 group relative w-64 transform overflow-hidden rounded-2xl border shadow-2xl ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02]">
         <Handle
           type="target"
           position={Position.Left}
-          className="w-3 h-3 bg-primary! border-2 border-background! -left-1.5"
+          className="bg-primary! border-background! -left-1.5 h-3 w-3 border-2"
         />
 
         {/* Header Section */}
-        <div className="p-4 bg-linear-to-br from-primary/10 to-accent/10 border-b border-border/50">
-          <div className="flex items-center justify-between mb-2">
+        <div className="from-primary/10 to-accent/10 border-border/50 border-b bg-linear-to-br p-4">
+          <div className="mb-2 flex items-center justify-between">
             <div
-              className={`${data.color} font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2`}
+              className={`${data.color} flex items-center gap-2 text-[10px] font-black tracking-[0.2em] uppercase`}
             >
-              <div className="p-1.5 bg-background rounded-lg shadow-sm">
+              <div className="bg-background rounded-lg p-1.5 shadow-sm">
                 <Split size={14} />
               </div>
               {data.title}
             </div>
           </div>
-          <p className="text-[10px] text-muted-foreground leading-relaxed font-medium">
+          <p className="text-muted-foreground text-[10px] leading-relaxed font-medium">
             {data.content}
           </p>
         </div>
 
         {/* Conditions List */}
-        <div className="p-3 bg-secondary/20">
-          <div className="flex items-center justify-between mb-3 px-1">
-            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+        <div className="bg-secondary/20 p-3">
+          <div className="mb-3 flex items-center justify-between px-1">
+            <span className="text-muted-foreground text-[9px] font-bold tracking-widest uppercase">
               Outcomes
             </span>
             <button
               type="button"
               onClick={handleAddCondition}
-              className="p-1 hover:bg-primary/20 rounded-md transition-colors text-primary"
+              className="hover:bg-primary/20 text-primary rounded-md p-1 transition-colors"
             >
               <PlusIcon size={14} />
             </button>
@@ -193,7 +193,7 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
             {conditions.map(condition => (
               <div
                 key={condition.id}
-                className="flex items-center justify-between bg-primary/5 hover:bg-primary/10 p-2 rounded-xl border border-primary/20 relative transition-all group/item"
+                className="bg-primary/5 hover:bg-primary/10 border-primary/20 group/item relative flex items-center justify-between rounded-xl border p-2 transition-all"
               >
                 <input
                   type="text"
@@ -201,13 +201,13 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
                   onChange={e =>
                     handleUpdateCondition(condition.id, e.target.value)
                   }
-                  className="bg-transparent border-none focus:outline-none w-full text-[10px] font-medium pr-6"
+                  className="w-full border-none bg-transparent pr-6 text-[10px] font-medium focus:outline-none"
                   placeholder="Condition..."
                 />
                 <button
                   type="button"
                   onClick={() => handleRemoveCondition(condition.id)}
-                  className="opacity-0 group-hover/item:opacity-100 transition-opacity absolute right-2 p-0.5 hover:bg-destructive/20 rounded"
+                  className="hover:bg-destructive/20 absolute right-2 rounded p-0.5 opacity-0 transition-opacity group-hover/item:opacity-100"
                 >
                   <XIcon size={10} className="text-destructive" />
                 </button>
@@ -216,14 +216,14 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
                   position={Position.Right}
                   id={condition.id}
                   style={{ right: -6, top: "50%" }}
-                  className="w-2.5 h-2.5 bg-primary! border-2 border-background!"
+                  className="bg-primary! border-background! h-2.5 w-2.5 border-2"
                 />
               </div>
             ))}
           </div>
 
-          <div className="mt-3 border-t border-border/40 pt-2 space-y-1.5">
-            <p className="text-[8px] uppercase tracking-widest text-muted-foreground font-bold">
+          <div className="border-border/40 mt-3 space-y-1.5 border-t pt-2">
+            <p className="text-muted-foreground text-[8px] font-bold tracking-widest uppercase">
               Connections
             </p>
             {outcomes.map(outcome => {
@@ -240,7 +240,7 @@ const LogicNode = ({ id, data }: NodeProps<CustomNodeData>) => {
                   <span
                     className={
                       targets.length > 0
-                        ? "font-semibold text-foreground truncate"
+                        ? "text-foreground truncate font-semibold"
                         : "text-muted-foreground/80 italic"
                     }
                   >

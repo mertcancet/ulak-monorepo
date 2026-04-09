@@ -3,35 +3,35 @@ import { Button } from "~/components/ui/button";
 
 export const QuickSelectToolbar = () => {
   return (
-    <div className="flex items-center space-x-3  backdrop-blur-sm border border-border p-2 rounded-xl shadow-sm ">
+    <div className="border-border flex items-center space-x-3 rounded-xl border p-2 shadow-sm backdrop-blur-sm">
       <Button
         variant="outline"
         size="sm"
-        className="h-8 gap-2 bg-background/50 border-border hover:bg-secondary"
+        className="bg-background/50 border-border hover:bg-secondary h-8 gap-2"
       >
-        <Brain className="h-3.5 w-3.5 text-primary" />
+        <Brain className="text-primary h-3.5 w-3.5" />
         <span className="text-xs font-semibold">GPT 4.1</span>
-        <ChevronDown className="h-3 w-3 text-muted-foreground" />
+        <ChevronDown className="text-muted-foreground h-3 w-3" />
       </Button>
       <Button
         variant="outline"
         size="sm"
-        className="h-8 gap-2 bg-background/50 border-border hover:bg-secondary"
+        className="bg-background/50 border-border hover:bg-secondary h-8 gap-2"
       >
-        <Mic2 className="h-3.5 w-3.5 text-primary" />
+        <Mic2 className="text-primary h-3.5 w-3.5" />
         <span className="text-xs font-semibold">Caner (Doğal)</span>
-        <ChevronDown className="h-3 w-3 text-muted-foreground" />
+        <ChevronDown className="text-muted-foreground h-3 w-3" />
       </Button>
       <Button
         variant="outline"
         size="sm"
-        className="ml-auto h-8 gap-2 bg-background/50 border-border hover:bg-secondary"
+        className="bg-background/50 border-border hover:bg-secondary ml-auto h-8 gap-2"
       >
-        <Languages className="h-3.5 w-3.5 text-primary" />
-        <span className="text-xs font-bold uppercase tracking-wider">
+        <Languages className="text-primary h-3.5 w-3.5" />
+        <span className="text-xs font-bold tracking-wider uppercase">
           Türkçe
         </span>
-        <ChevronDown className="h-3 w-3 text-muted-foreground" />
+        <ChevronDown className="text-muted-foreground h-3 w-3" />
       </Button>
     </div>
   );

@@ -51,20 +51,20 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="bg-background flex min-h-screen items-center justify-center px-4">
       {/* Subtle brand glow blobs */}
       <div
         className="pointer-events-none fixed inset-0 overflow-hidden"
         aria-hidden
       >
-        <div className="absolute -top-32 -left-32 w-120 h-120 rounded-full bg-brand/6 blur-[100px]" />
-        <div className="absolute -bottom-32 -right-32 w-100 h-100 rounded-full bg-brand-light/8 blur-[100px]" />
+        <div className="bg-brand/6 absolute -top-32 -left-32 h-120 w-120 rounded-full blur-[100px]" />
+        <div className="bg-brand-light/8 absolute -right-32 -bottom-32 h-100 w-100 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl gradient-primary shadow-brand mb-4">
+        <div className="mb-10 text-center">
+          <div className="gradient-primary shadow-brand mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl">
             <svg
               width="24"
               height="24"
@@ -79,21 +79,21 @@ export default function SignIn() {
               />
             </svg>
           </div>
-          <h1 className="font-display text-3xl font-semibold text-foreground leading-tight">
+          <h1 className="font-display text-foreground text-3xl leading-tight font-semibold">
             Tekrar Hoş Geldiniz
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground font-sans">
+          <p className="text-muted-foreground mt-2 font-sans text-sm">
             Kaldığınız yerden devam edin.
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-background border border-border rounded-2xl shadow-card p-8">
+        <div className="bg-background border-border shadow-card rounded-2xl border p-8">
           <Form onSubmit={signIn} className="space-y-5">
             <div className="space-y-1.5">
               <Label
                 htmlFor="email"
-                className="text-sm font-medium text-foreground"
+                className="text-foreground text-sm font-medium"
               >
                 E-posta
               </Label>
@@ -105,14 +105,14 @@ export default function SignIn() {
                 placeholder="isim@sirket.com"
                 autoComplete="email"
                 required
-                className="h-11 rounded-xl border-border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring h-11 rounded-xl text-sm"
               />
             </div>
 
             <div className="space-y-1.5">
               <Label
                 htmlFor="password"
-                className="text-sm font-medium text-foreground"
+                className="text-foreground text-sm font-medium"
               >
                 Şifre
               </Label>
@@ -124,12 +124,12 @@ export default function SignIn() {
                 placeholder="Şifrenizi girin"
                 autoComplete="current-password"
                 required
-                className="h-11 rounded-xl border-border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring h-11 rounded-xl text-sm"
               />
             </div>
 
             {errorMessage ? (
-              <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              <p className="border-destructive/30 bg-destructive/10 text-destructive rounded-xl border px-4 py-3 text-sm">
                 {errorMessage}
               </p>
             ) : null}
@@ -137,16 +137,16 @@ export default function SignIn() {
             <Button
               type="submit"
               disabled={isPending || isSessionPending}
-              className="h-11 w-full rounded-xl bg-foreground text-white text-sm font-semibold hover:bg-foreground/90 transition-colors"
+              className="bg-foreground hover:bg-foreground/90 h-11 w-full rounded-xl text-sm font-semibold text-white transition-colors"
             >
               {isPending ? "Giriş yapılıyor..." : "Giriş Yap"}
             </Button>
 
-            <p className="text-center text-sm text-muted-foreground font-sans">
+            <p className="text-muted-foreground text-center font-sans text-sm">
               Hesabınız yok mu?{" "}
               <Link
                 to="/auth/register"
-                className="font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground transition-colors"
+                className="text-foreground decoration-border hover:decoration-foreground font-semibold underline underline-offset-4 transition-colors"
               >
                 Hesap Oluşturun
               </Link>

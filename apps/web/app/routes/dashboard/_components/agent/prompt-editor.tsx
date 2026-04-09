@@ -3,21 +3,21 @@ import { DEFAULT_PROMPT } from "./constants";
 
 export const PromptEditor = () => {
   return (
-    <div className="flex-1 bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
-      <div className="p-4 border-b border-border flex justify-between items-center bg-secondary/20">
+    <div className="bg-card border-border flex flex-1 flex-col overflow-hidden rounded-xl border shadow-sm">
+      <div className="border-border bg-secondary/20 flex items-center justify-between border-b p-4">
         <div className="flex items-center space-x-2">
-          <div className="w-1.5 h-4 bg-primary rounded-full" />
+          <div className="bg-primary h-4 w-1.5 rounded-full" />
           <h2 className="text-sm font-bold tracking-tight">
             Sistem Talimatları
           </h2>
         </div>
-        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+        <span className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
           Markdown desteklenir
         </span>
       </div>
-      <div className="flex-1 p-0 flex flex-col">
+      <div className="flex flex-1 flex-col p-0">
         <Textarea
-          className="flex-1 border-none focus-visible:ring-0 bg-transparent text-sm leading-relaxed p-6 resize-none font-medium text-foreground/80 scrollbar-thin"
+          className="text-foreground/80 scrollbar-thin flex-1 resize-none border-none bg-transparent p-6 text-sm leading-relaxed font-medium focus-visible:ring-0"
           placeholder="Agent talimatlarını buraya girin..."
           defaultValue={DEFAULT_PROMPT}
         />

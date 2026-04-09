@@ -10,14 +10,14 @@ function Progress({
     <div
       data-slot="progress"
       className={cn(
-        "relative h-2 w-full overflow-hidden rounded-full bg-secondary",
+        "bg-secondary relative h-2 w-full overflow-hidden rounded-full",
         className,
       )}
       {...props}
     >
       <div
         data-slot="progress-indicator"
-        className="h-full bg-brand transition-all"
+        className="bg-brand h-full transition-all"
         style={{ width: `${value || 0}%` }}
       />
     </div>

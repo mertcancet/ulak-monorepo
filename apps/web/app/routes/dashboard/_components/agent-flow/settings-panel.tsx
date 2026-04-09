@@ -137,18 +137,18 @@ export const SettingsPanel: React.FC = () => {
   };
 
   return (
-    <aside className="w-90 h-full bg-background border-l border-border flex flex-col font-display">
-      <div className="px-4 py-3 border-b border-border">
+    <aside className="bg-background border-border font-display flex h-full w-90 flex-col border-l">
+      <div className="border-border border-b px-4 py-3">
         <h2 className="text-sm font-bold">Dugum Ayarlari</h2>
-        <p className="text-[11px] text-muted-foreground mt-0.5">
+        <p className="text-muted-foreground mt-0.5 text-[11px]">
           Canvas uzerinden secilen dugumu buradan duzenleyebilirsin.
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 scrollbar-hide space-y-4">
+      <div className="scrollbar-hide flex-1 space-y-4 overflow-y-auto p-4">
         {!selectedNode && (
-          <div className="p-4 border border-dashed border-border rounded-xl bg-secondary/20">
-            <p className="text-xs text-muted-foreground leading-relaxed">
+          <div className="border-border bg-secondary/20 rounded-xl border border-dashed p-4">
+            <p className="text-muted-foreground text-xs leading-relaxed">
               Duzenlemek icin once canvas uzerinde bir node sec.
             </p>
           </div>
@@ -156,18 +156,18 @@ export const SettingsPanel: React.FC = () => {
 
         {selectedNode && (
           <>
-            <section className="space-y-3 p-3 border border-border rounded-xl bg-secondary/20">
+            <section className="border-border bg-secondary/20 space-y-3 rounded-xl border p-3">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                <span className="text-muted-foreground text-[10px] tracking-wider uppercase">
                   Node ID
                 </span>
-                <span className="text-[10px] font-semibold truncate max-w-52">
+                <span className="max-w-52 truncate text-[10px] font-semibold">
                   {selectedNode.id}
                 </span>
               </div>
 
               <div>
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                   Baslik
                 </p>
                 <Input
@@ -181,7 +181,7 @@ export const SettingsPanel: React.FC = () => {
               </div>
 
               <div>
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                   Kisa Aciklama
                 </p>
                 <textarea
@@ -189,19 +189,19 @@ export const SettingsPanel: React.FC = () => {
                   onChange={event =>
                     updateSelectedNodeData({ content: event.target.value })
                   }
-                  className="w-full min-h-20 px-3 py-2 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                  className="bg-background border-border focus:ring-primary/20 focus:border-primary/30 min-h-20 w-full resize-y rounded-lg border px-3 py-2 text-xs outline-none focus:ring-1"
                   placeholder="Node aciklamasi"
                 />
               </div>
             </section>
 
             {isAgentNode && (
-              <section className="space-y-3 p-3 border border-border rounded-xl">
+              <section className="border-border space-y-3 rounded-xl border p-3">
                 <h3 className="text-sm font-semibold">Agent Ayarlari</h3>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                       Saglayici
                     </p>
                     <Input
@@ -220,7 +220,7 @@ export const SettingsPanel: React.FC = () => {
                   </div>
 
                   <div>
-                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                       Ses
                     </p>
                     <Input
@@ -240,7 +240,7 @@ export const SettingsPanel: React.FC = () => {
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Model
                   </p>
                   <Input
@@ -259,7 +259,7 @@ export const SettingsPanel: React.FC = () => {
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     API Anahtari
                   </p>
                   <Input
@@ -277,13 +277,13 @@ export const SettingsPanel: React.FC = () => {
                   />
                 </div>
 
-                <div className="rounded-lg border border-border bg-secondary/20 px-2.5 py-2">
+                <div className="border-border bg-secondary/20 rounded-lg border px-2.5 py-2">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="text-[11px] font-semibold uppercase tracking-wider">
+                      <p className="text-[11px] font-semibold tracking-wider uppercase">
                         Gercek Zamanli
                       </p>
-                      <p className="text-[10px] text-muted-foreground leading-tight">
+                      <p className="text-muted-foreground text-[10px] leading-tight">
                         is_realtime ve allow_interruptions ayarlarini yonet.
                       </p>
                     </div>
@@ -316,7 +316,7 @@ export const SettingsPanel: React.FC = () => {
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Sistem Promptu
                   </p>
                   <div className="relative">
@@ -327,23 +327,23 @@ export const SettingsPanel: React.FC = () => {
                           instructions: event.target.value,
                         })
                       }
-                      className="w-full min-h-56 px-4 py-3 pr-10 text-[12px] leading-6 bg-secondary/15 border border-border rounded-xl outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                      className="bg-secondary/15 border-border focus:ring-primary/20 focus:border-primary/30 min-h-56 w-full resize-y rounded-xl border px-4 py-3 pr-10 font-mono text-[12px] leading-6 outline-none focus:ring-1"
                       placeholder="Agent davranisini aciklayan prompt"
                     />
                     <button
                       type="button"
                       onClick={() => setExpandedField("instructions")}
-                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      className="text-muted-foreground hover:text-foreground absolute right-2 bottom-2 rounded-md p-1 transition-colors"
                       title="Buyut"
                       aria-label="Sistem Promptu buyut"
                     >
-                      <Maximize2 className="w-4 h-4" />
+                      <Maximize2 className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Karsilama Mesaji
                   </p>
                   <div className="relative">
@@ -354,23 +354,23 @@ export const SettingsPanel: React.FC = () => {
                           greet_prompt: event.target.value,
                         })
                       }
-                      className="w-full min-h-20 px-3 py-2 pr-9 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                      className="bg-background border-border focus:ring-primary/20 focus:border-primary/30 min-h-20 w-full resize-y rounded-lg border px-3 py-2 pr-9 text-xs outline-none focus:ring-1"
                       placeholder="Merhaba, size nasil yardimci olabilirim?"
                     />
                     <button
                       type="button"
                       onClick={() => setExpandedField("greet_prompt")}
-                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      className="text-muted-foreground hover:text-foreground absolute right-2 bottom-2 rounded-md p-1 transition-colors"
                       title="Buyut"
                       aria-label="Karsilama Mesaji buyut"
                     >
-                      <Maximize2 className="w-4 h-4" />
+                      <Maximize2 className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Veda Mesaji
                   </p>
                   <div className="relative">
@@ -381,23 +381,23 @@ export const SettingsPanel: React.FC = () => {
                           goodbye_prompt: event.target.value,
                         })
                       }
-                      className="w-full min-h-20 px-3 py-2 pr-9 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                      className="bg-background border-border focus:ring-primary/20 focus:border-primary/30 min-h-20 w-full resize-y rounded-lg border px-3 py-2 pr-9 text-xs outline-none focus:ring-1"
                       placeholder="Gorusme sonunda soylenecek mesaj"
                     />
                     <button
                       type="button"
                       onClick={() => setExpandedField("goodbye_prompt")}
-                      className="absolute bottom-2 right-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md"
+                      className="text-muted-foreground hover:text-foreground absolute right-2 bottom-2 rounded-md p-1 transition-colors"
                       title="Buyut"
                       aria-label="Veda Mesaji buyut"
                     >
-                      <Maximize2 className="w-4 h-4" />
+                      <Maximize2 className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Kullanilabilir Tool ID Listesi (virgulle)
                   </p>
                   <Input
@@ -418,12 +418,12 @@ export const SettingsPanel: React.FC = () => {
             )}
 
             {isHttpToolNode && (
-              <section className="space-y-3 p-3 border border-border rounded-xl">
+              <section className="border-border space-y-3 rounded-xl border p-3">
                 <h3 className="text-sm font-semibold">HTTP Tool Ayarlari</h3>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                       Tool ID
                     </p>
                     <Input
@@ -436,7 +436,7 @@ export const SettingsPanel: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                       Method
                     </p>
                     <select
@@ -444,7 +444,7 @@ export const SettingsPanel: React.FC = () => {
                       onChange={event =>
                         updateSelectedNodeData({ method: event.target.value })
                       }
-                      className="w-full h-9 px-3 text-xs bg-background border border-border rounded-lg outline-none"
+                      className="bg-background border-border h-9 w-full rounded-lg border px-3 text-xs outline-none"
                     >
                       <option value="GET">GET</option>
                       <option value="POST">POST</option>
@@ -456,7 +456,7 @@ export const SettingsPanel: React.FC = () => {
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Aciklama
                   </p>
                   <textarea
@@ -466,13 +466,13 @@ export const SettingsPanel: React.FC = () => {
                         description: event.target.value,
                       })
                     }
-                    className="w-full min-h-20 px-3 py-2 text-xs bg-background border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30"
+                    className="bg-background border-border focus:ring-primary/20 focus:border-primary/30 min-h-20 w-full resize-y rounded-lg border px-3 py-2 text-xs outline-none focus:ring-1"
                     placeholder="Tool ne icin kullaniliyor?"
                   />
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     URL
                   </p>
                   <Input
@@ -487,7 +487,7 @@ export const SettingsPanel: React.FC = () => {
 
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                       Timeout
                     </p>
                     <Input
@@ -501,7 +501,7 @@ export const SettingsPanel: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                    <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                       Max Retry
                     </p>
                     <Input
@@ -526,7 +526,7 @@ export const SettingsPanel: React.FC = () => {
                         }
                         aria-label="Yonlendirme"
                       />
-                      <span className="text-[11px] text-muted-foreground">
+                      <span className="text-muted-foreground text-[11px]">
                         Redirect
                       </span>
                     </div>
@@ -534,7 +534,7 @@ export const SettingsPanel: React.FC = () => {
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Headers (JSON)
                   </p>
                   <textarea
@@ -551,13 +551,13 @@ export const SettingsPanel: React.FC = () => {
                         });
                       }
                     }}
-                    className="w-full min-h-24 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                    className="bg-secondary/15 border-border focus:ring-primary/20 focus:border-primary/30 min-h-24 w-full resize-y rounded-lg border px-3 py-2 font-mono text-xs outline-none focus:ring-1"
                     placeholder='{"Authorization": "Bearer ..."}'
                   />
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Body (JSON)
                   </p>
                   <textarea
@@ -570,13 +570,13 @@ export const SettingsPanel: React.FC = () => {
                       );
                       updateSelectedNodeData({ body: parsed });
                     }}
-                    className="w-full min-h-24 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                    className="bg-secondary/15 border-border focus:ring-primary/20 focus:border-primary/30 min-h-24 w-full resize-y rounded-lg border px-3 py-2 font-mono text-xs outline-none focus:ring-1"
                     placeholder='{"id": "$order_id"}'
                   />
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Parametreler (JSON Schema)
                   </p>
                   <textarea
@@ -591,13 +591,13 @@ export const SettingsPanel: React.FC = () => {
                         updateSelectedNodeData({ parameters: parsed });
                       }
                     }}
-                    className="w-full min-h-32 px-3 py-2 text-xs bg-secondary/15 border border-border rounded-lg outline-none resize-y focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+                    className="bg-secondary/15 border-border focus:ring-primary/20 focus:border-primary/30 min-h-32 w-full resize-y rounded-lg border px-3 py-2 font-mono text-xs outline-none focus:ring-1"
                     placeholder='{"type":"object","properties":{}}'
                   />
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Hata Mesaji
                   </p>
                   <Input
@@ -613,7 +613,7 @@ export const SettingsPanel: React.FC = () => {
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+                  <p className="text-muted-foreground mb-2 block text-[11px] font-semibold tracking-wider uppercase">
                     Basari Mesaji
                   </p>
                   <Input
@@ -631,8 +631,8 @@ export const SettingsPanel: React.FC = () => {
             )}
 
             {!isAgentNode && !isHttpToolNode && (
-              <section className="p-3 border border-border rounded-xl bg-secondary/20">
-                <p className="text-xs text-muted-foreground">
+              <section className="border-border bg-secondary/20 rounded-xl border p-3">
+                <p className="text-muted-foreground text-xs">
                   Bu node tipi icin ozel bir form tanimli degil.
                 </p>
               </section>
@@ -649,8 +649,8 @@ export const SettingsPanel: React.FC = () => {
           }
         }}
       >
-        <DialogContent className="sm:max-w-225 p-0 overflow-hidden">
-          <DialogHeader className="px-5 py-4 border-b border-border">
+        <DialogContent className="overflow-hidden p-0 sm:max-w-225">
+          <DialogHeader className="border-border border-b px-5 py-4">
             <DialogTitle className="text-base">
               {expandedFieldTitle}
             </DialogTitle>
@@ -660,7 +660,7 @@ export const SettingsPanel: React.FC = () => {
             <textarea
               value={expandedFieldValue}
               onChange={event => updateExpandedFieldValue(event.target.value)}
-              className="w-full min-h-[60vh] px-4 py-3 text-sm leading-7 bg-background border border-border rounded-xl outline-none resize-none focus:ring-1 focus:ring-primary/20 focus:border-primary/30 font-mono"
+              className="bg-background border-border focus:ring-primary/20 focus:border-primary/30 min-h-[60vh] w-full resize-none rounded-xl border px-4 py-3 font-mono text-sm leading-7 outline-none focus:ring-1"
               placeholder={expandedFieldPlaceholder}
             />
 

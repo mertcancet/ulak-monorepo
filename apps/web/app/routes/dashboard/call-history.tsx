@@ -76,142 +76,142 @@ const CallHistoryPage = () => {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-background animate-in fade-in duration-500">
+    <div className="bg-background animate-in fade-in flex h-full flex-col duration-500">
       {/* Header */}
       <DashboardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <History className="w-4 h-4 text-primary" />
+          <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-lg">
+            <History className="text-primary h-4 w-4" />
           </div>
           <h1 className="text-sm font-bold tracking-tight">Çağrı Geçmişi</h1>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-secondary/50 rounded-lg p-0.5 border border-border">
+          <div className="bg-secondary/50 border-border flex items-center rounded-lg border p-0.5">
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 gap-2 text-xs font-semibold px-3 hover:bg-background shadow-none"
+              className="hover:bg-background h-8 gap-2 px-3 text-xs font-semibold shadow-none"
             >
-              <Calendar className="w-3.5 h-3.5" />
+              <Calendar className="h-3.5 w-3.5" />
               Tarih Aralığı
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 gap-2 text-xs font-semibold px-3 hover:bg-background shadow-none border-x border-border/50 rounded-none"
+              className="hover:bg-background border-border/50 h-8 gap-2 rounded-none border-x px-3 text-xs font-semibold shadow-none"
             >
-              <Filter className="w-3.5 h-3.5" />
+              <Filter className="h-3.5 w-3.5" />
               Filtrele
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 gap-2 text-xs font-semibold px-3 hover:bg-background shadow-none border-r border-border/50 rounded-none"
+              className="hover:bg-background border-border/50 h-8 gap-2 rounded-none border-r px-3 text-xs font-semibold shadow-none"
             >
-              <Columns className="w-3.5 h-3.5" />
+              <Columns className="h-3.5 w-3.5" />
               Görünüm
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 gap-2 text-xs font-semibold px-3 hover:bg-background shadow-none"
+              className="hover:bg-background h-8 gap-2 px-3 text-xs font-semibold shadow-none"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <SlidersHorizontal className="h-3.5 w-3.5" />
               Özel Nitelikler
             </Button>
           </div>
 
-          <div className="h-6 w-px bg-border mx-1" />
+          <div className="bg-border mx-1 h-6 w-px" />
 
           <Button
             variant="outline"
             size="sm"
-            className="h-8 gap-2 text-xs font-bold border-border bg-card hover:bg-secondary"
+            className="border-border bg-card hover:bg-secondary h-8 gap-2 text-xs font-bold"
           >
-            <Upload className="w-3.5 h-3.5 text-muted-foreground" />
+            <Upload className="text-muted-foreground h-3.5 w-3.5" />
             Dışa Aktar
           </Button>
 
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-muted-foreground hover:bg-secondary"
+            className="text-muted-foreground hover:bg-secondary h-8 w-8"
           >
-            <RotateCw className="w-4 h-4" />
+            <RotateCw className="h-4 w-4" />
           </Button>
         </div>
       </DashboardHeader>
 
       {/* Table Content */}
-      <div className="flex-1 overflow-auto scrollbar-thin">
-        <table className="w-full text-left border-collapse min-w-300">
+      <div className="scrollbar-thin flex-1 overflow-auto">
+        <table className="w-full min-w-300 border-collapse text-left">
           <thead className="sticky top-0 z-10">
-            <tr className="border-b border-border bg-secondary/30 backdrop-blur-md">
-              <th className="px-6 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+            <tr className="border-border bg-secondary/30 border-b backdrop-blur-md">
+              <th className="text-muted-foreground px-6 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Zaman
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Süre
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Kanal
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Maliyet
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Oturum ID
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Bitiş Nedeni
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Duygu
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Yön
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 Sonuç
               </th>
-              <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">
+              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
                 İşlem
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border/50">
+          <tbody className="divide-border/50 divide-y">
             {calls.map((call, idx) => (
               <tr
                 // biome-ignore lint/suspicious/noArrayIndexKey: <>
                 key={idx}
-                className="group hover:bg-secondary/40 transition-all duration-200 cursor-pointer"
+                className="group hover:bg-secondary/40 cursor-pointer transition-all duration-200"
               >
                 <td className="px-6 py-4 text-[11px] font-bold tracking-tight whitespace-nowrap">
                   {call.time}
                 </td>
-                <td className="px-4 py-4 text-xs font-semibold text-muted-foreground">
+                <td className="text-muted-foreground px-4 py-4 text-xs font-semibold">
                   {call.duration}
                 </td>
                 <td className="px-4 py-4">
                   <Badge
                     variant="outline"
-                    className="font-bold text-[10px] uppercase bg-secondary/50 border-border/50 py-0 px-2 rounded-md"
+                    className="bg-secondary/50 border-border/50 rounded-md px-2 py-0 text-[10px] font-bold uppercase"
                   >
                     {call.channel.replace("_", " ")}
                   </Badge>
                 </td>
-                <td className="px-4 py-4 text-xs font-bold font-mono text-primary">
+                <td className="text-primary px-4 py-4 font-mono text-xs font-bold">
                   {call.cost}
                 </td>
-                <td className="px-4 py-4 text-xs font-mono text-muted-foreground/60">
+                <td className="text-muted-foreground/60 px-4 py-4 font-mono text-xs">
                   {call.id}
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-2 text-[11px] font-bold text-foreground/80">
+                  <div className="text-foreground/80 flex items-center gap-2 text-[11px] font-bold">
                     <div
                       className={cn(
-                        "w-1.5 h-1.5 rounded-full shadow-[0_0_8px]",
+                        "h-1.5 w-1.5 rounded-full shadow-[0_0_8px]",
                         call.reasonColor.replace("bg-", "text-"),
                       )}
                       style={{
@@ -224,9 +224,9 @@ const CallHistoryPage = () => {
                   </div>
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-2 text-[11px] font-bold text-foreground/80">
+                  <div className="text-foreground/80 flex items-center gap-2 text-[11px] font-bold">
                     <div
-                      className="w-1.5 h-1.5 rounded-full"
+                      className="h-1.5 w-1.5 rounded-full"
                       style={{
                         backgroundColor: call.sentimentColor.includes("blue")
                           ? "hsl(var(--primary))"
@@ -236,14 +236,14 @@ const CallHistoryPage = () => {
                     {call.sentiment}
                   </div>
                 </td>
-                <td className="px-4 py-4 text-[11px] font-bold text-muted-foreground/70 uppercase tracking-tight">
+                <td className="text-muted-foreground/70 px-4 py-4 text-[11px] font-bold tracking-tight uppercase">
                   {call.direction}
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   <Badge
                     // biome-ignore lint/suspicious/noExplicitAny: <>
                     variant={call.statusVariant as any}
-                    className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 shadow-sm"
+                    className="px-2 py-0.5 text-[10px] font-black tracking-wider uppercase shadow-sm"
                   >
                     {call.status}
                   </Badge>
@@ -252,9 +252,9 @@ const CallHistoryPage = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="text-muted-foreground h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
                   >
-                    <MoreHorizontal className="w-4 h-4" />
+                    <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </td>
               </tr>
@@ -264,34 +264,34 @@ const CallHistoryPage = () => {
       </div>
 
       {/* Footer / Pagination */}
-      <footer className="p-4 border-t border-border bg-card/80 backdrop-blur-sm flex items-center justify-between shrink-0">
-        <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
-          Sayfa 1 / 1 <span className="mx-2 text-border">•</span> Toplam Oturum:
+      <footer className="border-border bg-card/80 flex shrink-0 items-center justify-between border-t p-4 backdrop-blur-sm">
+        <div className="text-muted-foreground text-[11px] font-bold tracking-widest uppercase">
+          Sayfa 1 / 1 <span className="text-border mx-2">•</span> Toplam Oturum:
           4
         </div>
 
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+            <span className="text-muted-foreground text-[11px] font-bold tracking-widest uppercase">
               Görüntüle:
             </span>
-            <select className="text-[11px] font-bold bg-secondary/50 border border-border rounded-lg p-1 px-2 focus:ring-1 focus:ring-primary/20 outline-none">
+            <select className="bg-secondary/50 border-border focus:ring-primary/20 rounded-lg border p-1 px-2 text-[11px] font-bold outline-none focus:ring-1">
               <option>20 / sayfa</option>
               <option selected>50 / sayfa</option>
               <option>100 / sayfa</option>
             </select>
           </div>
 
-          <div className="flex items-center gap-1 bg-secondary/50 p-1 rounded-xl border border-border">
+          <div className="bg-secondary/50 border-border flex items-center gap-1 rounded-xl border p-1">
             <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-lg disabled:opacity-30"
               disabled
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="h-4 w-4" />
             </Button>
-            <div className="h-8 px-3 flex items-center justify-center text-xs font-black bg-primary text-white rounded-lg shadow-lg shadow-primary/20">
+            <div className="bg-primary shadow-primary/20 flex h-8 items-center justify-center rounded-lg px-3 text-xs font-black text-white shadow-lg">
               1
             </div>
             <Button
@@ -300,7 +300,7 @@ const CallHistoryPage = () => {
               className="h-8 w-8 rounded-lg disabled:opacity-30"
               disabled
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>

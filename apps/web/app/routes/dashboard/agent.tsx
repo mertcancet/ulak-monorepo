@@ -13,13 +13,13 @@ import { TestingPanel } from "./_components/agent/testing-panel";
  */
 export default function AgentConfigPage() {
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden relative animate-in fade-in duration-500">
+    <div className="bg-background animate-in fade-in relative flex h-screen flex-col overflow-hidden duration-500">
       <AgentHeader />
 
-      <main className="flex-1 flex overflow-hidden p-4">
-        <div className="flex-1 flex overflow-hidden gap-4 rounded-xl border border-border bg-card/30 p-3">
+      <main className="flex flex-1 overflow-hidden p-4">
+        <div className="border-border bg-card/30 flex flex-1 gap-4 overflow-hidden rounded-xl border p-3">
           {/* Left Column: Configuration Canvas */}
-          <div className="flex-1 flex flex-col space-y-4 min-w-100">
+          <div className="flex min-w-100 flex-1 flex-col space-y-4">
             <QuickSelectToolbar />
             <PromptEditor />
             <GreetingSection />

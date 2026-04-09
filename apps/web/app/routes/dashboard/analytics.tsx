@@ -6,41 +6,41 @@ import { PerformanceTable } from "./_components/analytics/PerformanceTable";
 
 export default function AnalyticsPage() {
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-background">
+    <div className="bg-background flex h-full flex-col overflow-hidden">
       <AnalyticsHeader />
 
-      <main className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-thin">
+      <main className="scrollbar-thin flex-1 space-y-8 overflow-y-auto p-8">
         <MetricCards />
 
         <AnalyticsCharts />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
           <div className="md:col-span-8">
             <PerformanceTable />
           </div>
 
-          <div className="md:col-span-4 space-y-6">
-            <div className="bg-card border border-border p-8 rounded-2xl shadow-sm h-full flex flex-col justify-center items-center text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 ring-4 ring-primary/10">
-                <UserMinus className="w-8 h-8 text-primary" />
+          <div className="space-y-6 md:col-span-4">
+            <div className="bg-card border-border flex h-full flex-col items-center justify-center rounded-2xl border p-8 text-center shadow-sm">
+              <div className="bg-primary/10 ring-primary/10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl ring-4">
+                <UserMinus className="text-primary h-8 w-8" />
               </div>
-              <h3 className="text-4xl font-black text-primary tracking-tighter mb-2">
+              <h3 className="text-primary mb-2 text-4xl font-black tracking-tighter">
                 8.4%
               </h3>
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+              <p className="text-muted-foreground text-[10px] font-black tracking-[0.2em] uppercase">
                 İnsan Operatöre Aktarım
               </p>
-              <div className="mt-8 pt-8 border-t border-border w-full">
-                <div className="flex justify-between items-center text-[10px] font-bold text-muted-foreground mb-4">
+              <div className="border-border mt-8 w-full border-t pt-8">
+                <div className="text-muted-foreground mb-4 flex items-center justify-between text-[10px] font-bold">
                   <span>TREND (SON 30 GÜN)</span>
                   <span className="text-success">-1.2%</span>
                 </div>
-                <div className="h-10 flex items-end gap-1">
+                <div className="flex h-10 items-end gap-1">
                   {[40, 60, 45, 70, 50, 80, 55, 65, 45, 60].map((h, i) => (
                     <div
                       // biome-ignore lint/suspicious/noArrayIndexKey: <>
                       key={i}
-                      className="flex-1 bg-primary/20 rounded-t-sm hover:bg-primary/40 transition-colors"
+                      className="bg-primary/20 hover:bg-primary/40 flex-1 rounded-t-sm transition-colors"
                       style={{ height: `${h}%` }}
                     />
                   ))}

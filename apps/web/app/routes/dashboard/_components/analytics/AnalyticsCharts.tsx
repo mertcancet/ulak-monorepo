@@ -15,14 +15,14 @@ const ChartCard = ({
   className?: string;
 }) => (
   <div
-    className={`bg-card border border-border p-6 rounded-2xl shadow-sm ${className}`}
+    className={`bg-card border-border rounded-2xl border p-6 shadow-sm ${className}`}
   >
     <div className="mb-6">
-      <h3 className="font-bold tracking-tight text-sm uppercase text-foreground/80">
+      <h3 className="text-foreground/80 text-sm font-bold tracking-tight uppercase">
         {title}
       </h3>
       {subtitle && (
-        <p className="text-[10px] text-muted-foreground font-medium mt-1">
+        <p className="text-muted-foreground mt-1 text-[10px] font-medium">
           {subtitle}
         </p>
       )}
@@ -33,17 +33,17 @@ const ChartCard = ({
 
 export const AnalyticsCharts = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
       {/* Call Volume Chart */}
       <ChartCard
         title="Çağrı Sayıları"
         subtitle="Zaman içindeki değişim"
         className="md:col-span-8"
       >
-        <div className="h-64 flex flex-col justify-end">
-          <div className="flex-1 flex items-end gap-1 px-2 pb-2 border-b border-border/50 relative">
+        <div className="flex h-64 flex-col justify-end">
+          <div className="border-border/50 relative flex flex-1 items-end gap-1 border-b px-2 pb-2">
             <svg
-              className="w-full h-full text-primary overflow-visible"
+              className="text-primary h-full w-full overflow-visible"
               preserveAspectRatio="none"
               viewBox="0 0 1000 200"
             >
@@ -85,12 +85,12 @@ export const AnalyticsCharts = () => {
             </svg>
 
             {/* Tooltip placeholder */}
-            <div className="absolute top-0 left-[50%] -translate-x-1/2 bg-foreground text-background text-[10px] px-2 py-1.5 rounded-lg shadow-xl font-bold flex flex-col items-center">
+            <div className="bg-foreground text-background absolute top-0 left-[50%] flex -translate-x-1/2 flex-col items-center rounded-lg px-2 py-1.5 text-[10px] font-bold shadow-xl">
               <span className="opacity-70">16 Şub</span>
               <span className="text-xs">156 Çağrı</span>
             </div>
           </div>
-          <div className="flex justify-between mt-4 px-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="text-muted-foreground mt-4 flex justify-between px-2 text-[10px] font-bold tracking-widest uppercase">
             <span>10 Şub</span>
             <span>14 Şub</span>
             <span className="text-primary">Bugün</span>
@@ -105,10 +105,10 @@ export const AnalyticsCharts = () => {
         subtitle="Maksimum kanal kullanımı"
         className="md:col-span-4"
       >
-        <div className="h-64 flex flex-col justify-end">
-          <div className="flex-1 flex items-end bg-primary/5 rounded-xl border border-primary/10 overflow-hidden relative">
+        <div className="flex h-64 flex-col justify-end">
+          <div className="bg-primary/5 border-primary/10 relative flex flex-1 items-end overflow-hidden rounded-xl border">
             <svg
-              className="w-full h-full text-primary/40"
+              className="text-primary/40 h-full w-full"
               preserveAspectRatio="none"
               viewBox="0 0 400 200"
             >
@@ -119,12 +119,12 @@ export const AnalyticsCharts = () => {
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-4xl font-black text-primary/20 tracking-tighter">
+              <span className="text-primary/20 text-4xl font-black tracking-tighter">
                 84
               </span>
             </div>
           </div>
-          <div className="flex justify-between mt-4 text-[10px] font-bold text-muted-foreground">
+          <div className="text-muted-foreground mt-4 flex justify-between text-[10px] font-bold">
             <span>17 Şub</span>
             <span>21 Şub</span>
           </div>
@@ -135,11 +135,11 @@ export const AnalyticsCharts = () => {
       <ChartCard
         title="Çağrı Başarısı"
         subtitle="Tamamlanma durumu"
-        className="md:col-span-4 flex flex-col items-center"
+        className="flex flex-col items-center md:col-span-4"
       >
-        <div className="relative w-48 h-48 mt-4">
+        <div className="relative mt-4 h-48 w-48">
           <svg
-            className="w-full h-full transform -rotate-90"
+            className="h-full w-full -rotate-90 transform"
             viewBox="0 0 100 100"
           >
             <circle
@@ -166,22 +166,22 @@ export const AnalyticsCharts = () => {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <span className="text-3xl font-black tracking-tighter">76%</span>
-            <span className="text-[10px] font-bold text-muted-foreground uppercase">
+            <span className="text-muted-foreground text-[10px] font-bold uppercase">
               BAŞARILI
             </span>
           </div>
         </div>
-        <div className="mt-8 space-y-3 w-full">
+        <div className="mt-8 w-full space-y-3">
           <div className="flex items-center justify-between text-[11px] font-bold">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-primary" />
+              <div className="bg-primary h-2 w-2 rounded-full" />
               <span className="text-muted-foreground">Başarılı</span>
             </div>
             <span>976</span>
           </div>
           <div className="flex items-center justify-between text-[11px] font-bold">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-secondary" />
+              <div className="bg-secondary h-2 w-2 rounded-full" />
               <span className="text-muted-foreground">Başarısız</span>
             </div>
             <span>308</span>
@@ -193,36 +193,36 @@ export const AnalyticsCharts = () => {
       <ChartCard
         title="Duygu Analizi"
         subtitle="Kullanıcı geri bildirimi"
-        className="md:col-span-4 flex flex-col items-center"
+        className="flex flex-col items-center md:col-span-4"
       >
         <div className="mt-4 flex flex-col items-center gap-6">
-          <div className="w-24 h-24 rounded-full bg-success/10 flex items-center justify-center ring-4 ring-success/10 shadow-inner">
-            <Smile className="w-10 h-10 text-success" />
+          <div className="bg-success/10 ring-success/10 flex h-24 w-24 items-center justify-center rounded-full shadow-inner ring-4">
+            <Smile className="text-success h-10 w-10" />
           </div>
           <div className="text-center">
-            <p className="text-2xl font-black text-success tracking-tight">
+            <p className="text-success text-2xl font-black tracking-tight">
               Pozitif
             </p>
-            <p className="text-[10px] font-bold text-muted-foreground uppercase mt-1">
+            <p className="text-muted-foreground mt-1 text-[10px] font-bold uppercase">
               GENEL DURUM
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-2 w-full mt-4">
-            <div className="p-3 bg-success/5 rounded-xl border border-success/10 text-center">
-              <p className="text-xs font-black text-success">82%</p>
-              <p className="text-[9px] font-bold text-muted-foreground uppercase mt-1">
+          <div className="mt-4 grid w-full grid-cols-3 gap-2">
+            <div className="bg-success/5 border-success/10 rounded-xl border p-3 text-center">
+              <p className="text-success text-xs font-black">82%</p>
+              <p className="text-muted-foreground mt-1 text-[9px] font-bold uppercase">
                 Poz
               </p>
             </div>
-            <div className="p-3 bg-secondary/30 rounded-xl border border-border text-center">
-              <p className="text-xs font-black text-muted-foreground">14%</p>
-              <p className="text-[9px] font-bold text-muted-foreground uppercase mt-1">
+            <div className="bg-secondary/30 border-border rounded-xl border p-3 text-center">
+              <p className="text-muted-foreground text-xs font-black">14%</p>
+              <p className="text-muted-foreground mt-1 text-[9px] font-bold uppercase">
                 Nötr
               </p>
             </div>
-            <div className="p-3 bg-destructive/5 rounded-xl border border-destructive/10 text-center">
-              <p className="text-xs font-black text-destructive">4%</p>
-              <p className="text-[9px] font-bold text-muted-foreground uppercase mt-1">
+            <div className="bg-destructive/5 border-destructive/10 rounded-xl border p-3 text-center">
+              <p className="text-destructive text-xs font-black">4%</p>
+              <p className="text-muted-foreground mt-1 text-[9px] font-bold uppercase">
                 Neg
               </p>
             </div>
@@ -236,43 +236,43 @@ export const AnalyticsCharts = () => {
         subtitle="İletişim trafiği"
         className="md:col-span-4"
       >
-        <div className="mt-8 flex items-end gap-6 h-32 justify-center">
-          <div className="flex-1 flex flex-col items-center gap-3">
-            <div className="w-full bg-primary/10 rounded-t-xl relative group transition-all hover:bg-primary/20">
-              <div className="absolute bottom-0 w-full bg-primary rounded-t-xl h-[80%] transition-all" />
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-black opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="mt-8 flex h-32 items-end justify-center gap-6">
+          <div className="flex flex-1 flex-col items-center gap-3">
+            <div className="bg-primary/10 group hover:bg-primary/20 relative w-full rounded-t-xl transition-all">
+              <div className="bg-primary absolute bottom-0 h-[80%] w-full rounded-t-xl transition-all" />
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-black opacity-0 transition-opacity group-hover:opacity-100">
                 80%
               </div>
             </div>
             <div className="flex items-center gap-1.5">
-              <ArrowDownLeft className="w-3.5 h-3.5 text-primary" />
-              <span className="text-[10px] font-bold text-muted-foreground uppercase">
+              <ArrowDownLeft className="text-primary h-3.5 w-3.5" />
+              <span className="text-muted-foreground text-[10px] font-bold uppercase">
                 Gelen
               </span>
             </div>
           </div>
-          <div className="flex-1 flex flex-col items-center gap-3">
-            <div className="w-full bg-primary/10 rounded-t-xl relative group transition-all hover:bg-primary/20">
-              <div className="absolute bottom-0 w-full bg-primary rounded-t-xl h-[45%] transition-all" />
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-black opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex flex-1 flex-col items-center gap-3">
+            <div className="bg-primary/10 group hover:bg-primary/20 relative w-full rounded-t-xl transition-all">
+              <div className="bg-primary absolute bottom-0 h-[45%] w-full rounded-t-xl transition-all" />
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-black opacity-0 transition-opacity group-hover:opacity-100">
                 45%
               </div>
             </div>
             <div className="flex items-center gap-1.5">
-              <ArrowUpRight className="w-3.5 h-3.5 text-primary" />
-              <span className="text-[10px] font-bold text-muted-foreground uppercase">
+              <ArrowUpRight className="text-primary h-3.5 w-3.5" />
+              <span className="text-muted-foreground text-[10px] font-bold uppercase">
                 Giden
               </span>
             </div>
           </div>
         </div>
         <div className="mt-12 space-y-4">
-          <div className="flex justify-between items-end mb-1">
+          <div className="mb-1 flex items-end justify-between">
             <span className="text-xs font-bold">Cevaplama Oranı</span>
-            <span className="text-[10px] font-black text-success">+2.4%</span>
+            <span className="text-success text-[10px] font-black">+2.4%</span>
           </div>
           <Progress value={92} className="h-2" />
-          <p className="text-[9px] font-medium text-muted-foreground/80 leading-relaxed italic">
+          <p className="text-muted-foreground/80 text-[9px] leading-relaxed font-medium italic">
             "Toplam 240 deneme içinde 221 başarılı eşleşme sağlandı."
           </p>
         </div>

@@ -142,23 +142,23 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden animate-in fade-in duration-300">
+    <div className="animate-in fade-in flex h-full flex-col overflow-hidden duration-300">
       <DashboardHeader>
-        <h1 className="text-base font-semibold text-foreground font-display">
+        <h1 className="text-foreground font-display text-base font-semibold">
           Temsilciler
         </h1>
         <div className="flex items-center gap-2.5">
-          <div className="relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-3.5 h-3.5 group-focus-within:text-brand transition-colors" />
+          <div className="group relative">
+            <Search className="text-muted-foreground group-focus-within:text-brand absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 transition-colors" />
             <Input
-              className="pl-9 pr-4 h-9 w-60 bg-secondary border-transparent focus:bg-background focus:border-border transition-all rounded-lg text-sm text-foreground placeholder:text-muted-foreground"
+              className="bg-secondary focus:bg-background focus:border-border text-foreground placeholder:text-muted-foreground h-9 w-60 rounded-lg border-transparent pr-4 pl-9 text-sm transition-all"
               placeholder="Temsilci ara..."
               value={searchTerm}
               onChange={event => setSearchTerm(event.target.value)}
             />
           </div>
           <Button type="button" variant="secondary">
-            <Download className="w-3.5 h-3.5" />
+            <Download className="h-3.5 w-3.5" />
             İçe Aktar
           </Button>
           <Button
@@ -171,40 +171,40 @@ export default function Dashboard() {
         </div>
       </DashboardHeader>
 
-      <div className="p-6 space-y-5 flex-1 overflow-auto bg-background">
+      <div className="bg-background flex-1 space-y-5 overflow-auto p-6">
         {errorMessage && (
-          <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <div className="border-destructive/30 bg-destructive/10 text-destructive rounded-xl border px-4 py-3 text-sm">
             {errorMessage}
           </div>
         )}
 
-        <div className="rounded-2xl border border-border bg-background shadow-card overflow-hidden">
+        <div className="border-border bg-background shadow-card overflow-hidden rounded-2xl border">
           <Table>
             <TableHeader>
-              <TableRow className="hover:bg-transparent bg-secondary/60 border-b border-border">
-                <TableHead className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground h-11 pl-6">
+              <TableRow className="bg-secondary/60 border-border border-b hover:bg-transparent">
+                <TableHead className="text-muted-foreground h-11 pl-6 text-[11px] font-semibold tracking-wider uppercase">
                   Temsilci Adı
                 </TableHead>
-                <TableHead className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 text-[11px] font-semibold tracking-wider uppercase">
                   Tür
                 </TableHead>
-                <TableHead className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 text-[11px] font-semibold tracking-wider uppercase">
                   Ses
                 </TableHead>
-                <TableHead className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 text-[11px] font-semibold tracking-wider uppercase">
                   Telefon
                 </TableHead>
-                <TableHead className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 text-[11px] font-semibold tracking-wider uppercase">
                   Son Düzenleme
                 </TableHead>
-                <TableHead className="w-12 h-11"></TableHead>
+                <TableHead className="h-11 w-12"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading && (
                 <TableRow>
                   <TableCell
-                    className="py-10 text-center text-sm text-muted-foreground"
+                    className="text-muted-foreground py-10 text-center text-sm"
                     colSpan={6}
                   >
                     Temsilciler yükleniyor...
@@ -215,7 +215,7 @@ export default function Dashboard() {
               {!isLoading && filteredAgents.length === 0 && (
                 <TableRow>
                   <TableCell
-                    className="py-10 text-center text-sm text-muted-foreground"
+                    className="text-muted-foreground py-10 text-center text-sm"
                     colSpan={6}
                   >
                     Temsilci bulunamadı.
@@ -227,16 +227,16 @@ export default function Dashboard() {
                 filteredAgents.map(agent => (
                   <TableRow
                     key={agent.id}
-                    className="group hover:bg-secondary/40 transition-colors border-b border-muted last:border-b-0"
+                    className="group hover:bg-secondary/40 border-muted border-b transition-colors last:border-b-0"
                   >
                     <TableCell className="py-4 pl-6">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-brand/8 rounded-xl border border-brand/15 group-hover:border-brand/30 transition-colors">
-                          <Bot className="w-4 h-4 text-brand" />
+                        <div className="bg-brand/8 border-brand/15 group-hover:border-brand/30 rounded-xl border p-2 transition-colors">
+                          <Bot className="text-brand h-4 w-4" />
                         </div>
                         <button
                           type="button"
-                          className="text-sm font-semibold text-foreground text-left hover:text-brand transition-colors"
+                          className="text-foreground hover:text-brand text-left text-sm font-semibold transition-colors"
                           onClick={() =>
                             navigate(
                               `/dashboard/agent-flow?agentId=${agent.id}`,
@@ -248,42 +248,42 @@ export default function Dashboard() {
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-secondary text-secondary-foreground">
+                      <span className="bg-secondary text-secondary-foreground inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium">
                         {agent.hasFlow ? "Sohbet Akışı" : "Boş"}
                       </span>
                     </TableCell>
                     <TableCell className="py-4">
                       <div className="flex items-center gap-2">
-                        <Avatar className="w-6 h-6 ring-1 ring-border">
+                        <Avatar className="ring-border h-6 w-6 ring-1">
                           <AvatarImage src={DEFAULT_VOICE_IMAGE} />
                           <AvatarFallback className="text-[10px]">
                             V
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm text-secondary-foreground font-medium">
+                        <span className="text-secondary-foreground text-sm font-medium">
                           {DEFAULT_VOICE_NAME}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="py-4 text-sm text-muted-foreground">
+                    <TableCell className="text-muted-foreground py-4 text-sm">
                       -
                     </TableCell>
-                    <TableCell className="py-4 text-sm text-muted-foreground">
+                    <TableCell className="text-muted-foreground py-4 text-sm">
                       {formatDate(agent.updatedAt)}
                     </TableCell>
-                    <TableCell className="py-4 text-right pr-4">
+                    <TableCell className="py-4 pr-4 text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button
                             type="button"
-                            className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100"
+                            className="text-muted-foreground hover:text-foreground hover:bg-secondary flex h-8 w-8 items-center justify-center rounded-lg opacity-0 transition-colors group-hover:opacity-100"
                           >
-                            <MoreVertical className="w-4 h-4" />
+                            <MoreVertical className="h-4 w-4" />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                           align="end"
-                          className="w-40 border-border rounded-xl shadow-card"
+                          className="border-border shadow-card w-40 rounded-xl"
                         >
                           <DropdownMenuItem
                             onClick={() =>
@@ -310,22 +310,22 @@ export default function Dashboard() {
             </TableBody>
           </Table>
 
-          <div className="px-6 py-3.5 bg-secondary/30 border-t border-border flex items-center justify-center gap-3">
+          <div className="bg-secondary/30 border-border flex items-center justify-center gap-3 border-t px-6 py-3.5">
             <button
               type="button"
-              className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary transition-colors disabled:opacity-30"
+              className="text-muted-foreground hover:bg-secondary flex h-8 w-8 items-center justify-center rounded-lg transition-colors disabled:opacity-30"
               disabled
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="h-4 w-4" />
             </button>
-            <div className="w-7 h-7 flex items-center justify-center bg-foreground text-white rounded-lg text-xs font-semibold">
+            <div className="bg-foreground flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold text-white">
               1
             </div>
             <button
               type="button"
-              className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary transition-colors"
+              className="text-muted-foreground hover:bg-secondary flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         </div>

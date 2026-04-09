@@ -51,51 +51,51 @@ const performanceData = [
 
 export const PerformanceTable = () => {
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden">
-      <div className="p-6 border-b border-border flex justify-between items-center bg-secondary/10">
+    <div className="bg-card border-border overflow-hidden rounded-2xl border shadow-sm">
+      <div className="border-border bg-secondary/10 flex items-center justify-between border-b p-6">
         <div>
-          <h3 className="font-bold text-sm uppercase tracking-widest">
+          <h3 className="text-sm font-bold tracking-widest uppercase">
             Asistan Bazlı Performans
           </h3>
-          <p className="text-[10px] text-muted-foreground mt-1 font-medium">
+          <p className="text-muted-foreground mt-1 text-[10px] font-medium">
             En son güncellenen veriler
           </p>
         </div>
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 text-[11px] font-bold text-primary hover:bg-primary/5 gap-1.5 uppercase tracking-wider"
+          className="text-primary hover:bg-primary/5 h-8 gap-1.5 text-[11px] font-bold tracking-wider uppercase"
         >
           Tümünü Gör
-          <ChevronRight className="w-3.5 h-3.5" />
+          <ChevronRight className="h-3.5 w-3.5" />
         </Button>
       </div>
 
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent bg-secondary/20">
-            <TableHead className="text-[10px] font-black uppercase tracking-widest h-12 px-6">
+          <TableRow className="bg-secondary/20 hover:bg-transparent">
+            <TableHead className="h-12 px-6 text-[10px] font-black tracking-widest uppercase">
               Asistan Adı
             </TableHead>
-            <TableHead className="text-[10px] font-black uppercase tracking-widest h-12 px-6">
+            <TableHead className="h-12 px-6 text-[10px] font-black tracking-widest uppercase">
               <div className="flex items-center gap-1.5">
-                <PhoneCall className="w-3 h-3" />
+                <PhoneCall className="h-3 w-3" />
                 Çağrı
               </div>
             </TableHead>
-            <TableHead className="text-[10px] font-black uppercase tracking-widest h-12 px-6">
+            <TableHead className="h-12 px-6 text-[10px] font-black tracking-widest uppercase">
               <div className="flex items-center gap-1.5">
-                <Timer className="w-3 h-3" />
+                <Timer className="h-3 w-3" />
                 Ort. Süre
               </div>
             </TableHead>
-            <TableHead className="text-[10px] font-black uppercase tracking-widest h-12 px-6">
+            <TableHead className="h-12 px-6 text-[10px] font-black tracking-widest uppercase">
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3 h-3" />
+                <CheckCircle2 className="h-3 w-3" />
                 Başarı
               </div>
             </TableHead>
-            <TableHead className="text-[10px] font-black uppercase tracking-widest h-12 px-6">
+            <TableHead className="h-12 px-6 text-[10px] font-black tracking-widest uppercase">
               Durum
             </TableHead>
           </TableRow>
@@ -104,14 +104,14 @@ export const PerformanceTable = () => {
           {performanceData.map(item => (
             <TableRow
               key={item.id}
-              className="group hover:bg-secondary/10 transition-colors border-border/50"
+              className="group hover:bg-secondary/10 border-border/50 transition-colors"
             >
               <TableCell className="px-6 py-4">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center transition-transform group-hover:scale-105`}
+                    className={`h-10 w-10 rounded-xl ${item.bg} flex items-center justify-center transition-transform group-hover:scale-105`}
                   >
-                    <Bot className={`w-5 h-5 ${item.color}`} />
+                    <Bot className={`h-5 w-5 ${item.color}`} />
                   </div>
                   <span className="text-sm font-bold tracking-tight">
                     {item.name}
@@ -126,7 +126,7 @@ export const PerformanceTable = () => {
               </TableCell>
               <TableCell className="px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-24 bg-secondary h-1.5 rounded-full overflow-hidden shadow-inner">
+                  <div className="bg-secondary h-1.5 w-24 overflow-hidden rounded-full shadow-inner">
                     <div
                       className="bg-primary h-full transition-all duration-1000 ease-out"
                       style={{ width: `${item.successRate}%` }}
@@ -140,7 +140,7 @@ export const PerformanceTable = () => {
               <TableCell className="px-6 py-4">
                 <Badge
                   variant="secondary"
-                  className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 ${
+                  className={`px-2 py-0.5 text-[10px] font-black tracking-wider uppercase ${
                     item.status === "Aktif"
                       ? "bg-success/10 text-success border-success/20"
                       : "bg-secondary text-muted-foreground"
