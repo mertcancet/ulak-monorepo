@@ -1,4 +1,4 @@
-import { defineRelationsPart, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
@@ -144,69 +144,69 @@ export const knowledgeBaseChunks = pgTable(
   ],
 );
 
-export const knowledgeBaseRelations = defineRelationsPart(
-  {
-    users,
-    businesses,
-    knowledgeBases,
-    knowledgeBaseSources,
-    knowledgeBaseChunks,
-  },
-  r => ({
-    users: {
-      businesses: r.many.businesses(),
-      knowledgeBases: r.many.knowledgeBases(),
-      knowledgeBaseSources: r.many.knowledgeBaseSources(),
-    },
-    businesses: {
-      owner: r.one.users({
-        from: r.businesses.ownerUserId,
-        to: r.users.id,
-      }),
-      knowledgeBases: r.many.knowledgeBases(),
-      knowledgeBaseSources: r.many.knowledgeBaseSources(),
-      knowledgeBaseChunks: r.many.knowledgeBaseChunks(),
-    },
-    knowledgeBases: {
-      business: r.one.businesses({
-        from: r.knowledgeBases.businessId,
-        to: r.businesses.id,
-      }),
-      createdBy: r.one.users({
-        from: r.knowledgeBases.createdByUserId,
-        to: r.users.id,
-      }),
-      sources: r.many.knowledgeBaseSources(),
-      chunks: r.many.knowledgeBaseChunks(),
-    },
-    knowledgeBaseSources: {
-      business: r.one.businesses({
-        from: r.knowledgeBaseSources.businessId,
-        to: r.businesses.id,
-      }),
-      knowledgeBase: r.one.knowledgeBases({
-        from: r.knowledgeBaseSources.knowledgeBaseId,
-        to: r.knowledgeBases.id,
-      }),
-      createdBy: r.one.users({
-        from: r.knowledgeBaseSources.createdByUserId,
-        to: r.users.id,
-      }),
-      chunks: r.many.knowledgeBaseChunks(),
-    },
-    knowledgeBaseChunks: {
-      business: r.one.businesses({
-        from: r.knowledgeBaseChunks.businessId,
-        to: r.businesses.id,
-      }),
-      knowledgeBase: r.one.knowledgeBases({
-        from: r.knowledgeBaseChunks.knowledgeBaseId,
-        to: r.knowledgeBases.id,
-      }),
-      source: r.one.knowledgeBaseSources({
-        from: r.knowledgeBaseChunks.sourceId,
-        to: r.knowledgeBaseSources.id,
-      }),
-    },
-  }),
-);
+// export const knowledgeBaseRelations = defineRelationsPart(
+//   {
+//     users,
+//     businesses,
+//     // knowledgeBases,
+//     // knowledgeBaseSources,
+//     // knowledgeBaseChunks,
+//   },
+//   r => ({
+//     users: {
+//       businesses: r.many.businesses(),
+//       // knowledgeBases: r.many.knowledgeBases(),
+//       // knowledgeBaseSources: r.many.knowledgeBaseSources(),
+//     },
+//     businesses: {
+//       owner: r.one.users({
+//         from: r.businesses.ownerUserId,
+//         to: r.users.id,
+//       }),
+//       // knowledgeBases: r.many.knowledgeBases(),
+//       // knowledgeBaseSources: r.many.knowledgeBaseSources(),
+//       // knowledgeBaseChunks: r.many.knowledgeBaseChunks(),
+//     },
+//     // knowledgeBases: {
+//     //   business: r.one.businesses({
+//     //     from: r.knowledgeBases.businessId,
+//     //     to: r.businesses.id,
+//     //   }),
+//     //   createdBy: r.one.users({
+//     //     from: r.knowledgeBases.createdByUserId,
+//     //     to: r.users.id,
+//     //   }),
+//     //   sources: r.many.knowledgeBaseSources(),
+//     //   chunks: r.many.knowledgeBaseChunks(),
+//     // },
+//     // knowledgeBaseSources: {
+//     //   business: r.one.businesses({
+//     //     from: r.knowledgeBaseSources.businessId,
+//     //     to: r.businesses.id,
+//     //   }),
+//     //   knowledgeBase: r.one.knowledgeBases({
+//     //     from: r.knowledgeBaseSources.knowledgeBaseId,
+//     //     to: r.knowledgeBases.id,
+//     //   }),
+//     //   createdBy: r.one.users({
+//     //     from: r.knowledgeBaseSources.createdByUserId,
+//     //     to: r.users.id,
+//     //   }),
+//     //   chunks: r.many.knowledgeBaseChunks(),
+//     // },
+//     // knowledgeBaseChunks: {
+//     //   business: r.one.businesses({
+//     //     from: r.knowledgeBaseChunks.businessId,
+//     //     to: r.businesses.id,
+//     //   }),
+//     //   knowledgeBase: r.one.knowledgeBases({
+//     //     from: r.knowledgeBaseChunks.knowledgeBaseId,
+//     //     to: r.knowledgeBases.id,
+//     //   }),
+//     //   source: r.one.knowledgeBaseSources({
+//     //     from: r.knowledgeBaseChunks.sourceId,
+//     //     to: r.knowledgeBaseSources.id,
+//     //   }),
+//     // },
+//   }),
+// );
