@@ -11,63 +11,61 @@ import {
   Share,
 } from "lucide-react";
 import type React from "react";
+import { useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { useFlowStore } from "~/store/flow-store";
 import DashboardHeader from "../dashboard-header";
 
-export const FlowHeader: React.FC = () => {
+type FlowHeaderProps = {
+  agentId: string | null;
+  agentName: string;
+  onSave: () => Promise<void> | void;
+  canSave: boolean;
+  isSaving: boolean;
+};
+
+export const FlowHeader: React.FC<FlowHeaderProps> = ({
+  agentId,
+  agentName,
+  onSave,
+  canSave,
+  isSaving,
+}) => {
+  const navigate = useNavigate();
   const { nodes, edges } = useFlowStore();
 
-  const handlePublish = () => {
-    // Transform nodes to include their connections
-    const enrichedNodes = nodes.map(node => {
-      const outgoingEdges = edges.filter(edge => edge.source === node.id);
+  const shortAgentId = agentId
+    ? `${agentId.slice(0, 2)}...${agentId.slice(-3)}`
+    : "-";
+  const flowId = `${nodes.length}N-${edges.length}E`;
 
-      // Create a mapping of outcome IDs to target node IDs
-      const outcomes: Record<string, string> = {};
-      outgoingEdges.forEach(edge => {
-        const handleId = edge.sourceHandle || "default";
-        outcomes[handleId] = edge.target;
-      });
-
-      return {
-        ...node,
-        data: {
-          ...node.data,
-          outcomes,
-          // For backward compatibility or simpler cases
-          nextNodes: outgoingEdges.map(edge => edge.target),
-        },
-      };
-    });
-
-    console.log("--- ENRICHED NODES (with connections) ---");
-    console.log(enrichedNodes);
-    alert("Bağlantı bilgileri node içine gömüldü ve konsola yazdırıldı!");
-  };
   return (
     <DashboardHeader>
       <div className="flex flex-col gap-1">
         <div className="flex">
           <div className="mr-1 bg-secondary/50 rounded">
-            <Button variant="outline" size="icon">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigate("/dashboard")}
+            >
               <Home className="text-muted-foreground w-5 h-5" />
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <h1 className="font-semibold text-md">
-              Patient Screening (from template)
-            </h1>
+            <h1 className="font-semibold text-md">{agentName}</h1>
             <Edit className="text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors w-3 h-3" />
           </div>
         </div>
 
         <div>
           <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-medium font-display">
-            <span className="flex items-center gap-1">Agent ID: ag...acc </span>
+            <span className="flex items-center gap-1">
+              Agent ID: {shortAgentId}
+            </span>
             <Copy className="w-3 h-3 cursor-pointer hover:text-foreground" />
             <span className="flex items-center gap-1">
-              CF ID: co...774{" "}
+              Flow ID: {flowId}{" "}
               <Copy className="w-3 h-3 cursor-pointer hover:text-foreground" />
             </span>
             <span>$0.115/min</span>
@@ -133,9 +131,10 @@ export const FlowHeader: React.FC = () => {
             variant="default"
             size="sm"
             className="px-5 py-1.5"
-            onClick={handlePublish}
+            onClick={() => onSave()}
+            disabled={!canSave}
           >
-            Publish
+            {isSaving ? "Kaydediliyor..." : "Kaydet"}
           </Button>
         </div>
       </div>
