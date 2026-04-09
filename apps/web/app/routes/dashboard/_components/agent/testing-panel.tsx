@@ -23,8 +23,8 @@ const MessagesSquare = ({ className }: { className?: string }) => (
 
 export const TestingPanel = () => {
   return (
-    <div className="w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-lg overflow-hidden relative">
-      <div className="p-2 border-b border-border flex items-center justify-between bg-secondary/30 backdrop-blur-sm">
+    <div className="overflow-hidden w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-lg relative">
+      <div className="p-2 border-b border-border flex rounded-t-xl items-center justify-between bg-secondary/30 backdrop-blur-sm">
         <div className="flex space-x-1 bg-background/50 p-1 rounded-lg border border-border flex-1 shadow-inner">
           <button
             type="button"
