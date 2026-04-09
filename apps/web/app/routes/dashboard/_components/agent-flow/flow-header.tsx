@@ -93,39 +93,40 @@ export const FlowHeader: React.FC<FlowHeaderProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             type="button"
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-secondary-foreground bg-background border border-border rounded-lg hover:bg-secondary transition-colors"
+            className="flex h-8 items-center gap-1 px-3 text-xs font-medium text-secondary-foreground bg-background border border-border rounded-lg hover:bg-secondary transition-colors"
           >
             <MessageCircle className="w-3 h-3 text-muted-foreground" /> Geri
             bildirim
           </button>
-          <div className="flex items-center border border-border rounded-lg overflow-hidden">
+          <div className="flex h-8 items-center border border-border rounded-lg overflow-hidden">
             <button
               type="button"
-              className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
+              className="flex h-full items-center justify-center px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
             >
               <MoreHorizontal className="w-3 h-3" />
             </button>
             <button
               type="button"
-              className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
+              className="flex h-full items-center justify-center px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
             >
               <Share className="w-3 h-3" />
             </button>
             <button
               type="button"
-              className="p-1.5 px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
+              className="flex h-full items-center justify-center px-2 hover:bg-secondary border-r border-border transition-colors text-muted-foreground hover:text-foreground"
             >
               <History className="w-3 h-3" />
             </button>
             <button
               type="button"
-              className="p-1.5 px-2 hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+              className="flex h-full items-center justify-center px-2 hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
             >
               <Play className="w-3 h-3" />
             </button>
           </div>
           <Button
             variant="outline"
+            className="h-8 px-3 text-xs"
             onClick={() => onSave()}
             disabled={!canSave}
           >
