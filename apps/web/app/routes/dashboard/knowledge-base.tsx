@@ -76,15 +76,17 @@ export default function KnowledgeBasePage() {
       ["knowledge-bases"]({ id: knowledgeBaseId })
       .sources.get();
 
-    // nextSources.data
-
-    setSources(nextSources.data);
+    const safeSources = Array.isArray(nextSources.data) ? nextSources.data : [];
+    setSources(safeSources);
   }, []);
 
   const refreshKnowledgeBases = useCallback(
     async (businessId: string, preferredKnowledgeBaseId?: string | null) => {
-      const nextKnowledgeBases =
+      const nextKnowledgeBasesRaw =
         await knowledgeBaseApi.listKnowledgeBases(businessId);
+      const nextKnowledgeBases = Array.isArray(nextKnowledgeBasesRaw)
+        ? nextKnowledgeBasesRaw
+        : [];
 
       setKnowledgeBases(nextKnowledgeBases);
 
@@ -113,7 +115,10 @@ export default function KnowledgeBasePage() {
       setErrorMessage(null);
 
       try {
-        const nextBusinesses = await knowledgeBaseApi.listBusinesses();
+        const nextBusinessesRaw = await knowledgeBaseApi.listBusinesses();
+        const nextBusinesses = Array.isArray(nextBusinessesRaw)
+          ? nextBusinessesRaw
+          : [];
 
         if (cancelled) return;
 
