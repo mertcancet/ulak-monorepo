@@ -81,6 +81,8 @@ PostgreSQL 18 Alpine kullanılmaktadır. Drizzle ORM ile yönetilir.
 
 Proje **Biome 2.4.4** kullanır (formatter + linter olarak).
 
+Web tarafında Tailwind class sıralaması için **Prettier + prettier-plugin-tailwindcss** kullanılır.
+
 **Kurallar:**
 
 - **Quotes**: Double quotes (`"`)
@@ -89,6 +91,11 @@ Proje **Biome 2.4.4** kullanır (formatter + linter olarak).
 - **Indentation**: Spaces (2 boşluk)
 - **Tailwind CSS**: CSS parser'da `tailwindDirectives: true`
 - **Import Organization**: Otomatik organize edilen imports
+
+**Sorumluluk paylaşımı:**
+
+- **Biome**: lint + import organize + genel kalite kuralları
+- **Prettier (Web)**: dosya formatı + Tailwind utility class sıralaması
 
 **Format Komutları:**
 
@@ -100,6 +107,9 @@ pnpm check:api     # Check only
 # Web
 pnpm format:web    # Fix ve write
 pnpm check:web     # Check only
+pnpm format:web:prettier  # Web format + Tailwind class sort (write)
+pnpm check:web:prettier   # Web format kontrolü (fail)
+pnpm warn:web:prettier    # Web format kontrolü (warn only, fail etmez)
 ```
 
 ### TypeScript Yaklaşımı
@@ -302,20 +312,20 @@ export function AgentDetails() {
 // store/flow-store.ts
 import { create } from "zustand";
 
-export const useFlowStore = create<FlowState>((set) => ({
+export const useFlowStore = create<FlowState>(set => ({
   nodes: initialNodes,
   edges: initialEdges,
-  setNodes: (nodes) => set({ nodes }),
-  setEdges: (edges) => set({ edges }),
-  addNode: (node) => set((state) => ({ nodes: [...state.nodes, node] })),
+  setNodes: nodes => set({ nodes }),
+  setEdges: edges => set({ edges }),
+  addNode: node => set(state => ({ nodes: [...state.nodes, node] })),
 }));
 ```
 
 **Kullanım:**
 
 ```typescript
-const nodes = useFlowStore((state) => state.nodes);
-const setNodes = useFlowStore((state) => state.setNodes);
+const nodes = useFlowStore(state => state.nodes);
+const setNodes = useFlowStore(state => state.setNodes);
 ```
 
 ### Error Handling
@@ -557,7 +567,7 @@ export const agents = pgTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => [index().on(table.ownerUserId)],
+  table => [index().on(table.ownerUserId)],
 );
 ```
 
@@ -694,6 +704,7 @@ const user = session?.user;
 1. **Local Formatting**
 
    ```bash
+   pnpm format:web:prettier
    pnpm format:web
    pnpm format:api
    ```
@@ -735,6 +746,7 @@ Nasıl test edildi? (manuel/otomatik)
 ## 📝 Checklist
 
 - [ ] Biome checks pass (`pnpm check:web`, `pnpm check:api`)
+- [ ] Prettier web check passes (`pnpm check:web:prettier`)
 - [ ] Type checking passes (`tsc` or `react-router typegen`)
 - [ ] Builds pass (`pnpm build:web`, `pnpm build:api`)
 - [ ] New dependencies added to `pnpm-workspace.yaml` catalog if shared
