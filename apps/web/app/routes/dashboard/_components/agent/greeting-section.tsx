@@ -4,7 +4,7 @@ import { Button } from "~/components/ui/button";
 
 export const GreetingSection = () => {
   return (
-    <div className="bg-card border border-border rounded-xl p-4 shadow-sm shadow-black/5 glass">
+    <div className="bg-card border border-border rounded-xl p-4 shadow-sm shadow-black/5">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-bold tracking-tight">Karşılama Mesajı</h2>
         <Badge

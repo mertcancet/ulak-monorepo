@@ -124,7 +124,11 @@ export const FlowHeader: React.FC<FlowHeaderProps> = ({
               <Play className="w-3 h-3" />
             </button>
           </div>
-          <Button onClick={() => onSave()} disabled={!canSave}>
+          <Button
+            variant="outline"
+            onClick={() => onSave()}
+            disabled={!canSave}
+          >
             {isSaving ? "Kaydediliyor..." : "Kaydet"}
           </Button>
         </div>

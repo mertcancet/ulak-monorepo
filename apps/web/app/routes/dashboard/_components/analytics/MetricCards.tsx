@@ -19,7 +19,7 @@ const MetricCard = ({
   trendType,
   icon,
 }: MetricCardProps) => (
-  <div className="bg-card border border-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-all group relative overflow-hidden glass">
+  <div className="bg-card border border-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
     <div className="flex justify-between items-start mb-4">
       <div>
         <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">

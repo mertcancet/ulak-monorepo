@@ -41,7 +41,7 @@ const ConfigSectionItem = ({
 
 export const ConfigSidebar = () => {
   return (
-    <div className="w-80 flex flex-col bg-card border border-border rounded-xl shadow-sm overflow-hidden glass">
+    <div className="w-80 flex flex-col bg-card border border-border rounded-xl shadow-sm overflow-hidden">
       <ScrollArea className="h-full">
         <div className="divide-y divide-border">
           {CONFIG_SECTIONS.map((section, index) => (

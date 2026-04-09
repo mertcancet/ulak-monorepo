@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 
 export const QuickSelectToolbar = () => {
   return (
-    <div className="flex items-center space-x-3 bg-card/50 backdrop-blur-sm border border-border p-2 rounded-xl shadow-sm glass">
+    <div className="flex items-center space-x-3  backdrop-blur-sm border border-border p-2 rounded-xl shadow-sm ">
       <Button
         variant="outline"
         size="sm"

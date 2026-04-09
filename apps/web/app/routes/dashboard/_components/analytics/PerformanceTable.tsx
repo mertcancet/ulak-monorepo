@@ -51,7 +51,7 @@ const performanceData = [
 
 export const PerformanceTable = () => {
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden glass">
+    <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden">
       <div className="p-6 border-b border-border flex justify-between items-center bg-secondary/10">
         <div>
           <h3 className="font-bold text-sm uppercase tracking-widest">

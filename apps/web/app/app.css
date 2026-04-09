@@ -173,13 +173,6 @@
     border-radius: 2px;
   }
 
-  /* Warm frosted surface */
-  .glass {
-    backdrop-filter: blur(12px);
-    background: hsla(48, 100%, 96%, 0.45);
-    border: 1px solid hsl(var(--border));
-  }
-
   /* Warm Mistral glow shadow */
   .shadow-brand {
     box-shadow: rgba(127, 99, 21, 0.16) 0px 0px 18px;

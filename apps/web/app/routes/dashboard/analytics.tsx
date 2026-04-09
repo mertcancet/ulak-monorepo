@@ -20,7 +20,7 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="md:col-span-4 space-y-6">
-            <div className="bg-card border border-border p-8 rounded-2xl shadow-sm glass h-full flex flex-col justify-center items-center text-center">
+            <div className="bg-card border border-border p-8 rounded-2xl shadow-sm h-full flex flex-col justify-center items-center text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 ring-4 ring-primary/10">
                 <UserMinus className="w-8 h-8 text-primary" />
               </div>

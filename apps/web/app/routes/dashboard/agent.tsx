@@ -16,19 +16,21 @@ export default function AgentConfigPage() {
     <div className="flex flex-col h-screen bg-background overflow-hidden relative animate-in fade-in duration-500">
       <AgentHeader />
 
-      <main className="flex-1 flex overflow-hidden p-4 gap-4 bg-mesh">
-        {/* Left Column: Configuration Canvas */}
-        <div className="flex-1 flex flex-col space-y-4 min-w-[400px]">
-          <QuickSelectToolbar />
-          <PromptEditor />
-          <GreetingSection />
+      <main className="flex-1 flex overflow-hidden p-4">
+        <div className="flex-1 flex overflow-hidden gap-4 rounded-xl border border-border bg-card/30 p-3">
+          {/* Left Column: Configuration Canvas */}
+          <div className="flex-1 flex flex-col space-y-4 min-w-100">
+            <QuickSelectToolbar />
+            <PromptEditor />
+            <GreetingSection />
+          </div>
+
+          {/* Middle Column: Configuration Panel */}
+          <ConfigSidebar />
+
+          {/* Right Column: Testing Panel */}
+          <TestingPanel />
         </div>
-
-        {/* Middle Column: Configuration Panel */}
-        <ConfigSidebar />
-
-        {/* Right Column: Testing Panel */}
-        <TestingPanel />
       </main>
 
       <FooterStatusBar />

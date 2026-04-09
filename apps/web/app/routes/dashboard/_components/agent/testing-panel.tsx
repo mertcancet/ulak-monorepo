@@ -23,7 +23,7 @@ const MessagesSquare = ({ className }: { className?: string }) => (
 
 export const TestingPanel = () => {
   return (
-    <div className="w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-lg overflow-hidden glass relative">
+    <div className="w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-lg overflow-hidden relative">
       <div className="p-2 border-b border-border flex items-center justify-between bg-secondary/30 backdrop-blur-sm">
         <div className="flex space-x-1 bg-background/50 p-1 rounded-lg border border-border flex-1 shadow-inner">
           <button
@@ -73,7 +73,7 @@ export const TestingPanel = () => {
 
         <Button
           size="lg"
-          className="px-10 h-12 font-bold gradient-primary shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform active:scale-[0.98]"
+          className="px-10 h-12 font-bold bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:scale-[1.02] transition-transform active:scale-[0.98]"
         >
           Testi Başlat
         </Button>

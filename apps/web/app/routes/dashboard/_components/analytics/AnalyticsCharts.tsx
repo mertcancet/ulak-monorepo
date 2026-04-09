@@ -15,7 +15,7 @@ const ChartCard = ({
   className?: string;
 }) => (
   <div
-    className={`bg-card border border-border p-6 rounded-2xl shadow-sm glass ${className}`}
+    className={`bg-card border border-border p-6 rounded-2xl shadow-sm ${className}`}
   >
     <div className="mb-6">
       <h3 className="font-bold tracking-tight text-sm uppercase text-foreground/80">
