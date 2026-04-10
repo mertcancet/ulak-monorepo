@@ -13,6 +13,7 @@ export default [
     route("call-history", "routes/dashboard/call-history.tsx"),
     route("call-history/:id", "routes/dashboard/call-history-detail.tsx"),
     route("analytics", "routes/dashboard/analytics.tsx"),
+    route("billing", "routes/dashboard/billing.tsx"),
     route("settings", "routes/dashboard/settings.tsx"),
   ]),
 
