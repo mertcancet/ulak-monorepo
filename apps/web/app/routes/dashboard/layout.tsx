@@ -271,7 +271,7 @@ const DashboardLayout = () => {
                 icon={History}
                 label="Çağrı Geçmişi"
                 href="/dashboard/call-history"
-                active={location.pathname === "/dashboard/call-history"}
+                active={location.pathname.startsWith("/dashboard/call-history")}
                 collapsed={collapsed}
               />
               <SidebarItem

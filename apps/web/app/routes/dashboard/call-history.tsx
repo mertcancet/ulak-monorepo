@@ -1,83 +1,110 @@
 import {
+  ArrowRight,
   Calendar,
-  ChevronLeft,
-  ChevronRight,
-  Columns,
   Filter,
   History,
-  MoreHorizontal,
+  Phone,
   RotateCw,
-  SlidersHorizontal,
+  Search,
   Upload,
 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Link } from "react-router";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
+import {
+  type CallHistoryItem,
+  callHistoryMockData,
+} from "./_components/call-history/mock-data";
 import DashboardHeader from "./_components/dashboard-header";
 
+const statusFilterOptions = [
+  "Tum Sonuclar",
+  "Basarili",
+  "Basarisiz",
+  "Cevapsiz",
+] as const;
+
+const statusViewMap: Record<CallHistoryItem["status"], string> = {
+  Basarili: "Basarili",
+  Basarisiz: "Basarisiz",
+  Cevapsiz: "Cevapsiz",
+};
+
+const formatCurrency = (amount: number): string => `$${amount.toFixed(3)}`;
+
+const formatDateTime = (value: string): string => {
+  const date = new Date(value);
+  return date.toLocaleString("tr-TR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+};
+
+const formatDuration = (durationSeconds: number): string => {
+  const minutes = Math.floor(durationSeconds / 60);
+  const seconds = durationSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+};
+
+const statusBadgeClass: Record<CallHistoryItem["status"], string> = {
+  Basarili: "border-emerald-400/30 bg-emerald-500/10 text-emerald-300",
+  Basarisiz: "border-red-400/30 bg-red-500/10 text-red-300",
+  Cevapsiz: "border-zinc-500/40 bg-zinc-700/30 text-zinc-300",
+};
+
+const sentimentDotClass: Record<CallHistoryItem["sentiment"], string> = {
+  Pozitif: "bg-emerald-400",
+  Notr: "bg-zinc-300",
+  Negatif: "bg-red-400",
+  Belirsiz: "bg-zinc-500",
+};
+
 const CallHistoryPage = () => {
-  const calls = [
-    {
-      id: "call_3b2a...9082",
-      time: "2024-03-21 14:30:22 +03",
-      duration: "0:45",
-      channel: "web_call",
-      cost: "$0.021",
-      reason: "Kullanıcı Kapattı",
-      sentiment: "Pozitif",
-      direction: "Gelen",
-      status: "Başarılı",
-      reasonColor: "bg-success",
-      sentimentColor: "bg-primary",
-      statusVariant: "success",
-    },
-    {
-      id: "call_9a1f...bc7d",
-      time: "2024-03-21 14:22:10 +03",
-      duration: "2:12",
-      channel: "phone_call",
-      cost: "$0.142",
-      reason: "Kullanıcı Kapattı",
-      sentiment: "Nötr",
-      direction: "Giden",
-      status: "Başarılı",
-      reasonColor: "bg-success",
-      sentimentColor: "bg-muted-foreground",
-      statusVariant: "success",
-    },
-    {
-      id: "call_f821...a12c",
-      time: "2024-03-21 14:15:05 +03",
-      duration: "0:12",
-      channel: "web_call",
-      cost: "$0.008",
-      reason: "Sistem Hatası",
-      sentiment: "Belirsiz",
-      direction: "Gelen",
-      status: "Başarısız",
-      reasonColor: "bg-destructive/100",
-      sentimentColor: "bg-muted-foreground",
-      statusVariant: "destructive",
-    },
-    {
-      id: "call_e55d...221b",
-      time: "2024-03-21 13:58:45 +03",
-      duration: "1:30",
-      channel: "phone_call",
-      cost: "$0.089",
-      reason: "Temsilci Kapattı",
-      sentiment: "Pozitif",
-      direction: "Giden",
-      status: "Başarılı",
-      reasonColor: "bg-success",
-      sentimentColor: "bg-primary",
-      statusVariant: "success",
-    },
-  ];
+  const [query, setQuery] = useState<string>("");
+  const [statusFilter, setStatusFilter] =
+    useState<(typeof statusFilterOptions)[number]>("Tum Sonuclar");
+
+  const filteredCalls = useMemo(() => {
+    return callHistoryMockData.filter(call => {
+      const matchesSearch =
+        call.id.toLowerCase().includes(query.toLowerCase()) ||
+        call.userName.toLowerCase().includes(query.toLowerCase()) ||
+        call.callerNumber.toLowerCase().includes(query.toLowerCase()) ||
+        call.agentName.toLowerCase().includes(query.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === "Tum Sonuclar"
+          ? true
+          : statusViewMap[call.status] === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [query, statusFilter]);
+
+  const totalCost = filteredCalls.reduce((sum, item) => sum + item.costUsd, 0);
+  const successfulCalls = filteredCalls.filter(
+    call => call.status === "Basarili",
+  ).length;
+  const successRate =
+    filteredCalls.length === 0
+      ? 0
+      : Math.round((successfulCalls / filteredCalls.length) * 100);
 
   return (
     <div className="bg-background animate-in fade-in flex h-full flex-col duration-500">
-      {/* Header */}
       <DashboardHeader>
         <div className="flex items-center gap-3">
           <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-lg">
@@ -99,30 +126,12 @@ const CallHistoryPage = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="hover:bg-background border-border/50 h-8 gap-2 rounded-none border-x px-3 text-xs font-semibold shadow-none"
+              className="hover:bg-background border-border/50 h-8 gap-2 rounded-none border-l px-3 text-xs font-semibold shadow-none"
             >
               <Filter className="h-3.5 w-3.5" />
               Filtrele
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hover:bg-background border-border/50 h-8 gap-2 rounded-none border-r px-3 text-xs font-semibold shadow-none"
-            >
-              <Columns className="h-3.5 w-3.5" />
-              Görünüm
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hover:bg-background h-8 gap-2 px-3 text-xs font-semibold shadow-none"
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-              Özel Nitelikler
-            </Button>
           </div>
-
-          <div className="bg-border mx-1 h-6 w-px" />
 
           <Button
             variant="outline"
@@ -143,166 +152,178 @@ const CallHistoryPage = () => {
         </div>
       </DashboardHeader>
 
-      {/* Table Content */}
-      <div className="scrollbar-thin flex-1 overflow-auto">
-        <table className="w-full min-w-300 border-collapse text-left">
-          <thead className="sticky top-0 z-10">
-            <tr className="border-border bg-secondary/30 border-b backdrop-blur-md">
-              <th className="text-muted-foreground px-6 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Zaman
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Süre
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Kanal
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Maliyet
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Oturum ID
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Bitiş Nedeni
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Duygu
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Yön
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                Sonuç
-              </th>
-              <th className="text-muted-foreground px-4 py-3 text-[10px] leading-none font-bold tracking-widest uppercase">
-                İşlem
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-border/50 divide-y">
-            {calls.map((call, idx) => (
-              <tr
-                // biome-ignore lint/suspicious/noArrayIndexKey: <>
-                key={idx}
-                className="group hover:bg-secondary/40 cursor-pointer transition-all duration-200"
-              >
-                <td className="px-6 py-4 text-[11px] font-bold tracking-tight whitespace-nowrap">
-                  {call.time}
-                </td>
-                <td className="text-muted-foreground px-4 py-4 text-xs font-semibold">
-                  {call.duration}
-                </td>
-                <td className="px-4 py-4">
+      <div className="border-border/50 bg-secondary/15 grid grid-cols-2 gap-px border-y sm:grid-cols-4">
+        {[
+          { label: "Toplam Cagri", value: String(filteredCalls.length) },
+          {
+            label: "Basari Orani",
+            value: filteredCalls.length === 0 ? "-%" : `%${successRate}`,
+          },
+          {
+            label: "Toplam Maliyet",
+            value: formatCurrency(totalCost),
+          },
+          {
+            label: "Ortalama Gecikme",
+            value:
+              filteredCalls.length === 0
+                ? "-"
+                : `${Math.round(
+                    filteredCalls.reduce(
+                      (sum, item) => sum + item.latencyMs,
+                      0,
+                    ) / filteredCalls.length,
+                  )} ms`,
+          },
+        ].map(item => (
+          <div key={item.label} className="bg-background px-5 py-4">
+            <p className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
+              {item.label}
+            </p>
+            <p className="text-foreground mt-1 text-xl font-bold">
+              {item.value}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="border-border/50 flex flex-wrap items-center gap-3 border-b px-6 py-3">
+        <div className="border-border bg-secondary/40 flex h-9 min-w-65 items-center gap-2 rounded-lg border px-3">
+          <Search className="text-muted-foreground h-4 w-4" />
+          <input
+            value={query}
+            onChange={event => setQuery(event.target.value)}
+            placeholder="Oturum ID, kullanici, numara veya ajan ara"
+            className="text-foreground placeholder:text-muted-foreground h-full w-full bg-transparent text-sm outline-none"
+          />
+        </div>
+
+        <select
+          value={statusFilter}
+          onChange={event =>
+            setStatusFilter(
+              event.target.value as (typeof statusFilterOptions)[number],
+            )
+          }
+          className="border-border bg-secondary/40 text-foreground h-9 rounded-lg border px-3 text-sm font-medium outline-none"
+        >
+          {statusFilterOptions.map(option => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+
+        <div className="text-muted-foreground ml-auto flex items-center gap-2 text-xs font-semibold">
+          <Phone className="h-3.5 w-3.5" />
+          {filteredCalls.length} kayit listeleniyor
+        </div>
+      </div>
+
+      <div className="scrollbar-thin flex-1 overflow-auto px-4 py-4">
+        <Table className="min-w-265">
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="px-4">Baslangic</TableHead>
+              <TableHead className="px-4">Sure</TableHead>
+              <TableHead className="px-4">Kanal</TableHead>
+              <TableHead className="px-4">Maliyet</TableHead>
+              <TableHead className="px-4">Kullanici</TableHead>
+              <TableHead className="px-4">Bitis Nedeni</TableHead>
+              <TableHead className="px-4">Duygu</TableHead>
+              <TableHead className="px-4">Sonuc</TableHead>
+              <TableHead className="px-4 text-right">Detay</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredCalls.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={9} className="py-16 text-center">
+                  <p className="text-muted-foreground text-sm">
+                    Filtreye uygun cagri kaydi bulunamadi.
+                  </p>
+                </TableCell>
+              </TableRow>
+            )}
+
+            {filteredCalls.map(call => (
+              <TableRow key={call.id}>
+                <TableCell className="px-4 py-3">
+                  <div>
+                    <p className="font-mono text-xs font-bold">
+                      {formatDateTime(call.startedAt)}
+                    </p>
+                    <p className="text-muted-foreground mt-1 text-[11px]">
+                      {call.id}
+                    </p>
+                  </div>
+                </TableCell>
+                <TableCell className="text-muted-foreground px-4 py-3 text-xs font-semibold">
+                  {formatDuration(call.durationSeconds)}
+                </TableCell>
+                <TableCell className="px-4 py-3">
                   <Badge
                     variant="outline"
-                    className="bg-secondary/50 border-border/50 rounded-md px-2 py-0 text-[10px] font-bold uppercase"
+                    className="border-border/50 bg-secondary/40 rounded-md px-2 py-0 text-[10px] font-bold uppercase"
                   >
                     {call.channel.replace("_", " ")}
                   </Badge>
-                </td>
-                <td className="text-primary px-4 py-4 font-mono text-xs font-bold">
-                  {call.cost}
-                </td>
-                <td className="text-muted-foreground/60 px-4 py-4 font-mono text-xs">
-                  {call.id}
-                </td>
-                <td className="px-4 py-4 whitespace-nowrap">
-                  <div className="text-foreground/80 flex items-center gap-2 text-[11px] font-bold">
-                    <div
-                      className={cn(
-                        "h-1.5 w-1.5 rounded-full shadow-[0_0_8px]",
-                        call.reasonColor.replace("bg-", "text-"),
-                      )}
-                      style={{
-                        backgroundColor: call.reasonColor.includes("green")
-                          ? "hsl(var(--success))"
-                          : "hsl(var(--destructive))",
-                      }}
-                    />
-                    {call.reason}
+                </TableCell>
+                <TableCell className="text-primary px-4 py-3 font-mono text-xs font-bold">
+                  {formatCurrency(call.costUsd)}
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <div>
+                    <p className="text-xs font-semibold">{call.userName}</p>
+                    <p className="text-muted-foreground text-[11px]">
+                      {call.callerNumber}
+                    </p>
                   </div>
-                </td>
-                <td className="px-4 py-4 whitespace-nowrap">
-                  <div className="text-foreground/80 flex items-center gap-2 text-[11px] font-bold">
+                </TableCell>
+                <TableCell className="text-foreground/80 px-4 py-3 text-[11px] font-semibold">
+                  {call.endReason}
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <div className="text-foreground/80 flex items-center gap-2 text-[11px] font-semibold">
                     <div
-                      className="h-1.5 w-1.5 rounded-full"
-                      style={{
-                        backgroundColor: call.sentimentColor.includes("blue")
-                          ? "hsl(var(--primary))"
-                          : "hsl(var(--muted-foreground))",
-                      }}
+                      className={`h-1.5 w-1.5 rounded-full ${sentimentDotClass[call.sentiment]}`}
                     />
                     {call.sentiment}
                   </div>
-                </td>
-                <td className="text-muted-foreground/70 px-4 py-4 text-[11px] font-bold tracking-tight uppercase">
-                  {call.direction}
-                </td>
-                <td className="px-4 py-4 whitespace-nowrap">
+                </TableCell>
+                <TableCell className="px-4 py-3">
                   <Badge
-                    // biome-ignore lint/suspicious/noExplicitAny: <>
-                    variant={call.statusVariant as any}
-                    className="px-2 py-0.5 text-[10px] font-black tracking-wider uppercase shadow-sm"
+                    variant="outline"
+                    className={`rounded-md px-2 py-0 text-[10px] font-black tracking-wider uppercase ${statusBadgeClass[call.status]}`}
                   >
-                    {call.status}
+                    {statusViewMap[call.status]}
                   </Badge>
-                </td>
-                <td className="px-4 py-4 text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-muted-foreground h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </td>
-              </tr>
+                </TableCell>
+                <TableCell className="px-4 py-3 text-right">
+                  <Link to={`/dashboard/call-history/${call.id}`}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-muted-foreground hover:text-foreground gap-1.5"
+                    >
+                      Incele
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
-      {/* Footer / Pagination */}
       <footer className="border-border bg-card/80 flex shrink-0 items-center justify-between border-t p-4 backdrop-blur-sm">
         <div className="text-muted-foreground text-[11px] font-bold tracking-widest uppercase">
-          Sayfa 1 / 1 <span className="text-border mx-2">•</span> Toplam Oturum:
-          4
+          Toplam Kayit: {filteredCalls.length}
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-[11px] font-bold tracking-widest uppercase">
-              Görüntüle:
-            </span>
-            <select className="bg-secondary/50 border-border focus:ring-primary/20 rounded-lg border p-1 px-2 text-[11px] font-bold outline-none focus:ring-1">
-              <option>20 / sayfa</option>
-              <option selected>50 / sayfa</option>
-              <option>100 / sayfa</option>
-            </select>
-          </div>
-
-          <div className="bg-secondary/50 border-border flex items-center gap-1 rounded-xl border p-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-lg disabled:opacity-30"
-              disabled
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <div className="bg-primary shadow-primary/20 flex h-8 items-center justify-center rounded-lg px-3 text-xs font-black text-white shadow-lg">
-              1
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-lg disabled:opacity-30"
-              disabled
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="text-muted-foreground text-[11px] font-semibold">
+          Kayıtları satıra tıklayarak veya Incele ile detaylandırabilirsiniz.
         </div>
       </footer>
     </div>
