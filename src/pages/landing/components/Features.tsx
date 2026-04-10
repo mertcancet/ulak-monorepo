@@ -1,28 +1,28 @@
-import { Mic, FileText, Brain, GitBranch } from 'lucide-react';
-import { useTranslations } from '@/i18n';
+import { useTranslations } from "@/i18n";
+import { BookText, Bot, ChartColumnIncreasing, Workflow } from "lucide-react";
 
 export const Features = () => {
   const t = useTranslations();
   const features = [
     {
-      icon: <Mic className="text-accent-mint" />,
-      title: t('landing.features.items.voiceAgent.title'),
-      description: t('landing.features.items.voiceAgent.description'),
+      icon: <Bot className="text-accent-mint" />,
+      title: t("landing.features.items.voiceAgent.title"),
+      description: t("landing.features.items.voiceAgent.description"),
     },
     {
-      icon: <FileText className="text-accent-mint" />,
-      title: t('landing.features.items.transcription.title'),
-      description: t('landing.features.items.transcription.description'),
+      icon: <Workflow className="text-accent-mint" />,
+      title: t("landing.features.items.transcription.title"),
+      description: t("landing.features.items.transcription.description"),
     },
     {
-      icon: <Brain className="text-accent-mint" />,
-      title: t('landing.features.items.sentiment.title'),
-      description: t('landing.features.items.sentiment.description'),
+      icon: <BookText className="text-accent-mint" />,
+      title: t("landing.features.items.sentiment.title"),
+      description: t("landing.features.items.sentiment.description"),
     },
     {
-      icon: <GitBranch className="text-accent-mint" />,
-      title: t('landing.features.items.routing.title'),
-      description: t('landing.features.items.routing.description'),
+      icon: <ChartColumnIncreasing className="text-accent-mint" />,
+      title: t("landing.features.items.routing.title"),
+      description: t("landing.features.items.routing.description"),
     },
   ];
 
@@ -31,14 +31,14 @@ export const Features = () => {
       <div className="mx-auto max-w-7xl">
         <div className="mb-20">
           <h2 className="mb-6 font-display text-4xl font-bold md:text-5xl">
-            {t('landing.features.sectionTitle')}
+            {t("landing.features.sectionTitle")}
           </h2>
           <p className="max-w-xl text-lg text-slate-400">
-            {t('landing.features.sectionDescription')}
+            {t("landing.features.sectionDescription")}
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature) => (
+          {features.map(feature => (
             <div
               key={feature.title}
               className="glass neon-glow-mint group rounded-xl border-white/5 p-8 transition-all hover:border-accent-mint/30"
@@ -47,7 +47,9 @@ export const Features = () => {
                 {feature.icon}
               </div>
               <h3 className="mb-3 text-xl font-bold">{feature.title}</h3>
-              <p className="text-sm leading-relaxed text-slate-400">{feature.description}</p>
+              <p className="text-sm leading-relaxed text-slate-400">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
