@@ -39,7 +39,7 @@ export const messages = {
       analyticsDescription: "Performans içgörüleri ve raporlar",
       settingsTitle: "Ayarlar",
       settingsDescription: "Platform ayarlarınızı yapılandırın",
-      fallbackTitle: "CallingAI",
+      fallbackTitle: "UlakAI",
     },
     demoPage: {
       badge: "Canlı ürün demosu",
@@ -113,7 +113,7 @@ export const messages = {
       hero: {
         badge: "Çağrı operasyonları için AI kontrol merkezi",
         description:
-          "Agent oluştur, konuşma akışını görsel olarak tasarla, bilgi tabanını bağla ve çağrı performansını tek panelden yönet. CallingAI web uygulamasında geliştirdiğimiz tüm çekirdek modüller burada.",
+          "Agent oluştur, konuşma akışını görsel olarak tasarla, bilgi tabanını bağla ve çağrı performansını tek panelden yönet. UlakAI web uygulamasında geliştirdiğimiz tüm çekirdek modüller burada.",
         primaryButton: "Canlı Demoyu Planla",
         secondaryButton: "Modülleri İncele",
       },
@@ -193,7 +193,7 @@ export const messages = {
         },
       },
       cta: {
-        titleLine1: "CallingAI dashboard'unu",
+        titleLine1: "UlakAI dashboard'unu",
         titleLine2: "ekibinle canlı deneyimle",
         description:
           "Agent, akış, knowledge base ve analitik modüllerini kendi senaryonla birlikte demo oturumunda görelim.",
@@ -202,7 +202,7 @@ export const messages = {
       },
       footer: {
         brandDescription:
-          "CallingAI, ekiplerin agent tasarımı, bilgi yönetimi ve çağrı performansını tek panelde birleştirdiği operasyon platformudur.",
+          "UlakAI, ekiplerin agent tasarımı, bilgi yönetimi ve çağrı performansını tek panelde birleştirdiği operasyon platformudur.",
         sections: {
           product: "Ürün",
           company: "Şirket",
@@ -268,7 +268,7 @@ export const messages = {
       analyticsDescription: "Performance insights and reports",
       settingsTitle: "Settings",
       settingsDescription: "Configure your platform settings",
-      fallbackTitle: "CallingAI",
+      fallbackTitle: "UlakAI",
     },
     demoPage: {
       badge: "Live product walkthrough",
@@ -342,7 +342,7 @@ export const messages = {
       hero: {
         badge: "AI control center for call operations",
         description:
-          "Create agents, design conversation flows visually, connect your knowledge base, and track call performance from a single dashboard. This landing now reflects the core modules already built in our CallingAI web app.",
+          "Create agents, design conversation flows visually, connect your knowledge base, and track call performance from a single dashboard. This landing now reflects the core modules already built in our UlakAI web app.",
         primaryButton: "Schedule Live Demo",
         secondaryButton: "Explore Modules",
       },
@@ -422,7 +422,7 @@ export const messages = {
         },
       },
       cta: {
-        titleLine1: "Experience the CallingAI",
+        titleLine1: "Experience the UlakAI",
         titleLine2: "dashboard with your team",
         description:
           "Walk through Agent, Flow, Knowledge Base, and Analytics modules on your own use case in a live demo.",
@@ -431,7 +431,7 @@ export const messages = {
       },
       footer: {
         brandDescription:
-          "CallingAI is an operations platform where teams manage agent design, knowledge, and call performance from one control panel.",
+          "UlakAI is an operations platform where teams manage agent design, knowledge, and call performance from one control panel.",
         sections: {
           product: "Product",
           company: "Company",
