@@ -1,34 +1,20 @@
 root = true
 
 # All files
-[*]
 indent_style = space
 insert_final_newline = true
+indent_size = 2
+tab_width = 2
+charset = utf-8
+end_of_line = lf
 
+trim_trailing_whitespace = true
 # Xml files
-[*.xml]
+[*.{yml,yaml,json,md,html,css,scss}]
 indent_size = 2
 
-# Yaml files
-[*.yaml]
-indent_size = 2
-
-# Json files
-[*.json]
+[*.{js,jsx,ts,tsx}]
 indent_size = 2
 
 [Makefile]
 indent_style = tab
-
-[*.k]
-indent_size = 4
-indent_style = space
-
-# C# files
-[*.cs]
-
-#### Core EditorConfig Options ####
-
-# Indentation and spacing
-indent_size = 4
-tab_width = 4

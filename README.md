@@ -1,138 +1,75 @@
-# CallingAI Monorepo
+# React + TypeScript + Vite
 
-This repository manages the `apps/api` (Elysia + Bun + Drizzle) and `apps/web` (React Router) applications in a single monorepo.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Requirements
+Currently, two official plugins are available:
 
-- Node.js 20+
-- pnpm `10.33.0`
-- Bun (for API development/build)
-- Docker (to quickly run PostgreSQL)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Setup
+## React Compiler
 
-1. Clone the repository:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-```bash
-git clone <repo-url>
-cd callingai-monorepo
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(["dist"]),
+  {
+    files: ["**/*.{ts,tsx}"],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+]);
 ```
 
-2. Enable pnpm (if needed) and install dependencies:
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```bash
-corepack enable
-corepack prepare pnpm@10.33.0 --activate
-pnpm install
+```js
+// eslint.config.js
+import reactX from "eslint-plugin-react-x";
+import reactDom from "eslint-plugin-react-dom";
+
+export default defineConfig([
+  globalIgnores(["dist"]),
+  {
+    files: ["**/*.{ts,tsx}"],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs["recommended-typescript"],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+]);
 ```
 
-3. Start the PostgreSQL service:
-
-```bash
-docker compose up -d postgres
-```
-
-4. Prepare API environment variables:
-
-```bash
-cp apps/api/.env.example apps/api/.env
-```
-
-5. Push the database schema to your database:
-
-```bash
-pnpm dk push
-```
-
-6. (Optional) Seed sample data:
-
-```bash
-pnpm seed
-```
-
-## Development
-
-Run all services at once:
-
-```bash
-pnpm dev
-```
-
-Only API:
-
-```bash
-pnpm dev:api
-```
-
-Only Web:
-
-```bash
-pnpm dev:web
-```
-
-## Build
-
-API build:
-
-```bash
-pnpm build:api
-```
-
-Web build:
-
-```bash
-pnpm build:web
-```
-
-## Code Quality
-
-API format:
-
-```bash
-pnpm format:api
-```
-
-Web format:
-
-```bash
-pnpm format:web
-```
-
-API check:
-
-```bash
-pnpm check:api
-```
-
-Web check:
-
-```bash
-pnpm check:web
-```
-
-## Important Note: `pnpm dk push`
-
-When you make migration/schema changes under `apps/api/src/db/schema`, you must run `pnpm dk push` to keep your local database in sync.
-
-In short:
-
-- Schema changed -> `pnpm dk push`
-- If needed -> `pnpm seed`
-
-## Git Workflow (example)
-
-After your changes, you can follow this typical flow:
-
-```bash
-git checkout -b feature/readme-update
-pnpm check:api && pnpm check:web
-git add .
-git commit -m "docs: add root README with setup and pnpm dk push steps"
-git push origin feature/readme-update
-```
-
-If you are already on an existing branch, the last line can simply be:
-
-```bash
-git push origin <branch-name>
-```
+# -callai

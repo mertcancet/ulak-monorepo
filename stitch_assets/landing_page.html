@@ -1,0 +1,674 @@
+<!doctype html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Ulak AI | The Future of Autonomous CX</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#5c8dff",
+              "accent-mint": "#7CFFB2",
+              "accent-purple": "#8A7CFF",
+              "background-light": "#f5f6f8",
+              "background-dark": "#0B0F1A",
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              lg: "1rem",
+              xl: "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #0b0f1a;
+        color: white;
+        font-family: "Space Grotesk", sans-serif;
+        overflow-x: hidden;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .neon-glow-mint {
+        box-shadow: 0 0 20px rgba(124, 255, 178, 0.15);
+      }
+      .gradient-text {
+        background: linear-gradient(to right, #5c8dff, #8a7cff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .bg-mesh {
+        background-image:
+          radial-gradient(
+            at 0% 0%,
+            hsla(221, 100%, 68%, 0.1) 0,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 100%,
+            hsla(146, 100%, 74%, 0.05) 0,
+            transparent 50%
+          );
+      }
+      .hero-blob {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(92, 141, 255, 0.15) 0%,
+          transparent 70%
+        );
+        z-index: -1;
+        filter: blur(60px);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light font-display text-slate-900 selection:bg-primary/30 dark:bg-background-dark dark:text-slate-100"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 z-50 w-full border-b border-white/5 bg-background-dark/80 backdrop-blur-md"
+    >
+      <div
+        class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary"
+          >
+            <span class="material-icons-round text-xl text-white"
+              >bubble_chart</span
+            >
+          </div>
+          <span class="text-xl font-bold tracking-tight"
+            >Ulak<span class="text-primary">AI</span></span
+          >
+        </div>
+        <div
+          class="hidden items-center gap-8 text-sm font-medium text-slate-400 md:flex"
+        >
+          <a class="transition-colors hover:text-primary" href="#">Features</a>
+          <a class="transition-colors hover:text-primary" href="#">Solutions</a>
+          <a class="transition-colors hover:text-primary" href="#">Analytics</a>
+          <a class="transition-colors hover:text-primary" href="#">Pricing</a>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="px-5 py-2 text-sm font-medium transition-colors hover:text-primary"
+          >
+            Login
+          </button>
+          <button
+            class="rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-primary/25"
+          >
+            Launch App
+          </button>
+        </div>
+      </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="bg-mesh relative overflow-hidden px-6 pb-20 pt-40">
+      <div class="hero-blob -right-20 -top-20"></div>
+      <div class="hero-blob -left-20 bottom-0"></div>
+      <div class="relative z-10 mx-auto max-w-5xl text-center">
+        <div
+          class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary"
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"
+            ></span>
+            <span
+              class="relative inline-flex h-2 w-2 rounded-full bg-primary"
+            ></span>
+          </span>
+          Next-Gen Voice Intelligence
+        </div>
+        <h1
+          class="mb-8 text-6xl font-bold leading-[1.1] tracking-tight md:text-7xl"
+        >
+          The Future of Customer <br />
+          <span class="gradient-text">Experience is Autonomous</span>
+        </h1>
+        <p
+          class="mx-auto mb-12 max-w-2xl text-xl font-light leading-relaxed text-slate-400"
+        >
+          Deploy human-like AI voice agents that handle support, sales, and
+          scheduling 24/7 with zero latency and perfect sentiment.
+        </p>
+        <div
+          class="flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
+          <button
+            class="w-full rounded-xl bg-gradient-to-r from-primary to-accent-purple px-8 py-4 text-lg font-bold text-white shadow-xl shadow-primary/20 transition-transform hover:scale-105 sm:w-auto"
+          >
+            Get Started Free
+          </button>
+          <button
+            class="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-8 py-4 text-lg font-bold text-white transition-all hover:bg-white/10 sm:w-auto"
+          >
+            <span class="material-icons-round">play_circle</span>
+            Watch Demo
+          </button>
+        </div>
+      </div>
+      <!-- Abstract Neural Network Visualization -->
+      <div class="relative mx-auto mt-20 max-w-6xl">
+        <div
+          class="glass group relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10"
+        >
+          <div
+            class="absolute inset-0 z-10 bg-gradient-to-t from-background-dark via-transparent to-transparent"
+          ></div>
+          <img
+            class="h-full w-full scale-110 object-cover opacity-40 mix-blend-screen transition-transform duration-700 group-hover:scale-100"
+            data-alt="Abstract neural network connections in deep blue"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHmEuR-JjEY0kpi_jA8rjHUJOzjswOYakHQ-wWSAXvKllErS3_kJo4luuUrUQNJyw5qJZuDb84ytdg1RTEOVtT2qilNH1-Kj9H-85tIEfJekLV1XrP0FT4t1wllKuawvsJ9K3MK6K788Y6Y47aYsEUeX6sywiQsfIbaZHgmRx7Se7aJOlsnohBSnqZXyk541vquZUhDBZGmMoV26cfwoGtb0YH4yMPKeaUtHi3Sh0OO7MwPieKDPbA-uyiBU1gLPs5QrOCT_SG0zQ"
+          />
+          <div class="absolute inset-0 z-20 flex items-center justify-center">
+            <div
+              class="glass flex flex-col items-center rounded-2xl border-white/20 p-8"
+            >
+              <div class="mb-4 flex gap-1">
+                <div
+                  class="h-8 w-1 animate-pulse rounded-full bg-accent-mint"
+                ></div>
+                <div
+                  class="h-12 w-1 animate-bounce rounded-full bg-primary"
+                ></div>
+                <div
+                  class="h-16 w-1 animate-pulse rounded-full bg-accent-purple"
+                ></div>
+                <div
+                  class="h-12 w-1 animate-bounce rounded-full bg-primary"
+                ></div>
+                <div
+                  class="h-8 w-1 animate-pulse rounded-full bg-accent-mint"
+                ></div>
+              </div>
+              <p class="font-mono text-sm tracking-tighter text-accent-mint">
+                AI AGENT ONLINE // READY TO ASSIST
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Social Proof -->
+    <section class="border-y border-white/5 bg-background-dark/50 py-12">
+      <div class="mx-auto max-w-7xl px-6">
+        <p
+          class="mb-8 text-center text-sm font-medium uppercase tracking-[0.2em] text-slate-500"
+        >
+          Trusted by Global Enterprises
+        </p>
+        <div
+          class="flex flex-wrap items-center justify-center gap-12 opacity-40 contrast-125 grayscale md:gap-24"
+        >
+          <img
+            class="h-6 brightness-0 invert md:h-8"
+            data-alt="TechCorp Brand Logo"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmaMI4JbVm3OFoArz-QZwlp6OAPH1b-67d2w-gZOaXk4bGVSxRENROXOKcySyc8W7InlX0EX3VTQXvD4d4kVIdtm_BmPuQNGx1lQ7okjjks7UfcpuC-k4VpR-QrDoV7WIvw4AReXZWh7OfNajNo2UTYsq-CE1RhNKhfF-ZH9wrktxmgOK0sYWcbi2_vhK6mxkY0cE05-uXYsNmrbecOX4dcruTvi8wG1LZqGHW-MA-S6p0bw1lzzT4SMS1OWnyXCFG-3-3kcvf3Xw"
+          />
+          <img
+            class="h-6 brightness-0 invert md:h-8"
+            data-alt="GlobalConnect Brand Logo"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTQ1XFImx6yfYgGCGG9j1SwhCwxjiHNgNMSehwbUfPyoIH5kG1npB8mI9UbFU75dlhJwLmkd-q5KlCbPIMOTjdx1PKQCiixDFKesw63ukhZ3l-zdZQKlGqFlQ_yA4YuDuZXoca-G6abmyJTzPMMTRePNQ20_VEpHuRon9r7jgY-v4G7XKp4pbDXcCTcdUuHpm0wuxIG4NpOrN4AY9km9Thf1Pt4K2EbyulC0IaTVctTxPLYujo9gznuWSA1tncV0GVWjdX8Np9RoI"
+          />
+          <img
+            class="h-6 brightness-0 invert md:h-8"
+            data-alt="Nexus Systems Logo"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuArK7qo_8IPZK663HsoE0PsyNkYU-UkRrpk3yrrEACVDLj6uG_o-G19-FPXTDrgN5Lql8zCZLUuPavxCM__8u-LC2qRZGy4EOR3KvGc8AnUUn55YtnMuw4AItCPNibWFkfFMlqhr6zvn8zhi42MpEOenaE1Kqo3zYaBuDby2MCF8qyg_mzDCGNP42PydbkhCfnVAcJhshVzv1Fl9Yzivl3kl1Tu8Q_-0GKGCdOecnuBWkDKhrUToSvdR16QyNx4cCKxuglaqCL8kxg"
+          />
+          <img
+            class="h-6 brightness-0 invert md:h-8"
+            data-alt="Vanguard Data Logo"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJO0_HtOvoxB2Xr4FUkCS23BlcoaW-XakZ35G1mwZXOb95eWjjG9X8oiIf46fZh-KA56jW-PnaH9y-5dIJw18j6H42ysRTCL8iCHQM553eNjvoghU3wH5w36kTF-XzHQQirGdCbvEXgESBnMLS8b79hJ4PszRDC_BQAxE122n0CcDiBGTpJ9m3mLlJFEKmXgCZGEjnXC3nsPBqdzZK41Bt_cYesP_h-8-9PQYxob5bslaK5jmFXOc-GTuzUPbiMunk1wdkqJdr52M"
+          />
+          <img
+            class="h-6 brightness-0 invert md:h-8"
+            data-alt="Quantum Core Logo"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5pTydHhSm3XkTV1Tpxh3iIJ2ofWmR_TspTn1Zbvh_RvTSWFPHAOplLyU24VuxUI0udQ9ktBtw3i-gl9zbLQhttwgx-f8OqF5jOGuhzn05EHB5BSuVSN4aNHT_2NplNzkLPtxWXZX44Q0NQ1kfneXOm5qjLjZ9d56uDsMgQmS_OReqCzrxy7yJeOtpR5luQNIVUqIQ3CkXo0t0dAq-nzvsBSy-EviI1nv4LwT9AKtuJ-gckv7D65pDwV6lvu-Q9hs2NLrP6cxhXZ8"
+          />
+        </div>
+      </div>
+    </section>
+    <!-- Features Section -->
+    <section class="px-6 py-32">
+      <div class="mx-auto max-w-7xl">
+        <div class="mb-20">
+          <h2 class="mb-6 text-4xl font-bold md:text-5xl">
+            Unrivaled AI Capabilities
+          </h2>
+          <p class="max-w-xl text-lg text-slate-400">
+            Every call is an opportunity for perfection. Our AI handles the
+            complexity so your team can focus on growth.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <!-- Card 1 -->
+          <div
+            class="glass neon-glow-mint group rounded-xl border-white/5 p-8 transition-all hover:border-accent-mint/30"
+          >
+            <div
+              class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-mint/10 transition-colors group-hover:bg-accent-mint/20"
+            >
+              <span class="material-icons-round text-accent-mint"
+                >settings_voice</span
+              >
+            </div>
+            <h3 class="mb-3 text-xl font-bold">AI Voice Agent</h3>
+            <p class="text-sm leading-relaxed text-slate-400">
+              Natural, ultra-low latency voice interaction that sounds
+              indistinguishable from humans.
+            </p>
+          </div>
+          <!-- Card 2 -->
+          <div
+            class="glass neon-glow-mint group rounded-xl border-white/5 p-8 transition-all hover:border-accent-mint/30"
+          >
+            <div
+              class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-mint/10 transition-colors group-hover:bg-accent-mint/20"
+            >
+              <span class="material-icons-round text-accent-mint"
+                >subtitles</span
+              >
+            </div>
+            <h3 class="mb-3 text-xl font-bold">Transcription</h3>
+            <p class="text-sm leading-relaxed text-slate-400">
+              Real-time, multi-language transcription with 99.9% accuracy for
+              instant documentation.
+            </p>
+          </div>
+          <!-- Card 3 -->
+          <div
+            class="glass neon-glow-mint group rounded-xl border-white/5 p-8 transition-all hover:border-accent-mint/30"
+          >
+            <div
+              class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-mint/10 transition-colors group-hover:bg-accent-mint/20"
+            >
+              <span class="material-icons-round text-accent-mint"
+                >psychology</span
+              >
+            </div>
+            <h3 class="mb-3 text-xl font-bold">Sentiment Analysis</h3>
+            <p class="text-sm leading-relaxed text-slate-400">
+              Deep emotional intelligence detecting caller mood and intent to
+              adjust tone dynamically.
+            </p>
+          </div>
+          <!-- Card 4 -->
+          <div
+            class="glass neon-glow-mint group rounded-xl border-white/5 p-8 transition-all hover:border-accent-mint/30"
+          >
+            <div
+              class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-mint/10 transition-colors group-hover:bg-accent-mint/20"
+            >
+              <span class="material-icons-round text-accent-mint"
+                >alt_route</span
+              >
+            </div>
+            <h3 class="mb-3 text-xl font-bold">Smart Routing</h3>
+            <p class="text-sm leading-relaxed text-slate-400">
+              Predictive routing based on caller history and current agent
+              expertise levels.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- How It Works -->
+    <section class="relative overflow-hidden bg-white/5 py-32">
+      <div class="relative z-10 mx-auto max-w-7xl px-6">
+        <div class="mb-20 text-center">
+          <h2 class="mb-4 text-4xl font-bold">How It Works</h2>
+          <div class="mx-auto h-1 w-24 rounded-full bg-primary"></div>
+        </div>
+        <div class="relative grid grid-cols-1 gap-12 md:grid-cols-3">
+          <!-- Connecting Line (Desktop) -->
+          <div
+            class="absolute left-0 top-1/2 hidden h-0.5 w-full -translate-y-12 bg-white/5 md:block"
+          ></div>
+          <div class="relative text-center">
+            <div
+              class="glass relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-primary/40"
+            >
+              <span class="material-icons-round text-3xl text-primary"
+                >hub</span
+              >
+            </div>
+            <h4 class="mb-4 text-xl font-bold">1. Connect</h4>
+            <p class="text-slate-400">
+              Integrate your CRM, knowledge base, and phone numbers in minutes.
+            </p>
+          </div>
+          <div class="relative text-center">
+            <div
+              class="glass relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-accent-purple/40"
+            >
+              <span class="material-icons-round text-3xl text-accent-purple"
+                >auto_fix_high</span
+              >
+            </div>
+            <h4 class="mb-4 text-xl font-bold">2. Automate</h4>
+            <p class="text-slate-400">
+              AI learns your processes and starts handling calls with precision.
+            </p>
+          </div>
+          <div class="relative text-center">
+            <div
+              class="glass relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-accent-mint/40"
+            >
+              <span class="material-icons-round text-3xl text-accent-mint"
+                >trending_up</span
+              >
+            </div>
+            <h4 class="mb-4 text-xl font-bold">3. Scale</h4>
+            <p class="text-slate-400">
+              Global deployment across timezones with zero overhead costs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Analytics Preview -->
+    <section class="px-6 py-32">
+      <div
+        class="mx-auto flex max-w-7xl flex-col items-center gap-16 lg:flex-row"
+      >
+        <div class="lg:w-1/2">
+          <h2 class="mb-6 text-4xl font-bold leading-tight">
+            Insight into every <span class="text-primary">syllable</span>
+          </h2>
+          <p class="mb-8 text-lg leading-relaxed text-slate-400">
+            Our real-time dashboard gives you a bird's eye view of customer
+            satisfaction, resolution rates, and AI performance metrics.
+          </p>
+          <div class="space-y-4">
+            <div class="flex items-center gap-4">
+              <div
+                class="flex h-6 w-6 items-center justify-center rounded-full bg-accent-mint/20"
+              >
+                <span class="material-icons-round text-sm text-accent-mint"
+                  >check</span
+                >
+              </div>
+              <span class="text-slate-300">Live sentiment heatmaps</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <div
+                class="flex h-6 w-6 items-center justify-center rounded-full bg-accent-mint/20"
+              >
+                <span class="material-icons-round text-sm text-accent-mint"
+                  >check</span
+                >
+              </div>
+              <span class="text-slate-300">Conversion optimization alerts</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <div
+                class="flex h-6 w-6 items-center justify-center rounded-full bg-accent-mint/20"
+              >
+                <span class="material-icons-round text-sm text-accent-mint"
+                  >check</span
+                >
+              </div>
+              <span class="text-slate-300"
+                >Automated agent coaching metrics</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="w-full lg:w-1/2">
+          <div class="glass relative rounded-xl border-white/10 p-6">
+            <!-- Dashboard Mockup Header -->
+            <div class="mb-8 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="h-3 w-3 rounded-full bg-red-500/50"></div>
+                <div class="h-3 w-3 rounded-full bg-yellow-500/50"></div>
+                <div class="h-3 w-3 rounded-full bg-green-500/50"></div>
+              </div>
+              <div
+                class="rounded bg-white/5 px-3 py-1 font-mono text-xs text-slate-500"
+              >
+                REAL-TIME_ANALYTICS_v4.2
+              </div>
+            </div>
+            <!-- Metrics Grid -->
+            <div class="mb-8 grid grid-cols-2 gap-4">
+              <div class="rounded-lg bg-white/5 p-4">
+                <p class="mb-1 text-xs text-slate-500">Total Calls Today</p>
+                <p class="text-2xl font-bold">12,842</p>
+                <div
+                  class="mt-2 flex items-center gap-1 text-[10px] text-accent-mint"
+                >
+                  <span class="material-icons-round text-[10px]"
+                    >trending_up</span
+                  >
+                  +14.2%
+                </div>
+              </div>
+              <div class="rounded-lg bg-white/5 p-4">
+                <p class="mb-1 text-xs text-slate-500">Sentiment Score</p>
+                <p class="text-2xl font-bold">94.8%</p>
+                <div
+                  class="mt-2 flex items-center gap-1 text-[10px] text-accent-mint"
+                >
+                  <span class="material-icons-round text-[10px]"
+                    >sentiment_very_satisfied</span
+                  >
+                  Excellent
+                </div>
+              </div>
+            </div>
+            <!-- Chart Mockup -->
+            <div
+              class="relative flex h-48 items-end justify-around overflow-hidden rounded-lg bg-white/5 p-4"
+            >
+              <div
+                class="absolute inset-0 flex items-center justify-center opacity-20"
+              >
+                <span class="material-icons-round text-6xl text-primary"
+                  >insights</span
+                >
+              </div>
+              <div class="h-[30%] w-8 rounded-t bg-primary/40"></div>
+              <div class="h-[55%] w-8 rounded-t bg-primary/60"></div>
+              <div class="h-[80%] w-8 rounded-t bg-primary/80"></div>
+              <div
+                class="h-[95%] w-8 rounded-t bg-primary shadow-[0_-5px_15px_rgba(92,141,255,0.4)]"
+              ></div>
+              <div class="h-[65%] w-8 rounded-t bg-primary/70"></div>
+              <div class="h-[45%] w-8 rounded-t bg-primary/50"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Final CTA -->
+    <section class="px-6 py-24">
+      <div
+        class="relative mx-auto max-w-5xl overflow-hidden rounded-3xl p-12 text-center md:p-20"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-primary via-accent-purple to-background-dark"
+        ></div>
+        <div
+          class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"
+        ></div>
+        <div class="relative z-10">
+          <h2 class="mb-6 text-4xl font-bold text-white md:text-5xl">
+            Ready to automate your <br />
+            customer service?
+          </h2>
+          <p class="mx-auto mb-12 max-w-xl text-xl text-white/80">
+            Join 500+ enterprises scaling their communication with Ulak AI
+            today.
+          </p>
+          <div class="flex flex-col justify-center gap-4 sm:flex-row">
+            <button
+              class="rounded-xl bg-white px-10 py-4 font-bold text-background-dark transition-all hover:-translate-y-1 hover:shadow-2xl"
+            >
+              Get Started Now
+            </button>
+            <button
+              class="glass rounded-xl border-white/20 px-10 py-4 font-bold text-white transition-all hover:bg-white/10"
+            >
+              Talk to Sales
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-background-dark px-6 py-20">
+      <div
+        class="mx-auto grid max-w-7xl grid-cols-2 gap-12 md:grid-cols-4 lg:grid-cols-6"
+      >
+        <div class="col-span-2">
+          <div class="mb-6 flex items-center gap-2">
+            <div
+              class="flex h-6 w-6 items-center justify-center rounded bg-primary"
+            >
+              <span class="material-icons-round text-xs text-white"
+                >bubble_chart</span
+              >
+            </div>
+            <span class="text-lg font-bold tracking-tight"
+              >Ulak<span class="text-primary">AI</span></span
+            >
+          </div>
+          <p class="max-w-xs text-sm leading-relaxed text-slate-500">
+            Pioneering the next era of autonomous customer voice interactions.
+            AI that sounds like family.
+          </p>
+        </div>
+        <div>
+          <h5 class="mb-6 text-sm font-bold">Product</h5>
+          <ul class="space-y-4 text-sm text-slate-500">
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >AI Voice</a
+              >
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Integrations</a
+              >
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Dashboard</a
+              >
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Security</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="mb-6 text-sm font-bold">Company</h5>
+          <ul class="space-y-4 text-sm text-slate-500">
+            <li>
+              <a class="transition-colors hover:text-primary" href="#">About</a>
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#">Blog</a>
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Careers</a
+              >
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Contact</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="mb-6 text-sm font-bold">Resources</h5>
+          <ul class="space-y-4 text-sm text-slate-500">
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Documentation</a
+              >
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >API Reference</a
+              >
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Community</a
+              >
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Support</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="mb-6 text-sm font-bold">Legal</h5>
+          <ul class="space-y-4 text-sm text-slate-500">
+            <li>
+              <a class="transition-colors hover:text-primary" href="#"
+                >Privacy</a
+              >
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#">Terms</a>
+            </li>
+            <li>
+              <a class="transition-colors hover:text-primary" href="#">GDPR</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="md:row mx-auto mt-20 flex max-w-7xl flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 text-xs text-slate-500"
+      >
+        <p>© 2024 Ulak AI. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a class="transition-colors hover:text-white" href="#">Twitter</a>
+          <a class="transition-colors hover:text-white" href="#">LinkedIn</a>
+          <a class="transition-colors hover:text-white" href="#">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
