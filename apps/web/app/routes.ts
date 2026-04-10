@@ -8,6 +8,8 @@ export default [
     route("agent", "routes/dashboard/agent.tsx"),
     route("agent-flow", "routes/dashboard/agent-flow.tsx"),
     route("knowledge-base", "routes/dashboard/knowledge-base.tsx"),
+    route("numbers", "routes/dashboard/numbers.tsx"),
+    route("numbers/:id", "routes/dashboard/number-detail.tsx"),
     route("call-history", "routes/dashboard/call-history.tsx"),
     route("analytics", "routes/dashboard/analytics.tsx"),
   ]),
