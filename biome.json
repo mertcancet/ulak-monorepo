@@ -12,7 +12,15 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!!**/dist", "!!**/build", "!!**/prisma/generated"]
+    "includes": [
+      "**",
+      "!!**/dist",
+      "!!**/build",
+      "!!**/prisma/generated",
+      "!!**/.react-router",
+      "!!apps/landing/src",
+      "!!apps/landing/stitch_assets"
+    ]
   },
   "formatter": {
     "enabled": true,

@@ -1,5 +1,6 @@
 # Node
 node_modules/
+**/node_modules/
 
 # Logs
 logs
@@ -14,6 +15,7 @@ jspm_packages/
 
 # Build output
 dist/
+**/dist/
 build/
 
 # Misc
@@ -34,6 +36,10 @@ build/
 
 # Monorepo
 .pnpm-store/
+
+# Landing app
+apps/landing/node_modules/
+apps/landing/dist/
 
 # Turbo
 .turbo/
