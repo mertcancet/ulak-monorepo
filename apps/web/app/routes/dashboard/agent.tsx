@@ -1,9 +1,9 @@
 import { AgentHeader } from "./_components/agent/agent-header";
-import { ConfigSidebar } from "./_components/agent/config-sidebar";
+import { ConfigSidebar } from "./_components/agent/config-sidebar/index";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
 import { GreetingSection } from "./_components/agent/greeting-section";
 import { PromptEditor } from "./_components/agent/prompt-editor";
-import { QuickSelectToolbar } from "./_components/agent/quick-select-toolbar";
+import { QuickSelectToolbar } from "./_components/agent/quick-select";
 import { TestingPanel } from "./_components/agent/testing-panel";
 
 /**

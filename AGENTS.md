@@ -127,6 +127,11 @@ pnpm warn:web:prettier    # Web format kontrolü (warn only, fail etmez)
 - Internal utilities'lerde type inference kabul edilir
 - `any` kullanından kaçının (biome'da `// biome-ignore lint/suspicious/noExplicitAny: <>` ile suppress edilebilir)
 
+### Form Input Kuralı
+
+- `select` alanlarında daima **native/vanilla HTML `<select>`** kullanın.
+- Custom select bileşenleri (örn. Radix/shadcn select) yalnızca açıkça istenirse tercih edin.
+
 ### Import Sırası
 
 Biome otomatik olarak organize eder:
@@ -278,6 +283,100 @@ UI components shadcn.yaml üzerinden install edilir. Base components:
 - `DropdownMenu`, `Table`
 - `Avatar`, `Badge`, `Tooltip`
 
+**Okunabilirlik Kuralı (Component Boyutu):**
+
+- Bir React component dosyası **220 satırı** geçtiğinde, UI ve iş mantığını anlamlı alt component/hook'lara bölün.
+- **250+ satır** component'ler istisna değilse refactor edilmelidir.
+- Bölme yaparken tekrar eden JSX bloklarını ve karmaşık handler/state logic'ini öncelikli olarak ayırın.
+
+**Alt Component Folder Structure:**
+
+Component bölündüğünde, alt componentler aynı isimde bir klasöre taşınır ve `index.ts` üzerinden export edilir:
+
+```
+routes/dashboard/
+├── agent.tsx                   # Ana route dosyası (kısa, composition odaklı)
+└── _components/
+    └── agent/
+        ├── index.ts            # Tüm sub-component export'ları buradan yapılır
+        ├── agent-header.tsx
+        ├── config-panel.tsx
+        └── testing-panel.tsx
+```
+
+`index.ts` dosyası:
+
+```typescript
+// _components/agent/index.ts
+export { AgentHeader } from "./agent-header";
+export { ConfigPanel } from "./config-panel";
+export { TestingPanel } from "./testing-panel";
+```
+
+Ana route dosyasında import:
+
+```typescript
+// agent.tsx
+import { AgentHeader, ConfigPanel, TestingPanel } from "./_components/agent";
+```
+
+**Derin Bölme (Sub-component de büyürse):**
+
+Bir alt component (örn. `config-panel.tsx`) de 220 satırı aşarsa, aynı kural tekrar uygulanır: component kendi adında bir klasöre dönüşür, içindeki parçalar o klasörde yaşar ve yine bir `index.ts` barrel dosyası açılır.
+
+```
+routes/dashboard/
+├── agent.tsx
+└── _components/
+    └── agent/
+        ├── index.ts
+        ├── agent-header.tsx
+        ├── testing-panel.tsx
+        └── config-panel/               # config-panel artık bir klasör
+            ├── index.ts                # ConfigPanel'i dışarı açar
+            ├── config-panel.tsx        # Ana composition dosyası
+            ├── voice-settings.tsx
+            ├── llm-settings.tsx
+            └── prompt-editor.tsx
+```
+
+`config-panel/index.ts` — sadece dışarıya açılacak olanı export eder:
+
+```typescript
+// _components/agent/config-panel/index.ts
+export { ConfigPanel } from "./config-panel";
+```
+
+`config-panel/config-panel.tsx` — iç parçaları birleştirir:
+
+```typescript
+// _components/agent/config-panel/config-panel.tsx
+import { LlmSettings } from "./llm-settings";
+import { PromptEditor } from "./prompt-editor";
+import { VoiceSettings } from "./voice-settings";
+
+export function ConfigPanel() {
+  return (
+    <section>
+      <VoiceSettings />
+      <LlmSettings />
+      <PromptEditor />
+    </section>
+  );
+}
+```
+
+Üst katman (`_components/agent/index.ts`) **değişmez** — hâlâ `config-panel/index.ts`'ten gelen `ConfigPanel`'i re-export eder:
+
+```typescript
+// _components/agent/index.ts
+export { AgentHeader } from "./agent-header";
+export { ConfigPanel } from "./config-panel"; // klasör → index.ts otomatik çözülür
+export { TestingPanel } from "./testing-panel";
+```
+
+> **Kural:** Bir klasördeki `index.ts` yalnızca o katmanın **public API**'sini export eder. İç yardımcı componentler (örn. `voice-settings.tsx`) dışarıya doğrudan açılmaz.
+
 **Composition örneği:**
 
 ```typescript
@@ -292,7 +391,9 @@ export function AgentDetails() {
   );
 }
 
-// ✅ Do: Modular composition
+// ✅ Do: Modular composition with index.ts barrel
+import { AgentHeader, ConfigPanel, TestingPanel } from "./_components/agent";
+
 export function AgentDetails() {
   return (
     <div className="...">
