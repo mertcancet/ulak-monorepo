@@ -10,6 +10,13 @@ export const Navbar = () => {
   const homePath = useLocalizedPath('/');
   const demoPath = useLocalizedPath('/demo');
 
+  const handleBrandClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === '/') {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const sectionLink = (sectionId: string) =>
     pathname === '/' ? `#${sectionId}` : `${homePath}#${sectionId}`;
 
@@ -17,9 +24,13 @@ export const Navbar = () => {
     <nav className="fixed top-0 z-50 w-full border-b border-white/5 bg-background-dark/80 backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 text-white">
         <div className="flex items-center gap-2">
-          <span className="font-display text-xl font-bold tracking-tight">
+          <Link
+            className="font-display text-xl font-bold tracking-tight transition-colors"
+            onClick={handleBrandClick}
+            to={homePath}
+          >
             Cleon<span className="text-primary">AI</span>
-          </span>
+          </Link>
         </div>
         <div className="hidden items-center gap-8 text-sm font-medium text-slate-400 md:flex">
           <a
