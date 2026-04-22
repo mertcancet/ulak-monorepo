@@ -58,7 +58,7 @@ export const OurApproach = () => {
                 <div className="absolute -bottom-6 left-12 h-6 w-0.5 bg-gradient-to-b from-primary/40 to-transparent"></div>
               )}
 
-              <div className="glass group rounded-xl border border-white/10 p-8 transition-all hover:border-primary/30 hover:bg-white/5">
+              <div className="glass group rounded-xl border border-white/10 p-8 transition-all hover:border-primary/30 hover:bg-white/5 hover:shadow-[0_0_32px_hsl(var(--primary)/0.2)]">
                 <div className="flex gap-6">
                   {/* Step Number & Icon */}
                   <div className="relative flex flex-col items-center pt-1">
