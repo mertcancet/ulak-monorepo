@@ -25,7 +25,7 @@ export const HowItWorks = () => {
   ];
 
   return (
-    <section id="solutions" className="relative overflow-hidden bg-white/5 py-32 text-white">
+    <section id="solutions" className="relative overflow-hidden py-32 text-white">
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div className="mb-20 text-center">
           <h2 className="mb-4 font-display text-4xl font-bold">
