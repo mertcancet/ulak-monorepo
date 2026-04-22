@@ -91,8 +91,8 @@ export function SocialProofSection() {
                 <span className="shrink-0 whitespace-nowrap px-8 text-sm font-medium text-foreground/50">
                   {t("landing.socialProof.lead")}
                 </span>
-                {marqueeBrands.map(brand => (
-                  <div key={brand.name} className="flex items-center gap-3">
+                {marqueeBrands.map((brand, index) => (
+                  <div key={`${brand.name}-${index}`} className="flex items-center gap-3">
                     <span className="text-base font-semibold text-foreground">
                       {brand.name}
                     </span>
