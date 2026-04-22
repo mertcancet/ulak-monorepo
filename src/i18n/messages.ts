@@ -39,7 +39,7 @@ export const messages = {
       analyticsDescription: "Performans içgörüleri ve raporlar",
       settingsTitle: "Ayarlar",
       settingsDescription: "Platform ayarlarınızı yapılandırın",
-      fallbackTitle: "UlakAI",
+      fallbackTitle: "CleonAI",
     },
     demoPage: {
       badge: "Canlı ürün demosu",
@@ -83,7 +83,7 @@ export const messages = {
         },
         placeholders: {
           fullName: "Örn. John Doe",
-          company: "Örn. Ulak Teknoloji",
+          company: "Örn. Cleon Teknoloji",
           email: "ornek@sirket.com",
           phone: "+90 5xx xxx xx xx",
           callVolume: "Bir aralık seç",
@@ -113,7 +113,7 @@ export const messages = {
       hero: {
         badge: "Çağrı operasyonları için AI kontrol merkezi",
         description:
-          "Agent oluştur, konuşma akışını görsel olarak tasarla, bilgi tabanını bağla ve çağrı performansını tek panelden yönet. UlakAI web uygulamasında geliştirdiğimiz tüm çekirdek modüller burada.",
+          "Agent oluştur, konuşma akışını görsel olarak tasarla, bilgi tabanını bağla ve çağrı performansını tek panelden yönet. CleonAI web uygulamasında geliştirdiğimiz tüm çekirdek modüller burada.",
         primaryButton: "Canlı Demoyu Planla",
         secondaryButton: "Modülleri İncele",
       },
@@ -193,7 +193,7 @@ export const messages = {
         },
       },
       cta: {
-        titleLine1: "UlakAI dashboard'unu",
+        titleLine1: "CleonAI dashboard'unu",
         titleLine2: "ekibinle canlı deneyimle",
         description:
           "Agent, akış, knowledge base ve analitik modüllerini kendi senaryonla birlikte demo oturumunda görelim.",
@@ -202,7 +202,7 @@ export const messages = {
       },
       footer: {
         brandDescription:
-          "UlakAI, ekiplerin agent tasarımı, bilgi yönetimi ve çağrı performansını tek panelde birleştirdiği operasyon platformudur.",
+          "CleonAI, ekiplerin agent tasarımı, bilgi yönetimi ve çağrı performansını tek panelde birleştirdiği operasyon platformudur.",
         sections: {
           product: "Ürün",
           company: "Şirket",
@@ -226,7 +226,7 @@ export const messages = {
           terms: "Koşullar",
           gdpr: "KVKK/GDPR",
         },
-        copyright: "© 2024 Ulak AI. Tüm hakları saklıdır.",
+        copyright: "© 2024 Cleon AI. Tüm hakları saklıdır.",
       },
     },
   },
@@ -268,7 +268,7 @@ export const messages = {
       analyticsDescription: "Performance insights and reports",
       settingsTitle: "Settings",
       settingsDescription: "Configure your platform settings",
-      fallbackTitle: "UlakAI",
+      fallbackTitle: "CleonAI",
     },
     demoPage: {
       badge: "Live product walkthrough",
@@ -312,7 +312,7 @@ export const messages = {
         },
         placeholders: {
           fullName: "e.g. John Doe",
-          company: "e.g. Ulak Technology",
+          company: "e.g. Cleon Technology",
           email: "name@company.com",
           phone: "+90 5xx xxx xx xx",
           callVolume: "Select a range",
@@ -342,7 +342,7 @@ export const messages = {
       hero: {
         badge: "AI control center for call operations",
         description:
-          "Create agents, design conversation flows visually, connect your knowledge base, and track call performance from a single dashboard. This landing now reflects the core modules already built in our UlakAI web app.",
+          "Create agents, design conversation flows visually, connect your knowledge base, and track call performance from a single dashboard. This landing now reflects the core modules already built in our CleonAI web app.",
         primaryButton: "Schedule Live Demo",
         secondaryButton: "Explore Modules",
       },
@@ -422,7 +422,7 @@ export const messages = {
         },
       },
       cta: {
-        titleLine1: "Experience the UlakAI",
+        titleLine1: "Experience the CleonAI",
         titleLine2: "dashboard with your team",
         description:
           "Walk through Agent, Flow, Knowledge Base, and Analytics modules on your own use case in a live demo.",
@@ -431,7 +431,7 @@ export const messages = {
       },
       footer: {
         brandDescription:
-          "UlakAI is an operations platform where teams manage agent design, knowledge, and call performance from one control panel.",
+          "CleonAI is an operations platform where teams manage agent design, knowledge, and call performance from one control panel.",
         sections: {
           product: "Product",
           company: "Company",
@@ -455,7 +455,7 @@ export const messages = {
           terms: "Terms",
           gdpr: "GDPR",
         },
-        copyright: "© 2024 Ulak AI. All rights reserved.",
+        copyright: "© 2024 Cleon AI. All rights reserved.",
       },
     },
   },

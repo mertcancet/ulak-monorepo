@@ -9,7 +9,7 @@ export const Footer = () => {
         <div className="col-span-2">
           <div className="mb-6 flex items-center gap-2">
             <span className="font-display text-lg font-bold tracking-tight">
-              Ulak<span className="text-primary">AI</span>
+              Cleon<span className="text-primary">AI</span>
             </span>
           </div>
           <p className="max-w-xs text-sm leading-relaxed text-slate-500">

@@ -25,7 +25,7 @@ export function HeroSection() {
             WebkitTextFillColor: "transparent",
           }}
         >
-          Ulak AI
+          Cleon AI
         </h1>
         <p className="mt-6 max-w-3xl text-base leading-8 text-slate-300 md:text-xl">
           {t("landing.hero.description")}

@@ -18,7 +18,7 @@ export const Navbar = () => {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 text-white">
         <div className="flex items-center gap-2">
           <span className="font-display text-xl font-bold tracking-tight">
-            Ulak<span className="text-primary">AI</span>
+            Cleon<span className="text-primary">AI</span>
           </span>
         </div>
         <div className="hidden items-center gap-8 text-sm font-medium text-slate-400 md:flex">

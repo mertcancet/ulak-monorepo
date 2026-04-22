@@ -57,7 +57,7 @@ export function Sidebar() {
         </div>
         <div className="flex flex-col">
           <span className="text-sm font-bold leading-none text-sidebar-foreground">
-            UlakAI
+            CleonAI
           </span>
           <span className="mt-0.5 text-[10px] leading-none text-sidebar-foreground/50">
             {t("sidebar.brandSubtitle")}
@@ -151,7 +151,7 @@ export function Sidebar() {
               Admin User
             </p>
             <p className="truncate text-[10px] text-sidebar-foreground/50">
-              admin@UlakAI.com
+              admin@CleonAI.com
             </p>
           </div>
           <Settings className="h-3.5 w-3.5 shrink-0 text-sidebar-foreground/40" />

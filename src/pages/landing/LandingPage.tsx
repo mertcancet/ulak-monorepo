@@ -4,7 +4,9 @@ import { Features } from './components/Features';
 import { Footer } from './components/Footer';
 import { HeroSection } from './components/HeroSection';
 import { HowItWorks } from './components/HowItWorks';
+import { OurApproach } from './components/OurApproach';
 import { SocialProofSection } from './components/SocialProffSection';
+import { UseCasesSection } from './components/UseCasesSection';
 
 export default function LandingPage() {
   return (
@@ -13,6 +15,8 @@ export default function LandingPage() {
         <HeroSection />
         <SocialProofSection />
         <Features />
+        <UseCasesSection />
+        <OurApproach />
         <HowItWorks />
         <AnalyticsPreview />
         <CTA />
