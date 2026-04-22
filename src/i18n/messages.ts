@@ -155,6 +155,123 @@ export const messages = {
           },
         },
       },
+      useCases: {
+        sectionTitle: "Aynı platform, farklı operasyon senaryoları",
+        sectionDescription:
+          "CleonAI platformu, çeşitli sektörlerde akıllı çağrı otomasyonu ve AI aracılı iş akışlarını destekler.",
+        labels: {
+          problem: "Problem",
+          solution: "Çözüm",
+          keyFeatures: "Temel Özellikler",
+        },
+        items: {
+          healthcare: {
+            title: "Sağlık Sektörü",
+            problem:
+              "Randevu yönetimi, hasta hatırlatmaları ve poliklinik yönlendirmesi manuel işlemlerle karışıklık yaratıyor.",
+            solution:
+              "Hastalar tek bir çağrıda randevu alabilir, otomatik hatırlatmalar alabilir ve sigorta durumlarına uygun poliklinikler yönlendirilir.",
+            features: {
+              0: "No-show oranını düşüren otomatik hatırlatmalar",
+              1: "Poliklinik / doktor / sigorta bazlı yönlendirme",
+            },
+          },
+          realEstate: {
+            title: "Gayrimenkul & Emlak",
+            problem:
+              "Emlak danışmanları çok sayıda müşteri sorgusuyla meşgul, potansiyel satış fırsatları kaçırılıyor.",
+            solution:
+              "AI ajanı müşteri sorularını yanıtlar, mülk önerileri sunar ve görüş saati planlaması yapar.",
+            features: {
+              0: "7/24 müşteri desteği ve ön niteliklandırma",
+              1: "Mülk bilgileri ve fiyat sorguları anlık yanıt",
+            },
+          },
+          ecommerce: {
+            title: "E-Ticaret & Perakende",
+            problem:
+              "Müşteri hizmetleri, siparişleri takip etme ve iade işlemleriyle aşırı yüklenmiş.",
+            solution:
+              "AI sistem otomatik olarak sipariş statüsü sağlıyor, iade işlemleri yönetiyor ve ürün önerileri yapıyor.",
+            features: {
+              0: "Siparişleri takip etme ve durum bildirimleri",
+              1: "İade ve değişim talepleri otomatik işleme",
+            },
+          },
+          restaurant: {
+            title: "Restoran & Turizm",
+            problem:
+              "Restoran rezervasyonları ve müşteri soruları manuel olarak yönetiliyor, yoğun saatlarda çağrılar kaçırılıyor.",
+            solution:
+              "AI ajanı masa rezervasyonlarını yönetir, menü sorularını yanıtlar ve özel istekleri kaydeder.",
+            features: {
+              0: "Otomasyon ile masa boş alanlarını değerlendirme",
+              1: "Menü, fiyatlar ve alerjiler hakkında bilgi",
+            },
+          },
+          education: {
+            title: "Eğitim & Kurslar",
+            problem:
+              "Kurs müdürleri öğrenci kayıtları, program bilgileri ve danışmanlık için çok zaman harcıyor.",
+            solution:
+              "AI asistan öğrenci sorularını yanıtlar, program seçiminde rehberlik eder ve kayıt işlemlerini hızlandırır.",
+            features: {
+              0: "Kurs programları ve müfredatı hakkında detaylı bilgi",
+              1: "Öğrenci seçimine uygun program tavsiyesi",
+            },
+          },
+          banking: {
+            title: "Banka & Sigorta Firmaları",
+            problem:
+              "Müşteri hizmetleri, kredi başvuruları, sigorta teklifi ve hesap sorularıyla aşırı meşgul, başvuru işlemleri uzun sürüyor.",
+            solution:
+              "AI ajanı müşteri profili değerlendirir, uygun kredi/sigorta ürünleri önerir ve işlemleri hızlandırır.",
+            features: {
+              0: "Kredi uygunluğu hızlı değerlendirmesi",
+              1: "Sigorta ürünleri analiz ve önerileri",
+            },
+          },
+        },
+      },
+      ourApproach: {
+        badge: "SUNUM ADIMI",
+        titleLine1: "İster küçük bir ekip olun,",
+        titleLine2: "ister büyük bir operasyon;",
+        titleHighlight: "Yanınızdayız",
+        description:
+          "Ürün ekibimiz tüm süreç boyunca sizinle birlikte çalışır. Analiz, kurulum ve iyileştirme aşamalarında yanınızda oluruz.",
+        stepLabel: "ADIM",
+        steps: {
+          discover: {
+            title: "İhtiyacı ve senaryoları belirleriz",
+            description:
+              "Sizi dinler, operasyonunuzun nerede yavaşladığını anlar ve çağrı akışlarını buna uygun senaryolarla tasarlarız.",
+            status: "Niyet Anlaşıldı",
+          },
+          integrate: {
+            title: "Telefon ve veri altyapısına bağlarız",
+            description:
+              "Santral, PBX, CRM ya da gerekli servisleri aynı yapıda birleştirir; gelen ve giden aramaları hazır hale getiririz.",
+            status: "Takım",
+          },
+          personalize: {
+            title: "Kişiselleştirilmiş iletişimi devreye alırız",
+            description:
+              "CleonAI sadece cevap vermez; müşteriye uygun tonla konuşur, bilgi çeker, aksiyon yaratır ve gerektiğinde insana aktarır.",
+            status: "Aksiyon",
+          },
+          optimize: {
+            title: "Analizlerle süreci geliştiririz",
+            description:
+              "Her görüşme sonrası sonuç, kalite ve verimlilik verilerini ölçer; senaryoları ekip geri bildirimleriyle iyileştiririz.",
+            status: "Optimize",
+          },
+        },
+        ctaTitle: "Müşteri başarısı bizim başarısı",
+        ctaDescription:
+          "Her adımda destek, her aşamada iyileştirme. CleonAI, işletmenizin büyümesinin ortağıdır.",
+        ctaButton: "Süreci Başlatalım",
+      },
       howItWorks: {
         sectionTitle: "Üründe Akış Nasıl İlerliyor?",
         steps: {
@@ -383,6 +500,123 @@ export const messages = {
               "Track status, sentiment, cost, and latency with combined tables and charts.",
           },
         },
+      },
+      useCases: {
+        sectionTitle: "One platform, multiple operational scenarios",
+        sectionDescription:
+          "The CleonAI platform supports intelligent call automation and AI-assisted workflows across different industries.",
+        labels: {
+          problem: "Problem",
+          solution: "Solution",
+          keyFeatures: "Key Features",
+        },
+        items: {
+          healthcare: {
+            title: "Healthcare",
+            problem:
+              "Appointment scheduling, patient reminders, and clinic routing become confusing when handled manually.",
+            solution:
+              "Patients can book appointments in a single call, receive automated reminders, and get routed to clinics based on insurance.",
+            features: {
+              0: "Automated reminders that reduce no-show rates",
+              1: "Clinic / doctor / insurance-based routing",
+            },
+          },
+          realEstate: {
+            title: "Real Estate",
+            problem:
+              "Agents are overloaded with inquiries, causing high-intent opportunities to be missed.",
+            solution:
+              "The AI agent answers buyer questions, suggests properties, and schedules viewing appointments.",
+            features: {
+              0: "24/7 customer support and lead pre-qualification",
+              1: "Instant property information and pricing responses",
+            },
+          },
+          ecommerce: {
+            title: "E-commerce & Retail",
+            problem:
+              "Support teams are overloaded with order tracking and return requests.",
+            solution:
+              "The AI system provides order status automatically, handles returns, and recommends products.",
+            features: {
+              0: "Order tracking and status notifications",
+              1: "Automated return and exchange processing",
+            },
+          },
+          restaurant: {
+            title: "Restaurants & Hospitality",
+            problem:
+              "Reservations and customer questions are managed manually, so calls are missed during peak hours.",
+            solution:
+              "The AI agent manages table reservations, answers menu questions, and records special requests.",
+            features: {
+              0: "Automated table capacity optimization",
+              1: "Menu, pricing, and allergy information",
+            },
+          },
+          education: {
+            title: "Education & Courses",
+            problem:
+              "Course managers spend too much time on student registration, program information, and guidance.",
+            solution:
+              "The AI assistant answers student questions, guides program selection, and accelerates enrollment steps.",
+            features: {
+              0: "Detailed program and curriculum information",
+              1: "Program recommendations based on student fit",
+            },
+          },
+          banking: {
+            title: "Banking & Insurance",
+            problem:
+              "Support teams are overwhelmed by loan applications, insurance quotes, and account-related inquiries.",
+            solution:
+              "The AI agent evaluates customer profiles, suggests suitable products, and speeds up application handling.",
+            features: {
+              0: "Fast loan eligibility assessment",
+              1: "Insurance product analysis and recommendations",
+            },
+          },
+        },
+      },
+      ourApproach: {
+        badge: "DELIVERY STEPS",
+        titleLine1: "Whether you are a small team,",
+        titleLine2: "or a large operation;",
+        titleHighlight: "we are with you",
+        description:
+          "Our product team works with you throughout the whole journey. We stay by your side during analysis, setup, and optimization stages.",
+        stepLabel: "STEP",
+        steps: {
+          discover: {
+            title: "We define needs and scenarios",
+            description:
+              "We listen, identify where your operation slows down, and design call flows with scenarios tailored to your process.",
+            status: "Intent Captured",
+          },
+          integrate: {
+            title: "We connect telephony and data infrastructure",
+            description:
+              "We unify PBX, CRM, and required services in a single architecture and prepare inbound and outbound call operations.",
+            status: "Integrated",
+          },
+          personalize: {
+            title: "We launch personalized communication",
+            description:
+              "CleonAI does more than respond. It speaks in the right tone, fetches information, triggers actions, and hands off to humans when needed.",
+            status: "Activated",
+          },
+          optimize: {
+            title: "We improve the process with analytics",
+            description:
+              "After each conversation, we measure outcomes, quality, and efficiency, then improve scenarios with team feedback.",
+            status: "Optimized",
+          },
+        },
+        ctaTitle: "Your success is our success",
+        ctaDescription:
+          "Support at every step, optimization at every stage. CleonAI is a growth partner for your business.",
+        ctaButton: "Start the Process",
       },
       howItWorks: {
         sectionTitle: "How the Product Workflow Runs",

@@ -5,22 +5,22 @@ export const Features = () => {
   const t = useTranslations();
   const features = [
     {
-      icon: <Bot className="text-accent-mint" />,
+      icon: <Bot className="text-primary" />,
       title: t("landing.features.items.voiceAgent.title"),
       description: t("landing.features.items.voiceAgent.description"),
     },
     {
-      icon: <Workflow className="text-accent-mint" />,
+      icon: <Workflow className="text-primary" />,
       title: t("landing.features.items.transcription.title"),
       description: t("landing.features.items.transcription.description"),
     },
     {
-      icon: <BookText className="text-accent-mint" />,
+      icon: <BookText className="text-primary" />,
       title: t("landing.features.items.sentiment.title"),
       description: t("landing.features.items.sentiment.description"),
     },
     {
-      icon: <ChartColumnIncreasing className="text-accent-mint" />,
+      icon: <ChartColumnIncreasing className="text-primary" />,
       title: t("landing.features.items.routing.title"),
       description: t("landing.features.items.routing.description"),
     },
@@ -41,9 +41,9 @@ export const Features = () => {
           {features.map(feature => (
             <div
               key={feature.title}
-              className="glass neon-glow-mint group rounded-xl border-white/5 p-8 transition-all hover:border-accent-mint/30"
+              className="glass group rounded-xl border-white/5 p-8 transition-all hover:border-primary/30 hover:shadow-[0_0_32px_hsl(var(--primary)/0.2)]"
             >
-              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-mint/10 transition-colors group-hover:bg-accent-mint/20">
+              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
                 {feature.icon}
               </div>
               <h3 className="mb-3 text-xl font-bold">{feature.title}</h3>

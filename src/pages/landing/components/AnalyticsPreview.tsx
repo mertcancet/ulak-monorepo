@@ -24,8 +24,8 @@ export const AnalyticsPreview = () => {
             {t('landing.analyticsPreview.description')}
           </p>
           <div className="space-y-4">
-            {bullets.map((item, idx) => (
-              <div key={idx} className="flex items-center gap-4">
+            {bullets.map((item) => (
+              <div key={item} className="flex items-center gap-4">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-mint/20">
                   <Check className="text-accent-mint" size={14} />
                 </div>

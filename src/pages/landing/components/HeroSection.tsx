@@ -20,7 +20,7 @@ export function HeroSection() {
             fontFamily:
               "General Sans, Geist Sans, Inter, system-ui, sans-serif",
             backgroundImage:
-              "linear-gradient(223deg, #E8E8E9 0%, #3A7BBF 104.15%)",
+              "linear-gradient(223deg, #E8E8E9 0%, hsl(234 89% 60%) 104.15%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
           }}

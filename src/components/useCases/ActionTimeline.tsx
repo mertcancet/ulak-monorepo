@@ -15,7 +15,7 @@ export function ActionTimeline({ items }: ActionTimelineProps) {
         Aksiyon Timeline:
       </div>
       {items.map((item, index) => (
-        <div key={index} className="flex gap-4">
+        <div key={item.step} className="flex gap-4">
           <div className="flex flex-col items-center">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-sm font-semibold text-orange-600">
               {item.time}

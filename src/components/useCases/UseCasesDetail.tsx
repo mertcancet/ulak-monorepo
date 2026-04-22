@@ -70,8 +70,8 @@ export function UseCasesDetail({ useCase }: UseCasesDetailProps) {
           Temel Özellikler:
         </h3>
         <div className="space-y-2">
-          {useCase.features.map((feature, index) => (
-            <div key={index} className="flex items-start gap-3">
+          {useCase.features.map((feature) => (
+            <div key={feature} className="flex items-start gap-3">
               <div className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-orange-500" />
               <p className="text-sm text-gray-700">{feature}</p>
             </div>
