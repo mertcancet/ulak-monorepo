@@ -46,7 +46,7 @@ export function LanguageSwitcher() {
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className={cn(
-              'transition-colors data-[highlighted]:bg-white/5',
+              'text-white/80 transition-colors data-[highlighted]:bg-white/5 data-[highlighted]:text-white',
               locale === language.code &&
                 'bg-primary/20 text-white data-[highlighted]:bg-primary/20',
             )}

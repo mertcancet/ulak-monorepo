@@ -2,6 +2,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { Topbar } from '@/components/layout/Topbar';
 import { useTranslations } from '@/i18n';
 import { stripLocaleFromPathname } from '@/i18n/config';
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 export function AppLayout() {
@@ -39,6 +40,10 @@ export function AppLayout() {
     title: t('pageMeta.fallbackTitle'),
     description: '',
   };
+
+  useEffect(() => {
+    document.title = `${meta.title} | CleonAI`;
+  }, [meta.title]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
