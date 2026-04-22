@@ -12,7 +12,6 @@ import {
   HelpCircle,
   History,
   List,
-  MessageSquare,
   Phone,
   Settings,
   ShieldCheck,
@@ -274,13 +273,7 @@ const DashboardLayout = () => {
                 active={location.pathname.startsWith("/dashboard/call-history")}
                 collapsed={collapsed}
               />
-              <SidebarItem
-                icon={MessageSquare}
-                label="Sohbet Geçmişi"
-                href="/dashboard/chat-history"
-                active={location.pathname === "/dashboard/chat-history"}
-                collapsed={collapsed}
-              />
+
               <SidebarItem
                 icon={BarChart3}
                 label="Analizler"

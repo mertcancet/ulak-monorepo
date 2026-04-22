@@ -223,32 +223,54 @@ const CallHistoryPage = () => {
       <div className="scrollbar-thin flex-1 overflow-auto px-4 py-4">
         <Table className="min-w-265">
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="px-4">Baslangic</TableHead>
-              <TableHead className="px-4">Sure</TableHead>
-              <TableHead className="px-4">Kanal</TableHead>
-              <TableHead className="px-4">Maliyet</TableHead>
-              <TableHead className="px-4">Kullanici</TableHead>
-              <TableHead className="px-4">Bitis Nedeni</TableHead>
-              <TableHead className="px-4">Duygu</TableHead>
-              <TableHead className="px-4">Sonuc</TableHead>
-              <TableHead className="px-4 text-right">Detay</TableHead>
+            <TableRow className="bg-secondary/60 border-border border-b hover:bg-transparent">
+              <TableHead className="text-muted-foreground h-10 pl-4 text-[11px] font-semibold tracking-wider uppercase">
+                Baslangic
+              </TableHead>
+              <TableHead className="text-muted-foreground h-10 text-[11px] font-semibold tracking-wider uppercase">
+                Sure
+              </TableHead>
+              <TableHead className="text-muted-foreground h-10 text-[11px] font-semibold tracking-wider uppercase">
+                Kanal
+              </TableHead>
+              <TableHead className="text-muted-foreground h-10 text-[11px] font-semibold tracking-wider uppercase">
+                Maliyet
+              </TableHead>
+              <TableHead className="text-muted-foreground h-10 text-[11px] font-semibold tracking-wider uppercase">
+                Kullanici
+              </TableHead>
+              <TableHead className="text-muted-foreground h-10 text-[11px] font-semibold tracking-wider uppercase">
+                Bitis Nedeni
+              </TableHead>
+              <TableHead className="text-muted-foreground h-10 text-[11px] font-semibold tracking-wider uppercase">
+                Duygu
+              </TableHead>
+              <TableHead className="text-muted-foreground h-10 text-[11px] font-semibold tracking-wider uppercase">
+                Sonuc
+              </TableHead>
+              <TableHead className="text-muted-foreground h-10 pr-4 text-right text-[11px] font-semibold tracking-wider uppercase">
+                Detay
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredCalls.length === 0 && (
               <TableRow>
-                <TableCell colSpan={9} className="py-16 text-center">
-                  <p className="text-muted-foreground text-sm">
-                    Filtreye uygun cagri kaydi bulunamadi.
-                  </p>
+                <TableCell
+                  colSpan={9}
+                  className="text-muted-foreground py-8 text-center text-xs"
+                >
+                  <p>Filtreye uygun cagri kaydi bulunamadi.</p>
                 </TableCell>
               </TableRow>
             )}
 
             {filteredCalls.map(call => (
-              <TableRow key={call.id}>
-                <TableCell className="px-4 py-3">
+              <TableRow
+                key={call.id}
+                className="border-border/80 hover:bg-secondary/20 border-b transition-colors last:border-b-0"
+              >
+                <TableCell className="py-3 pl-4">
                   <div>
                     <p className="font-mono text-xs font-bold">
                       {formatDateTime(call.startedAt)}
@@ -258,10 +280,10 @@ const CallHistoryPage = () => {
                     </p>
                   </div>
                 </TableCell>
-                <TableCell className="text-muted-foreground px-4 py-3 text-xs font-semibold">
+                <TableCell className="text-muted-foreground py-3 text-xs font-semibold">
                   {formatDuration(call.durationSeconds)}
                 </TableCell>
-                <TableCell className="px-4 py-3">
+                <TableCell className="py-3">
                   <Badge
                     variant="outline"
                     className="border-border/50 bg-secondary/40 rounded-md px-2 py-0 text-[10px] font-bold uppercase"
@@ -269,10 +291,10 @@ const CallHistoryPage = () => {
                     {call.channel.replace("_", " ")}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-primary px-4 py-3 font-mono text-xs font-bold">
+                <TableCell className="text-primary py-3 font-mono text-xs font-bold">
                   {formatCurrency(call.costUsd)}
                 </TableCell>
-                <TableCell className="px-4 py-3">
+                <TableCell className="py-3">
                   <div>
                     <p className="text-xs font-semibold">{call.userName}</p>
                     <p className="text-muted-foreground text-[11px]">
@@ -280,10 +302,10 @@ const CallHistoryPage = () => {
                     </p>
                   </div>
                 </TableCell>
-                <TableCell className="text-foreground/80 px-4 py-3 text-[11px] font-semibold">
+                <TableCell className="text-foreground/80 py-3 text-[11px] font-semibold">
                   {call.endReason}
                 </TableCell>
-                <TableCell className="px-4 py-3">
+                <TableCell className="py-3">
                   <div className="text-foreground/80 flex items-center gap-2 text-[11px] font-semibold">
                     <div
                       className={`h-1.5 w-1.5 rounded-full ${sentimentDotClass[call.sentiment]}`}
@@ -291,7 +313,7 @@ const CallHistoryPage = () => {
                     {call.sentiment}
                   </div>
                 </TableCell>
-                <TableCell className="px-4 py-3">
+                <TableCell className="py-3">
                   <Badge
                     variant="outline"
                     className={`rounded-md px-2 py-0 text-[10px] font-black tracking-wider uppercase ${statusBadgeClass[call.status]}`}
@@ -299,7 +321,7 @@ const CallHistoryPage = () => {
                     {statusViewMap[call.status]}
                   </Badge>
                 </TableCell>
-                <TableCell className="px-4 py-3 text-right">
+                <TableCell className="py-3 pr-4 text-right">
                   <Link to={`/dashboard/call-history/${call.id}`}>
                     <Button
                       variant="ghost"
