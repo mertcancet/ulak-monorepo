@@ -18,6 +18,10 @@ export default [
     route("analytics", "routes/dashboard/analytics.tsx"),
     route("billing", "routes/dashboard/billing.tsx"),
     route("settings", "routes/dashboard/settings.tsx"),
+    route("tools", "routes/dashboard/tools.tsx"),
+    route("tools/new", "routes/dashboard/tools-new.tsx"),
+    route("tools/http/new", "routes/dashboard/tools-http-new.tsx"),
+    route("tools/end-call/new", "routes/dashboard/tools-end-call-new.tsx"),
   ]),
 
   route("auth", "routes/auth/layout.tsx", [

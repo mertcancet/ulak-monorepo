@@ -15,6 +15,7 @@ import {
   Phone,
   Settings,
   ShieldCheck,
+  ToolCase,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -319,6 +320,13 @@ const DashboardLayout = () => {
                 label="Agent"
                 href="/dashboard/agent"
                 active={location.pathname === "/dashboard/agent"}
+                collapsed={collapsed}
+              />
+              <SidebarItem
+                icon={ToolCase}
+                label="Tools"
+                href="/dashboard/tools"
+                active={location.pathname === "/dashboard/tools"}
                 collapsed={collapsed}
               />
             </SidebarSection>

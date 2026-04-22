@@ -42,7 +42,7 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     // biome-ignore lint/suspicious/noExplicitAny: <>
-    const Comp = (asChild ? Slot : "button") as any;
+    const Comp = (asChild ? Slot.Root : "button") as any;
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
