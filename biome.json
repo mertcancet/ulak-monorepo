@@ -16,7 +16,6 @@
       "**",
       "!!**/dist",
       "!!**/build",
-      "!!**/prisma/generated",
       "!!**/.react-router",
       "!!apps/landing/src",
       "!!apps/landing/stitch_assets"

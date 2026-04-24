@@ -2,12 +2,7 @@ import { desc, eq, getColumns, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
-import {
-  agentInsertSchema,
-  agentSelectSchema,
-  agents,
-  agentUpdateSchema,
-} from "~/db/schema";
+import { tools, toolsInsertSchema, toolsSelectSchema } from "~/db/schema";
 import models from "~/plugins/models";
 import { checkPermissions } from "~/shared/auth-helpers";
 import paginatedQuerySchema, {
@@ -16,11 +11,11 @@ import paginatedQuerySchema, {
 import { headerSchema } from "~/shared/validations";
 import authModule from "../auth";
 
-const agentsModule = () =>
+const toolsModule = () =>
   new Elysia({
-    name: "agents",
-    prefix: "/agents",
-    tags: ["Agents"],
+    name: "tools",
+    prefix: "/tools",
+    tags: ["Tools"],
   })
     .use(models())
     .use(authModule())
@@ -35,7 +30,7 @@ const agentsModule = () =>
             id: session.userId,
           },
           resource: {
-            kind: "agent",
+            kind: "tool",
             workspaceId,
           },
           action: "view",
@@ -45,14 +40,14 @@ const agentsModule = () =>
 
         const data = await db
           .select({
-            ...getColumns(agents),
+            ...getColumns(tools),
             total: sql`count(*) over()`.mapWith(Number),
           })
-          .from(agents)
-          .where(eq(agents.workspaceId, workspaceId))
+          .from(tools)
+          .where(eq(tools.workspaceId, workspaceId))
           .offset((page - 1) * pageSize)
           .limit(pageSize)
-          .orderBy(desc(agents.id));
+          .orderBy(desc(tools.id));
 
         const total = data?.[0]?.total || 0;
 
@@ -70,7 +65,7 @@ const agentsModule = () =>
         query: paginatedQuerySchema,
         headers: headerSchema,
         response: {
-          200: paginatedResponse(agentSelectSchema.array()),
+          200: paginatedResponse(toolsSelectSchema.array()),
           403: z.any(),
         },
       },
@@ -85,7 +80,7 @@ const agentsModule = () =>
             id: session.userId,
           },
           resource: {
-            kind: "agent",
+            kind: "tool",
             workspaceId,
           },
           action: "create",
@@ -94,17 +89,19 @@ const agentsModule = () =>
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
         const [data] = await db
-          .insert(agents)
+          .insert(tools)
           .values(body)
-          .returning({ id: agents.id });
+          .returning({ id: tools.id });
 
         return data;
       },
       {
         requireAuth: true,
-        body: agentInsertSchema,
+        body: toolsInsertSchema,
         headers: headerSchema,
-        response: { 201: "created.response" },
+        response: {
+          201: "created.response",
+        },
       },
     )
     .patch(
@@ -117,7 +114,7 @@ const agentsModule = () =>
             id: session.userId,
           },
           resource: {
-            kind: "agent",
+            kind: "tool",
             workspaceId,
           },
           action: "update",
@@ -125,17 +122,14 @@ const agentsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        const result = await db
-          .update(agents)
-          .set(body)
-          .where(eq(agents.id, id));
+        const result = await db.update(tools).set(body).where(eq(tools.id, id));
 
         if (result.rowCount === 0)
           return problem({ title: "Not Found", status: 404 });
       },
       {
         requireAuth: true,
-        body: agentUpdateSchema,
+        body: toolsInsertSchema,
         headers: headerSchema,
       },
     )
@@ -149,7 +143,7 @@ const agentsModule = () =>
             id: session.userId,
           },
           resource: {
-            kind: "agent",
+            kind: "tool",
             workspaceId,
           },
           action: "delete",
@@ -157,7 +151,7 @@ const agentsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        const result = await db.delete(agents).where(eq(agents.id, id));
+        const result = await db.delete(tools).where(eq(tools.id, id));
 
         if (result.rowCount === 0)
           return problem({ title: "Not Found", status: 404 });
@@ -168,4 +162,4 @@ const agentsModule = () =>
       },
     );
 
-export default agentsModule;
+export default toolsModule;

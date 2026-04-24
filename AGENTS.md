@@ -30,7 +30,7 @@ callingai-monorepo/
 - **Shared Catalog**: Common versions `pnpm-workspace.yaml` içinde tanımlanır:
   - `elysia`: ^1.4.28
   - `better-auth`: ^1.4.20
-  - `arktype`: ^2.1.29
+  - `zod`: ^4.3.6
   - `@biomejs/biome`: 2.4.4
 
 ### Path Aliases

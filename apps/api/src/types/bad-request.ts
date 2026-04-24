@@ -1,18 +1,27 @@
-import { type } from "arktype";
+import { z } from "zod";
+import type { AutocompleteString } from ".";
 
-const badRequestModule = type.module({
-  "#ValidationError": {
-    path: "string",
-    message: "string",
-  },
-  Schema: {
-    title: "string",
-    "detail?": "string",
-    status: "100 < number < 599",
-    instance: "string",
-    "errors?": "ValidationError[]",
-  },
+const titles = [
+  "Bad Request",
+  "Unauthorized",
+  "Forbidden",
+  "Not Found",
+] as const;
+
+const badRequestSchema = z.object({
+  title: z
+    .string()
+    .transform(v => v as AutocompleteString<(typeof titles)[number]>),
+  detail: z.string().optional(),
+  status: z.number().gt(99).lt(600),
+  instance: z.string(),
+  errors: z
+    .object({
+      path: z.string(),
+      message: z.string(),
+    })
+    .array()
+    .optional(),
 });
 
-export const badRequestSchema = badRequestModule.Schema;
-export type BadRequest = typeof badRequestSchema.infer;
+export type BadRequest = z.infer<typeof badRequestSchema>;

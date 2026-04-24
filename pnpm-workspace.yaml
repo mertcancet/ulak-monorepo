@@ -10,7 +10,7 @@ onlyBuiltDependencies:
   - lefthook
 
 catalog:
-  arktype: ^2.1.29
+  ajv: ^8.18.0
   better-auth: ^1.4.20
   elysia: ^1.4.28
   "@biomejs/biome": 2.4.4
@@ -27,6 +27,7 @@ catalog:
   class-variance-authority: "^0.7.1"
   lucide-react: "^0.574.0"
   "@radix-ui/react-slot": "^1.2.4"
+  zod: "^4.3.6"
 
 overrides:
   "@better-auth/drizzle-adapter": "https://pkg.pr.new/better-auth/better-auth/@better-auth/drizzle-adapter@6913"

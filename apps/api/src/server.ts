@@ -1,30 +1,62 @@
 import { cors } from "@elysiajs/cors";
 import openapi from "@elysiajs/openapi";
-import type { type } from "arktype";
 import { Elysia } from "elysia";
+import type { z } from "zod";
 import agentsModule from "~/modules/agents";
 import authModule from "~/modules/auth";
 import knowledgeBaseModule from "~/modules/knowledge-base";
 import errorHandler from "~/plugins/error-handler";
 import env from "~/shared/env";
+import { BetterAuthOpenAPI } from "./lib/auth";
+import toolsModule from "./modules/tools";
+import workspacesModule from "./modules/workspaces";
 
 const app = new Elysia()
   .use(
     openapi({
       documentation: {
         info: {
-          title: "Ulak Api Docs",
+          title: "Cleon Api Docs",
           version: "v1",
         },
+        servers: env.OPENAPI_SERVERS.map(server => ({
+          url: server,
+          variables: {
+            port: {
+              default: env.PORT.toString(),
+            },
+          },
+        })),
+        components: {
+          ...(await BetterAuthOpenAPI.components),
+
+          securitySchemes: {
+            WorkspaceId: {
+              type: "apiKey",
+              in: "header",
+              name: "cleon-workspace-id",
+            },
+          },
+        },
+        paths: await BetterAuthOpenAPI.getPaths(),
       },
       scalar: {
         persistAuth: true,
         telemetry: false,
+        tagsSorter: "alpha",
       },
       mapJsonSchema: {
-        arktype: (schema: type) => {
-          return schema["~standard"].jsonSchema.input({
-            target: "draft-2020-12",
+        zod: (schema: z.ZodTypeAny) => {
+          return schema.toJSONSchema({
+            unrepresentable: "any",
+            override: ctx => {
+              const def = ctx.zodSchema._zod.def;
+
+              if (def.type === "date") {
+                ctx.jsonSchema.type = "string";
+                ctx.jsonSchema.format = "date-time";
+              }
+            },
           });
         },
       },
@@ -39,11 +71,9 @@ const app = new Elysia()
   .use(errorHandler())
   .use(authModule())
   .use(agentsModule())
+  .use(toolsModule())
+  .use(workspacesModule())
   .use(knowledgeBaseModule())
-  .get("/", () => "Hello Elysia")
-  .get("/user", ({ user }) => user, {
-    auth: true,
-  })
   .listen(env.PORT);
 
 console.log(

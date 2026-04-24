@@ -16,8 +16,7 @@
     "format:web": "biome check --write --unsafe ./apps/web",
     "check:api": "biome check --reporter=summary ./apps/api",
     "check:web": "biome check --reporter=summary ./apps/web",
-    "dk": "pnpm --filter api drizzle-kit",
-    "ba": "pnpm --filter api better-auth"
+    "dk": "bun --cwd apps/api node_modules/drizzle-kit/bin.cjs"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

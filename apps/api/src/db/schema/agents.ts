@@ -2,63 +2,57 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   index,
-  integer,
   jsonb,
   pgTable,
   text,
   timestamp,
-  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { users } from "./users";
-
-export type AgentFlowDocument = {
-  nodes: unknown[];
-  edges: unknown[];
-  viewport?: unknown;
-  metadata?: Record<string, unknown>;
-};
+import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
+import { z } from "zod";
+import { type LLMSettings, llmSettingsSchema } from "~/modules/agents/types";
+import { workspaces } from "./workspaces";
 
 export const agents = pgTable(
   "agents",
   {
-    id: uuid("id").primaryKey().default(sql`uuidv7()`),
-    ownerUserId: uuid("owner_user_id")
+    id: uuid().primaryKey().default(sql`uuidv7()`),
+    workspaceId: uuid()
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    name: text("name").notNull(),
-    description: text("description"),
-    isActive: boolean("is_active").default(true).notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    name: text().notNull(),
+    phone: text().unique(),
+    llm: jsonb().$type<LLMSettings>(),
+    instructions: text().notNull(),
+    allowInterruptions: boolean().default(true).notNull(),
+    greetPrompt: text(),
+    goodbyePrompt: text(),
+    isActive: boolean().default(true).notNull(),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp()
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  table => [index().on(table.ownerUserId), index().on(table.isActive)],
+  table => [index().on(table.workspaceId)],
 );
 
-export const agentFlows = pgTable(
-  "agent_flows",
-  {
-    id: uuid("id").primaryKey().default(sql`uuidv7()`),
-    agentId: uuid("agent_id")
-      .notNull()
-      .references(() => agents.id, { onDelete: "cascade" }),
-    ownerUserId: uuid("owner_user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    flow: jsonb("flow").$type<AgentFlowDocument>().notNull(),
-    version: integer("version").default(1).notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-      .defaultNow()
-      .$onUpdate(() => new Date())
-      .notNull(),
-  },
-  table => [
-    uniqueIndex().on(table.agentId),
-    index().on(table.ownerUserId),
-    index().on(table.updatedAt),
-  ],
-);
+export const agentSelectSchema = createSelectSchema(agents, {
+  llm: llmSettingsSchema,
+});
+
+export const agentInsertSchema = createInsertSchema(agents, {
+  llm: llmSettingsSchema,
+  name: z.string().min(3),
+  workspaceId: z.uuidv7(),
+}).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const agentUpdateSchema = agentInsertSchema.partial().omit({
+  workspaceId: true,
+});
+
+export type Agent = z.infer<typeof agentSelectSchema>;

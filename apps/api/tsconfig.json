@@ -2,21 +2,36 @@
   "compilerOptions": {
     "paths": {
       "~/db": ["./src/db"],
-      "~/db/schema": ["./src/db/schema/index"],
+      "~/db/schema": ["./src/db/schema"],
       "~/lib/*": ["./src/lib/*"],
+      "~/types": ["./src/types/index"],
       "~/types/*": ["./src/types/*"],
       "~/plugins/*": ["./src/plugins/*"],
       "~/modules/*": ["./src/modules/*"],
       "~/shared/*": ["./src/shared/*"],
       "@ulak/shared": ["../../packages/shared/src"]
     },
-    "target": "es2021",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "types": ["bun-types"],
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "lib": ["ESNext"],
+    "target": "esnext",
+    "module": "preserve",
+    "moduleDetection": "force",
+    "types": ["bun"],
+
+    // Bundler mode
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+
+    // Best practices
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "forceConsistentCasingInFileNames": true
   }
 }

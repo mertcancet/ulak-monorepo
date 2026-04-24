@@ -5,7 +5,7 @@ const problemDetails = () =>
   new Elysia({
     name: "problem-details",
   }).derive({ as: "global" }, ({ request }) => ({
-    problem: ({
+    problem({
       title = "Bad Request",
       status: statusCode = 400,
       detail,
@@ -13,7 +13,7 @@ const problemDetails = () =>
     }: Pick<
       Partial<BadRequest>,
       "title" | "detail" | "status" | "errors"
-    > = {}) => {
+    > = {}) {
       return Response.json(
         {
           title,
