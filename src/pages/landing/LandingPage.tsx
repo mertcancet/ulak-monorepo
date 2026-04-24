@@ -1,3 +1,4 @@
+import { TestCaseSection } from '@/components/layout/TestCaseSection';
 import { AnalyticsPreview } from './components/AnalyticsPreview';
 import { CTA } from './components/CTA';
 import { Features } from './components/Features';
@@ -16,6 +17,7 @@ export default function LandingPage() {
         <SocialProofSection />
         <Features />
         <UseCasesSection />
+        <TestCaseSection />
         <OurApproach />
         <HowItWorks />
         <AnalyticsPreview />
