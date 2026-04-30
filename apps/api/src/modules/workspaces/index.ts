@@ -1,7 +1,7 @@
 import Elysia from "elysia";
-import { z } from "zod";
 import db from "~/db";
 import { workspaces } from "~/db/schema";
+import models from "~/plugins/models";
 import authModule from "../auth";
 import { workspaceSchema } from "./types";
 
@@ -11,16 +11,15 @@ const workspacesModule = () =>
     prefix: "/workspaces",
     tags: ["Workspaces"],
   })
+    .use(models())
     .use(authModule())
     .post(
       "",
-      async ({ body, session }) => {
+      async ({ body }) => {
+        // TODO: Permission Check - workspace resource
         const [workspace] = await db
           .insert(workspaces)
-          .values({
-            ...body,
-            userId: session.userId,
-          })
+          .values(body)
           .returning({ id: workspaces.id });
 
         return workspace;
@@ -29,7 +28,7 @@ const workspacesModule = () =>
         requireAuth: true,
         body: workspaceSchema,
         response: {
-          201: z.object({ id: z.string() }),
+          201: "created.response",
         },
       },
     );

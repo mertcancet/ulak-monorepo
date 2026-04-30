@@ -17,9 +17,8 @@ export const users = pgTable("users", {
   email: text().notNull().unique(),
   emailVerified: boolean().default(false).notNull(),
   image: text(),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp()
-    .defaultNow()
+  createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp({ withTimezone: true })
     .$onUpdate(() => new Date())
     .notNull(),
 });

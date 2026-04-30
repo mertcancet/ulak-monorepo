@@ -5,16 +5,16 @@ import { users } from "./users";
 export const sessions = pgTable(
   "sessions",
   {
-    id: uuid("id").primaryKey().default(sql`uuidv7()`),
-    expiresAt: timestamp("expires_at").notNull(),
-    token: text("token").notNull().unique(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    id: uuid().primaryKey().default(sql`uuidv7()`),
+    expiresAt: timestamp({ withTimezone: true }).notNull(),
+    token: text().notNull().unique(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp({ withTimezone: true })
       .$onUpdate(() => new Date())
       .notNull(),
-    ipAddress: text("ip_address"),
-    userAgent: text("user_agent"),
-    userId: uuid("user_id")
+    ipAddress: text(),
+    userAgent: text(),
+    userId: uuid()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
@@ -24,21 +24,21 @@ export const sessions = pgTable(
 export const accounts = pgTable(
   "accounts",
   {
-    id: uuid("id").primaryKey().default(sql`uuidv7()`),
-    accountId: uuid("account_id").notNull(),
-    providerId: text("provider_id").notNull(),
-    userId: uuid("user_id")
+    id: uuid().primaryKey().default(sql`uuidv7()`),
+    accountId: uuid().notNull(),
+    providerId: text().notNull(),
+    userId: uuid()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    accessToken: text("access_token"),
-    refreshToken: text("refresh_token"),
-    idToken: text("id_token"),
-    accessTokenExpiresAt: timestamp("access_token_expires_at"),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-    scope: text("scope"),
-    password: text("password"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    accessToken: text(),
+    refreshToken: text(),
+    idToken: text(),
+    accessTokenExpiresAt: timestamp({ withTimezone: true }),
+    refreshTokenExpiresAt: timestamp({ withTimezone: true }),
+    scope: text(),
+    password: text(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp({ withTimezone: true })
       .$onUpdate(() => new Date())
       .notNull(),
   },
@@ -48,12 +48,12 @@ export const accounts = pgTable(
 export const verifications = pgTable(
   "verifications",
   {
-    id: uuid("id").primaryKey().default(sql`uuidv7()`),
-    identifier: text("identifier").notNull(),
-    value: text("value").notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    id: uuid().primaryKey().default(sql`uuidv7()`),
+    identifier: text().notNull(),
+    value: text().notNull(),
+    expiresAt: timestamp({ withTimezone: true }).notNull(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp({ withTimezone: true })
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),

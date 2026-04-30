@@ -8,7 +8,6 @@ import { checkPermissions } from "~/shared/auth-helpers";
 import paginatedQuerySchema, {
   paginatedResponse,
 } from "~/shared/paginated-query";
-import { headerSchema } from "~/shared/validations";
 import authModule from "../auth";
 
 const toolsModule = () =>
@@ -62,8 +61,8 @@ const toolsModule = () =>
       },
       {
         requireAuth: true,
+        headers: "headers.workspaceId",
         query: paginatedQuerySchema,
-        headers: headerSchema,
         response: {
           200: paginatedResponse(toolsSelectSchema.array()),
           403: z.any(),
@@ -90,17 +89,53 @@ const toolsModule = () =>
 
         const [data] = await db
           .insert(tools)
-          .values(body)
+          .values({
+            ...body,
+            workspaceId,
+          })
           .returning({ id: tools.id });
 
         return data;
       },
       {
         requireAuth: true,
+        headers: "headers.workspaceId",
         body: toolsInsertSchema,
-        headers: headerSchema,
         response: {
           201: "created.response",
+        },
+      },
+    )
+    .get(
+      ":id",
+      async ({ params: { id }, session, headers, problem }) => {
+        const workspaceId = headers["cleon-workspace-id"];
+
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "tool",
+            workspaceId,
+          },
+          action: "view",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        const [tool] = await db.select().from(tools).where(eq(tools.id, id));
+
+        if (!tool) return problem({ title: "Not Found", status: 404 });
+
+        return tool;
+      },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+        response: {
+          200: toolsSelectSchema,
+          403: z.any(),
         },
       },
     )
@@ -122,15 +157,15 @@ const toolsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        const result = await db.update(tools).set(body).where(eq(tools.id, id));
-
-        if (result.rowCount === 0)
-          return problem({ title: "Not Found", status: 404 });
+        await db
+          .update(tools)
+          .set({ ...body, workspaceId })
+          .where(eq(tools.id, id));
       },
       {
         requireAuth: true,
+        headers: "headers.workspaceId",
         body: toolsInsertSchema,
-        headers: headerSchema,
       },
     )
     .delete(
@@ -151,14 +186,11 @@ const toolsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        const result = await db.delete(tools).where(eq(tools.id, id));
-
-        if (result.rowCount === 0)
-          return problem({ title: "Not Found", status: 404 });
+        await db.delete(tools).where(eq(tools.id, id));
       },
       {
         requireAuth: true,
-        headers: headerSchema,
+        headers: "headers.workspaceId",
       },
     );
 

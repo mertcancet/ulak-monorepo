@@ -45,21 +45,25 @@ const errorHandler = () =>
         const classCode = error.cause.code?.slice(0, 2);
         const clientErrors = ["22", "23", "42"];
 
-        if (
-          env.NODE_ENV === "development" &&
-          classCode &&
-          clientErrors.includes(classCode)
-        ) {
+        const isClientError = classCode && clientErrors.includes(classCode);
+
+        console.error(error);
+
+        if (env.NODE_ENV === "development" && isClientError) {
           return problem({
             title: "Bad Request",
             detail: error.cause.message,
+            status: 400,
+          });
+        } else if (env.NODE_ENV !== "development" && isClientError) {
+          return problem({
+            title: "Bad Request",
             status: 400,
           });
         }
 
         return problem({
           title: "Database Error",
-          detail: error.cause.message,
           status: 500,
         });
       }

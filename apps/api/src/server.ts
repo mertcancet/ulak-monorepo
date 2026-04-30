@@ -36,6 +36,11 @@ const app = new Elysia()
               in: "header",
               name: "cleon-workspace-id",
             },
+            AgentSecret: {
+              type: "apiKey",
+              in: "header",
+              name: "cleon-agent-secret",
+            },
           },
         },
         paths: await BetterAuthOpenAPI.getPaths(),
@@ -47,7 +52,7 @@ const app = new Elysia()
       },
       mapJsonSchema: {
         zod: (schema: z.ZodTypeAny) => {
-          return schema.toJSONSchema({
+          return schema.toJSONSchema?.({
             unrepresentable: "any",
             override: ctx => {
               const def = ctx.zodSchema._zod.def;

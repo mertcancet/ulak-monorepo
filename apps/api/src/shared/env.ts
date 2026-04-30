@@ -14,6 +14,11 @@ const envSchema = z.object({
     .string()
     .transform(servers => servers.split(","))
     .pipe(z.string().array()),
+  CLEON_AGENT_SECRET: z.string(),
+
+  LIVEKIT_URL: z.url(),
+  LIVEKIT_API_KEY: z.string(),
+  LIVEKIT_API_SECRET: z.string(),
 });
 
 const result = envSchema.safeParse({
@@ -24,6 +29,11 @@ const result = envSchema.safeParse({
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
   CORS_ORIGINS: process.env.CORS_ORIGINS || "http://localhost:5173",
   OPENAPI_SERVERS: process.env.OPENAPI_SERVERS || "http://localhost:3000",
+  CLEON_AGENT_SECRET: process.env.CLEON_AGENT_SECRET,
+
+  LIVEKIT_URL: process.env.LIVEKIT_URL,
+  LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY,
+  LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET,
 });
 
 if (!result.success) {

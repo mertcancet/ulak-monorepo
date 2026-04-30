@@ -39,19 +39,4 @@ export const toolSettingsSchema = z.discriminatedUnion("type", [
   endCallTool,
 ]);
 
-const toolSchema = z.object({
-  id: z.uuidv7(),
-  name: z
-    .string()
-    .min(3)
-    .regex(/^[a-z][a-z0-9_-]*$/, {
-      message:
-        "Tool name should only contain alphanumeric characters, underscores and hyphens.",
-    }),
-  description: z.string(),
-  disallow_interruptions: z.boolean().default(false).optional(),
-  settings: toolSettingsSchema,
-});
-
-export type Tool = z.infer<typeof toolSchema>;
-export type ToolSettings = Tool["settings"];
+export type ToolSettings = z.infer<typeof toolSettingsSchema>;

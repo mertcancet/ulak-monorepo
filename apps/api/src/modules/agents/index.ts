@@ -1,19 +1,22 @@
-import { desc, eq, getColumns, sql } from "drizzle-orm";
+import { and, desc, eq, getColumns, ne, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
 import {
+  agent_tools,
   agentInsertSchema,
   agentSelectSchema,
   agents,
   agentUpdateSchema,
+  tools,
+  toolsSelectSchema,
 } from "~/db/schema";
 import models from "~/plugins/models";
 import { checkPermissions } from "~/shared/auth-helpers";
+import env from "~/shared/env";
 import paginatedQuerySchema, {
   paginatedResponse,
 } from "~/shared/paginated-query";
-import { headerSchema } from "~/shared/validations";
 import authModule from "../auth";
 
 const agentsModule = () =>
@@ -67,8 +70,8 @@ const agentsModule = () =>
       },
       {
         requireAuth: true,
+        headers: "headers.workspaceId",
         query: paginatedQuerySchema,
-        headers: headerSchema,
         response: {
           200: paginatedResponse(agentSelectSchema.array()),
           403: z.any(),
@@ -102,9 +105,42 @@ const agentsModule = () =>
       },
       {
         requireAuth: true,
+        headers: "headers.workspaceId",
         body: agentInsertSchema,
-        headers: headerSchema,
         response: { 201: "created.response" },
+      },
+    )
+    .get(
+      ":id",
+      async ({ params: { id }, session, headers, problem }) => {
+        const workspaceId = headers["cleon-workspace-id"];
+
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "agent",
+            workspaceId,
+          },
+          action: "view",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        const [agent] = await db.select().from(agents).where(eq(agents.id, id));
+
+        if (!agent) return problem({ title: "Not Found", status: 404 });
+
+        return agent;
+      },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+        response: {
+          200: agentSelectSchema,
+          403: z.any(),
+        },
       },
     )
     .patch(
@@ -125,18 +161,12 @@ const agentsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        const result = await db
-          .update(agents)
-          .set(body)
-          .where(eq(agents.id, id));
-
-        if (result.rowCount === 0)
-          return problem({ title: "Not Found", status: 404 });
+        await db.update(agents).set(body).where(eq(agents.id, id));
       },
       {
         requireAuth: true,
+        headers: "headers.workspaceId",
         body: agentUpdateSchema,
-        headers: headerSchema,
       },
     )
     .delete(
@@ -157,14 +187,90 @@ const agentsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        const result = await db.delete(agents).where(eq(agents.id, id));
-
-        if (result.rowCount === 0)
-          return problem({ title: "Not Found", status: 404 });
+        await db.delete(agents).where(eq(agents.id, id));
       },
       {
         requireAuth: true,
-        headers: headerSchema,
+        headers: "headers.workspaceId",
+      },
+    )
+    .post(
+      ":id/tools",
+      async ({ params: { id }, body, session, headers, problem }) => {
+        const workspaceId = headers["cleon-workspace-id"];
+        const toolIds = body.toolIds;
+
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "agent",
+            workspaceId,
+          },
+          action: "update",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        const values = toolIds.map(toolId => ({ agentId: id, toolId }));
+
+        await db.insert(agent_tools).values(values);
+      },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+        body: z.object({ toolIds: z.uuidv7().array() }),
+      },
+    )
+    .post(
+      "bootstrap",
+      async ({ body, headers, problem }) => {
+        const agentSecret = headers["cleon-agent-secret"];
+        const { phoneNumber } = body;
+
+        if (agentSecret !== env.CLEON_AGENT_SECRET)
+          return problem({ title: "Forbidden", status: 403 });
+
+        const [startAgent] = await db
+          .select()
+          .from(agents)
+          .where(eq(agents.phoneNumber, phoneNumber));
+
+        if (!startAgent) return problem({ title: "Not Found", status: 404 });
+
+        const availableAgents = await db
+          .select()
+          .from(agents)
+          .where(
+            and(
+              eq(agents.workspaceId, startAgent.workspaceId),
+              ne(agents.id, startAgent.id),
+            ),
+          );
+
+        const availableTools = await db
+          .select()
+          .from(tools)
+          .where(eq(tools.workspaceId, startAgent.workspaceId));
+
+        return {
+          startAgent,
+          availableAgents,
+          availableTools,
+        };
+      },
+      {
+        headers: "headers.cleonAgentSecret",
+        body: z.object({ phoneNumber: z.string() }),
+        response: {
+          200: z.object({
+            startAgent: agentSelectSchema,
+            availableAgents: agentSelectSchema.array(),
+            availableTools: toolsSelectSchema.array(),
+          }),
+          403: z.any(),
+        },
       },
     );
 
