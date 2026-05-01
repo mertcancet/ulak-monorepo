@@ -40,9 +40,9 @@ callingai-monorepo/
 ```typescript
 "paths": {
   "~/*": ["./app/*"],
-  "@ulak/api": ["../../apps/api/src/server"],
-  "@ulak/auth": ["../../apps/api/src/lib/auth"],
-  "@ulak/shared": ["../../packages/shared/src"]
+  "@cleon/api": ["../../apps/api/src/server"],
+  "@cleon/auth": ["../../apps/api/src/lib/auth"],
+  "@cleon/shared": ["../../packages/shared/src"]
 }
 ```
 
@@ -57,7 +57,7 @@ callingai-monorepo/
   "~/plugins/*": ["./src/plugins/*"],
   "~/modules/*": ["./src/modules/*"],
   "~/shared/*": ["./src/shared/*"],
-  "@ulak/shared": ["../../packages/shared/src"]
+  "@cleon/shared": ["../../packages/shared/src"]
 }
 ```
 
@@ -137,7 +137,7 @@ pnpm warn:web:prettier    # Web format kontrolü (warn only, fail etmez)
 Biome otomatik olarak organize eder:
 
 1. External packages
-2. Internal path aliases (`~/*`, `@ulak/*`)
+2. Internal path aliases (`~/*`, `@cleon/*`)
 3. Relative imports (`./`, `../`)
 
 ---

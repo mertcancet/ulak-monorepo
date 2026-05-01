@@ -85,4 +85,4 @@ console.log(
   `Server running at http://${app.server?.hostname}:${app.server?.port}`,
 );
 
-export type UlakApi = typeof app;
+export type cleonApi = typeof app;

@@ -1,4 +1,4 @@
-import type { EndCallToolFormData } from "@ulak/shared";
+import type { EndCallToolFormData } from "@cleon/shared";
 import { ArrowLeft, PhoneOff } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";

@@ -1,4 +1,4 @@
-import type { ToolSettings } from "@ulak/shared";
+import type { ToolSettings } from "@cleon/shared";
 import { sql } from "drizzle-orm";
 import {
   boolean,

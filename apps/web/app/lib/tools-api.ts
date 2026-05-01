@@ -3,7 +3,7 @@ import type {
   Paginated,
   ToolItem,
   UpdateToolInput,
-} from "@ulak/shared";
+} from "@cleon/shared";
 import { request } from "./fetcher";
 
 export type { CreateToolInput, Paginated, ToolItem, UpdateToolInput };

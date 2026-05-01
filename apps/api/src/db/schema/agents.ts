@@ -1,4 +1,4 @@
-import type { LLMSettings } from "@ulak/shared";
+import type { LLMSettings } from "@cleon/shared";
 import { sql } from "drizzle-orm";
 import {
   boolean,

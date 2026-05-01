@@ -1,4 +1,4 @@
-import type { ToolSettings } from "@ulak/shared";
+import type { ToolSettings } from "@cleon/shared";
 import { Ajv } from "ajv";
 import { z } from "zod";
 

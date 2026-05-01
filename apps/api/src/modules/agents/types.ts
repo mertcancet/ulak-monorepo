@@ -1,4 +1,4 @@
-import type { LLMSettings } from "@ulak/shared";
+import type { LLMSettings } from "@cleon/shared";
 import { z } from "zod";
 
 export const llmSettingsSchema = z.object({

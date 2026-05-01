@@ -1,4 +1,4 @@
-import type auth from "@ulak/auth";
+import type auth from "@cleon/auth";
 import { inferAdditionalFields } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 

@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/a11y/useButtonType: false positive */
 import { BookOpen, BookText, File, Link } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import ulakClient from "~/lib/cleon-client";
+import cleonClient from "~/lib/cleon-client";
 import {
   type BusinessItem,
   type KnowledgeBaseItem,
@@ -72,7 +72,7 @@ export default function KnowledgeBasePage() {
 
   const loadSources = useCallback(async (knowledgeBaseId: string) => {
     // const nextSources = await knowledgeBaseApi.listSources(knowledgeBaseId);
-    const nextSources = await ulakClient["knowledge-base"]
+    const nextSources = await cleonClient["knowledge-base"]
       ["knowledge-bases"]({ id: knowledgeBaseId })
       .sources.get();
 

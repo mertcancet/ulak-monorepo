@@ -9,7 +9,7 @@
       "~/plugins/*": ["./src/plugins/*"],
       "~/modules/*": ["./src/modules/*"],
       "~/shared/*": ["./src/shared/*"],
-      "@ulak/shared": ["../../packages/shared/src"]
+      "@cleon/shared": ["../../packages/shared/src"]
     },
     "lib": ["ESNext"],
     "target": "esnext",

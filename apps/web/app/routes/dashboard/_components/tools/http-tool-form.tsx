@@ -1,4 +1,4 @@
-import type { HttpToolFormData } from "@ulak/shared";
+import type { HttpToolFormData } from "@cleon/shared";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";

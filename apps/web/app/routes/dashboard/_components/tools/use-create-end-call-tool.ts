@@ -1,5 +1,5 @@
+import type { EndCallToolFormData } from "@cleon/shared";
 import { useMutation } from "@tanstack/react-query";
-import type { EndCallToolFormData } from "@ulak/shared";
 import { useNavigate } from "react-router";
 import { toolsApi } from "~/lib/tools-api";
 

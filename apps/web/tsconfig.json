@@ -15,11 +15,11 @@
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/*": ["./app/*"],
-      "@ulak/api": ["../../apps/api/src/server"],
-      "@ulak/auth": ["../../apps/api/src/lib/auth"],
+      "@cleon/api": ["../../apps/api/src/server"],
+      "@cleon/auth": ["../../apps/api/src/lib/auth"],
       "~/plugins/*": ["../../apps/api/src/plugins/*"],
       "~/modules/*": ["../../apps/api/src/modules/*"],
-      "@ulak/shared": ["../../packages/shared/src"]
+      "@cleon/shared": ["../../packages/shared/src"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

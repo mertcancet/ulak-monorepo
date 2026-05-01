@@ -1,7 +1,7 @@
+import type { cleonApi } from "@cleon/api";
 import { treaty } from "@elysiajs/eden";
-import type { UlakApi } from "@ulak/api";
 
-const cleonClient = treaty<UlakApi>("localhost:3000");
+const cleonClient = treaty<cleonApi>("localhost:3000");
 
 // TODO: Bunları sil. Örnek
 
@@ -11,7 +11,7 @@ const cleonClient = treaty<UlakApi>("localhost:3000");
 //   })
 //   .get();
 
-// await ulakClient["knowledge-base"]
+// await cleonClient["knowledge-base"]
 //   .businesses({
 //     businessId: "heywolrd",
 //   })

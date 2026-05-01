@@ -1,1 +1,1 @@
-export { UlakApi } from "./server";
+export { cleonApi } from "./server";

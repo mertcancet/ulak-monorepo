@@ -1,4 +1,4 @@
-import type { HttpToolFormData } from "@ulak/shared";
+import type { HttpToolFormData } from "@cleon/shared";
 import { ArrowLeft, Globe } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
