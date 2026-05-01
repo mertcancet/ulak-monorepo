@@ -1,11 +1,11 @@
 import { treaty } from "@elysiajs/eden";
 import type { UlakApi } from "@ulak/api";
 
-const ulakClient = treaty<UlakApi>("localhost:3000");
+const cleonClient = treaty<UlakApi>("localhost:3000");
 
 // TODO: Bunları sil. Örnek
 
-// const businesses = await ulakClient["knowledge-base"]
+// const businesses = await cleonClient["knowledge-base"]
 //   .businesses({
 //     businessId: "heywolrd",
 //   })
@@ -17,4 +17,4 @@ const ulakClient = treaty<UlakApi>("localhost:3000");
 //   })
 //   .delete();
 
-export default ulakClient;
+export default cleonClient;

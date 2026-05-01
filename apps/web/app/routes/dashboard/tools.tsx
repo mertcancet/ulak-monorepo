@@ -1,9 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import { Wrench } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
+import { toolsApi } from "~/lib/tools-api";
 import DashboardHeader from "./_components/dashboard-header";
 
+// TODO: workspaceId'yi gerçek workspace yönetiminden al
+const WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
+
 export default function ToolsPage() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["tools", WORKSPACE_ID],
+    queryFn: async () => {
+      return toolsApi.listTools(WORKSPACE_ID);
+    },
+  });
+
+  const tools = data?.data ?? [];
+
   return (
     <div className="animate-in fade-in flex h-full flex-col overflow-hidden duration-300">
       <DashboardHeader>
@@ -72,16 +86,60 @@ export default function ToolsPage() {
           </div>
         </div>
 
-        {/* Empty state */}
-        <div className="border-border flex flex-1 flex-col items-center justify-center rounded-2xl border p-12">
-          <div className="bg-secondary mb-4 flex size-14 items-center justify-center rounded-xl">
-            <Wrench className="text-muted-foreground size-6" />
+        {isLoading && (
+          <div className="flex flex-1 items-center justify-center">
+            <p className="text-muted-foreground text-sm">Yükleniyor...</p>
           </div>
-          <p className="text-foreground text-sm font-medium">Henüz araç yok</p>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Görüşmelerinizde kullanmak için araç oluşturun
-          </p>
-        </div>
+        )}
+
+        {isError && (
+          <div className="flex flex-1 items-center justify-center">
+            <p className="text-destructive text-sm">
+              Araçlar yüklenirken bir hata oluştu.
+            </p>
+          </div>
+        )}
+
+        {!isLoading && !isError && tools.length === 0 && (
+          <div className="border-border flex flex-1 flex-col items-center justify-center rounded-2xl border p-12">
+            <div className="bg-secondary mb-4 flex size-14 items-center justify-center rounded-xl">
+              <Wrench className="text-muted-foreground size-6" />
+            </div>
+            <p className="text-foreground text-sm font-medium">
+              Henüz araç yok
+            </p>
+            <p className="text-muted-foreground mt-1 text-sm">
+              Görüşmelerinizde kullanmak için araç oluşturun
+            </p>
+          </div>
+        )}
+
+        {!isLoading && !isError && tools.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {tools.map(tool => (
+              <Link
+                key={tool.id}
+                to={`/dashboard/tools/${tool.id}`}
+                className="border-border bg-background hover:bg-secondary flex items-center gap-4 rounded-xl border p-4 transition-colors"
+              >
+                <div className="bg-secondary flex size-10 items-center justify-center rounded-lg">
+                  <Wrench className="text-muted-foreground size-4" />
+                </div>
+                <div className="flex flex-1 flex-col gap-0.5">
+                  <p className="text-foreground text-sm font-medium">
+                    {tool.name}
+                  </p>
+                  <p className="text-muted-foreground text-xs">
+                    {tool.description}
+                  </p>
+                </div>
+                <span className="text-muted-foreground border-border rounded-md border px-2 py-0.5 text-xs">
+                  {tool.settings.type}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

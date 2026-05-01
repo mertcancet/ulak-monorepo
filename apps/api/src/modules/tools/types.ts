@@ -1,3 +1,4 @@
+import type { ToolSettings } from "@ulak/shared";
 import { Ajv } from "ajv";
 import { z } from "zod";
 
@@ -39,4 +40,4 @@ export const toolSettingsSchema = z.discriminatedUnion("type", [
   endCallTool,
 ]);
 
-export type ToolSettings = z.infer<typeof toolSettingsSchema>;
+export type { ToolSettings };

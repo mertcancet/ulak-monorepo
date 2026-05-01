@@ -1,3 +1,4 @@
+import type { LLMSettings } from "@ulak/shared";
 import { z } from "zod";
 
 export const llmSettingsSchema = z.object({
@@ -9,4 +10,4 @@ export const llmSettingsSchema = z.object({
   api_key: z.string(),
 });
 
-export type LLMSettings = z.infer<typeof llmSettingsSchema>;
+export type { LLMSettings };

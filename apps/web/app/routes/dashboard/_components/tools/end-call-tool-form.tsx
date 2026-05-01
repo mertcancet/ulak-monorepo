@@ -1,14 +1,12 @@
+import type { EndCallToolFormData } from "@ulak/shared";
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
+import { useCreateEndCallTool } from "./use-create-end-call-tool";
 
-export interface EndCallToolFormData {
-  name: string;
-  description: string;
-  requireSpeechBefore: boolean;
-  waitForSpeechBefore: boolean;
-}
+export type { EndCallToolFormData };
 
 interface EndCallToolFormProps {
   data: EndCallToolFormData;
@@ -19,6 +17,10 @@ export function EndCallToolForm({ data, onChange }: EndCallToolFormProps) {
   const update = (partial: Partial<EndCallToolFormData>) => {
     onChange({ ...data, ...partial });
   };
+
+  const { mutate: createTool, isPending } = useCreateEndCallTool();
+
+  const canCreate = data.name.trim() !== "";
 
   return (
     <div className="flex flex-col gap-8">
@@ -52,50 +54,53 @@ export function EndCallToolForm({ data, onChange }: EndCallToolFormProps) {
           />
         </div>
 
-        <div className="flex flex-col gap-3">
-          {(
-            [
-              {
-                key: "requireSpeechBefore",
-                label: "Araç çağrısından önce konuşma zorunlu",
-                description:
-                  "Cagriyi sonlandirmadan once ajanin konusmasini zorunlu kilar",
-              },
-              {
-                key: "waitForSpeechBefore",
-                label: "Araç çağrısından önce konuşmayı bekle",
-                description:
-                  "Cagriyi sonlandirmadan once ajanin konusmasini tamamlamasini bekler",
-              },
-            ] as const
-          ).map(item => (
-            <div
-              key={item.key}
-              className="flex items-start justify-between gap-4"
-            >
-              <div className="flex flex-col gap-0.5">
-                <span className="text-foreground text-sm font-medium">
-                  {item.label}
-                </span>
-                <span className="text-muted-foreground text-xs">
-                  {item.description}
-                </span>
-              </div>
-              <Switch
-                checked={data[item.key]}
-                onCheckedChange={val => update({ [item.key]: val })}
-              />
-            </div>
-          ))}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-foreground text-sm font-medium">
+              Kesintilere izin verme
+            </span>
+            <span className="text-muted-foreground text-xs">
+              Araç çalışırken kullanıcının konuşmasını engeller
+            </span>
+          </div>
+          <Switch
+            checked={data.disallowInterruptions}
+            onCheckedChange={val => update({ disallowInterruptions: val })}
+          />
         </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <div>
+          <h3 className="text-foreground text-sm font-semibold">
+            Sonlandırma talimatı
+          </h3>
+          <p className="text-muted-foreground mt-0.5 text-xs">
+            Çağrı sonlandırılmadan önce ajana verilecek talimat (isteğe bağlı)
+          </p>
+        </div>
+        <Textarea
+          placeholder="or. Kullanıcıya görüşmenin sona erdiğini kibarca bildir."
+          value={data.endInstructions}
+          onChange={e => update({ endInstructions: e.target.value })}
+          rows={3}
+        />
       </section>
 
       <section className="bg-secondary/50 border-border rounded-xl border p-4">
         <p className="text-muted-foreground text-sm leading-relaxed">
-          Ajan bu araci tetiklediginde gorusme guvenli sekilde sonlandirilir. Ek
-          bir ayar gerektirmez.
+          Ajan bu araci tetiklediginde gorusme guvenli sekilde sonlandirilir.
         </p>
       </section>
+
+      <div className="flex justify-end pt-2">
+        <Button
+          onClick={() => createTool(data)}
+          disabled={!canCreate || isPending}
+        >
+          {isPending ? "Oluşturuluyor..." : "Oluştur"}
+        </Button>
+      </div>
     </div>
   );
 }
@@ -103,6 +108,6 @@ export function EndCallToolForm({ data, onChange }: EndCallToolFormProps) {
 export const defaultEndCallToolData: EndCallToolFormData = {
   name: "",
   description: "",
-  requireSpeechBefore: true,
-  waitForSpeechBefore: true,
+  disallowInterruptions: true,
+  endInstructions: "",
 };

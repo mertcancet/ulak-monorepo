@@ -1,3 +1,4 @@
+import type { LLMSettings } from "@ulak/shared";
 import { sql } from "drizzle-orm";
 import {
   boolean,
@@ -11,7 +12,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod";
-import { type LLMSettings, llmSettingsSchema } from "~/modules/agents/types";
+import { llmSettingsSchema } from "~/modules/agents/types";
 import { workspaces } from "./workspaces";
 
 export const agents = pgTable(

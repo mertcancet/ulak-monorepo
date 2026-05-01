@@ -1,24 +1,21 @@
+import type { EndCallToolFormData } from "@ulak/shared";
 import { ArrowLeft, PhoneOff } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import DashboardHeader from "./_components/dashboard-header";
 import {
   defaultEndCallToolData,
   EndCallToolForm,
-  type EndCallToolFormData,
 } from "./_components/tools/end-call-tool-form";
+import { useCreateEndCallTool } from "./_components/tools/use-create-end-call-tool";
 
 export default function ToolsEndCallNewPage() {
-  const navigate = useNavigate();
   const [data, setData] = useState<EndCallToolFormData>(defaultEndCallToolData);
 
   const canCreate = data.name.trim() !== "";
 
-  const handleCreate = () => {
-    // TODO: wire up API call
-    navigate("/dashboard/tools");
-  };
+  const { mutate: createTool, isPending } = useCreateEndCallTool();
 
   return (
     <div className="animate-in fade-in flex h-full flex-col overflow-hidden duration-300">
@@ -43,8 +40,11 @@ export default function ToolsEndCallNewPage() {
           <Button variant="outline" asChild>
             <Link to="/dashboard/tools">İptal</Link>
           </Button>
-          <Button onClick={handleCreate} disabled={!canCreate}>
-            Oluştur
+          <Button
+            onClick={() => createTool(data)}
+            disabled={!canCreate || isPending}
+          >
+            {isPending ? "Oluşturuluyor..." : "Oluştur"}
           </Button>
         </div>
       </DashboardHeader>

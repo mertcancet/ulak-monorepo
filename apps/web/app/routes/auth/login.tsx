@@ -31,9 +31,10 @@ export default function SignIn() {
     setIsPending(true);
 
     try {
-      await authClient.signIn.email(
-        { email, password },
-        {
+      const response = await authClient.signIn.email({
+        email,
+        password,
+        fetchOptions: {
           onSuccess: () => {
             navigate("/dashboard", { replace: true });
           },
@@ -42,12 +43,18 @@ export default function SignIn() {
             setErrorMessage(error.message || fallbackMessage);
           },
         },
-      );
+      });
+
+      // Fallback: if callback does not run in some client states, redirect on token response.
+      const token = (response as { token?: unknown })?.token;
+      if (typeof token === "string" && token.length > 0) {
+        navigate("/dashboard", { replace: true });
+      }
     } catch (_error) {
       setErrorMessage("Sunucuya baglanirken bir hata olustu.");
+    } finally {
+      setIsPending(false);
     }
-
-    setIsPending(false);
   };
 
   return (

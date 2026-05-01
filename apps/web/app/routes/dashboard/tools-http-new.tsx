@@ -1,24 +1,31 @@
+import type { HttpToolFormData } from "@ulak/shared";
 import { ArrowLeft, Globe } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import DashboardHeader from "./_components/dashboard-header";
 import {
   defaultHttpToolData,
   HttpToolForm,
-  type HttpToolFormData,
 } from "./_components/tools/http-tool-form";
+import { useCreateHttpTool } from "./_components/tools/use-create-http-tool";
 
 export default function ToolsHttpNewPage() {
-  const navigate = useNavigate();
   const [data, setData] = useState<HttpToolFormData>(defaultHttpToolData);
 
-  const canCreate = data.name.trim() !== "" && data.url.trim() !== "";
-
-  const handleCreate = () => {
-    // TODO: wire up API call
-    navigate("/dashboard/tools");
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
   };
+
+  const canCreate =
+    data.name.trim() !== "" && data.url.trim() !== "" && isValidUrl(data.url);
+
+  const { mutate: createTool, isPending } = useCreateHttpTool();
 
   return (
     <div className="animate-in fade-in flex h-full flex-col overflow-hidden duration-300">
@@ -43,8 +50,11 @@ export default function ToolsHttpNewPage() {
           <Button variant="outline" asChild>
             <Link to="/dashboard/tools">İptal</Link>
           </Button>
-          <Button onClick={handleCreate} disabled={!canCreate}>
-            Oluştur
+          <Button
+            onClick={() => createTool(data)}
+            disabled={!canCreate || isPending}
+          >
+            {isPending ? "Oluşturuluyor..." : "Oluştur"}
           </Button>
         </div>
       </DashboardHeader>

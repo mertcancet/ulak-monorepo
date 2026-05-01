@@ -6,7 +6,14 @@ import db from "~/db";
 import * as schema from "~/db/schema";
 import env from "~/shared/env";
 
+const authUrlHost = new URL(env.BETTER_AUTH_URL).hostname;
+const isLocalAuthHost =
+  authUrlHost === "localhost" ||
+  authUrlHost === "127.0.0.1" ||
+  authUrlHost === "::1";
+
 const auth = betterAuth({
+  baseURL: env.BETTER_AUTH_URL,
   // @ts-expect-error
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -31,7 +38,7 @@ const auth = betterAuth({
       generateId: false,
     },
     crossSubDomainCookies: {
-      enabled: true,
+      enabled: !isLocalAuthHost,
     },
   },
   emailAndPassword: {

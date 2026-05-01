@@ -1,3 +1,4 @@
+import type { HttpToolFormData } from "@ulak/shared";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -7,34 +8,9 @@ import { Select } from "~/components/ui/select";
 import { Slider } from "~/components/ui/slider";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
+import { useCreateHttpTool } from "./use-create-http-tool";
 
-interface Header {
-  id: string;
-  key: string;
-  value: string;
-}
-
-interface Parameter {
-  id: string;
-  name: string;
-  description: string;
-  required: boolean;
-}
-
-export interface HttpToolFormData {
-  name: string;
-  description: string;
-  executionMode: "sync" | "async";
-  requireSpeechBefore: boolean;
-  waitForSpeechBefore: boolean;
-  forbidSpeechAfter: boolean;
-  allowToolChaining: boolean;
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  url: string;
-  headers: Header[];
-  timeoutSeconds: number;
-  parameters: Parameter[];
-}
+export type { HttpToolFormData };
 
 interface HttpToolFormProps {
   data: HttpToolFormData;
@@ -44,6 +20,25 @@ interface HttpToolFormProps {
 export function HttpToolForm({ data, onChange }: HttpToolFormProps) {
   const [newParamName, setNewParamName] = useState("");
   const [newParamDesc, setNewParamDesc] = useState("");
+
+  const { mutate: createTool, isPending } = useCreateHttpTool();
+
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const urlError =
+    data.url.trim() !== "" && !isValidUrl(data.url)
+      ? "Geçerli bir URL girin (örn. https://example.com/path)"
+      : null;
+
+  const canCreate =
+    data.name.trim() !== "" && data.url.trim() !== "" && !urlError;
 
   const update = (partial: Partial<HttpToolFormData>) => {
     onChange({ ...data, ...partial });
@@ -216,11 +211,15 @@ export function HttpToolForm({ data, onChange }: HttpToolFormProps) {
               </option>
             ))}
           </Select>
-          <Input
-            placeholder="or. https://my-app.com/phonic-tools/send-sms"
-            value={data.url}
-            onChange={e => update({ url: e.target.value })}
-          />
+          <div className="flex flex-1 flex-col gap-1">
+            <Input
+              placeholder="or. https://my-app.com/phonic-tools/send-sms"
+              value={data.url}
+              onChange={e => update({ url: e.target.value })}
+              className={urlError ? "border-destructive" : ""}
+            />
+            {urlError && <p className="text-destructive text-xs">{urlError}</p>}
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -355,6 +354,15 @@ export function HttpToolForm({ data, onChange }: HttpToolFormProps) {
           </div>
         )}
       </section>
+
+      <div className="flex justify-end pt-2">
+        <Button
+          onClick={() => createTool(data)}
+          disabled={!canCreate || isPending}
+        >
+          {isPending ? "Oluşturuluyor..." : "Oluştur"}
+        </Button>
+      </div>
     </div>
   );
 }

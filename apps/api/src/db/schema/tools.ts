@@ -1,3 +1,4 @@
+import type { ToolSettings } from "@ulak/shared";
 import { sql } from "drizzle-orm";
 import {
   boolean,
@@ -10,7 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod";
-import { type ToolSettings, toolSettingsSchema } from "~/modules/tools/types";
+import { toolSettingsSchema } from "~/modules/tools/types";
 import { agents } from "./agents";
 import { workspaces } from "./workspaces";
 
