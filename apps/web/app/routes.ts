@@ -17,6 +17,7 @@ export default [
     route("ai-qa", "routes/dashboard/ai-qa.tsx"),
     route("analytics", "routes/dashboard/analytics.tsx"),
     route("billing", "routes/dashboard/billing.tsx"),
+    route("members", "routes/dashboard/members.tsx"),
     route("settings", "routes/dashboard/settings.tsx"),
     route("tools", "routes/dashboard/tools.tsx"),
     route("tools/new", "routes/dashboard/tools-new.tsx"),

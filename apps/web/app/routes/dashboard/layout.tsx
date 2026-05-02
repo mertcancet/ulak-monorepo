@@ -16,6 +16,7 @@ import {
   Settings,
   ShieldCheck,
   ToolCase,
+  Users,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -297,6 +298,13 @@ const DashboardLayout = () => {
                 label="Faturalandırma"
                 href="/dashboard/billing"
                 active={location.pathname === "/dashboard/billing"}
+                collapsed={collapsed}
+              />
+              <SidebarItem
+                icon={Users}
+                label="Üyeler"
+                href="/dashboard/members"
+                active={location.pathname === "/dashboard/members"}
                 collapsed={collapsed}
               />
               <SidebarItem
