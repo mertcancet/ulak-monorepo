@@ -19,6 +19,8 @@ const envSchema = z.object({
   LIVEKIT_URL: z.url(),
   LIVEKIT_API_KEY: z.string(),
   LIVEKIT_API_SECRET: z.string(),
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
 });
 
 const result = envSchema.safeParse({
@@ -34,6 +36,8 @@ const result = envSchema.safeParse({
   LIVEKIT_URL: process.env.LIVEKIT_URL,
   LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY,
   LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 });
 
 if (!result.success) {

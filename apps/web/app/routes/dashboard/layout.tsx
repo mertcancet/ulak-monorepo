@@ -187,7 +187,7 @@ const DashboardLayout = () => {
                   <Bot className="h-4 w-4 text-white" />
                 </div>
                 <span className="text-foreground font-display text-base font-semibold tracking-tight">
-                  Calling AI
+                  Cleon AI
                 </span>
               </div>
             )}

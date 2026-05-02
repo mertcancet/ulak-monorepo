@@ -14,6 +14,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
+  const [isGooglePending, setIsGooglePending] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -56,6 +57,31 @@ export default function Register() {
       setErrorMessage("Sunucuya baglanirken bir hata olustu.");
     } finally {
       setIsPending(false);
+    }
+  };
+
+  const signUpWithGoogle = async () => {
+    if (isPending || isSessionPending || isGooglePending) {
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsGooglePending(true);
+
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+        fetchOptions: {
+          onError: ({ error }) => {
+            const fallbackMessage = "Google ile kayit basarisiz.";
+            setErrorMessage(error.message || fallbackMessage);
+          },
+        },
+      });
+    } catch (_error) {
+      setErrorMessage("Google ile kayit baslatilirken bir hata olustu.");
+      setIsGooglePending(false);
     }
   };
 
@@ -164,9 +190,27 @@ export default function Register() {
             <Button
               type="submit"
               disabled={isPending || isSessionPending}
-              className="bg-foreground hover:bg-foreground/90 h-11 w-full rounded-xl text-sm font-semibold text-white transition-colors"
+              className="bg-foreground hover:bg-foreground/90 text-background h-11 w-full rounded-xl text-sm font-semibold transition-colors"
             >
               {isPending ? "Hesap oluşturuluyor..." : "Hesap Oluştur"}
+            </Button>
+
+            <div className="flex items-center gap-3">
+              <div className="bg-border h-px flex-1" />
+              <span className="text-muted-foreground text-xs">veya</span>
+              <div className="bg-border h-px flex-1" />
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isPending || isSessionPending || isGooglePending}
+              onClick={signUpWithGoogle}
+              className="h-11 w-full rounded-xl text-sm font-semibold"
+            >
+              {isGooglePending
+                ? "Google yonlendiriliyor..."
+                : "Google ile Kayıt Ol"}
             </Button>
 
             <p className="text-muted-foreground text-center font-sans text-sm">

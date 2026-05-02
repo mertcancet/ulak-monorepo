@@ -144,7 +144,7 @@ export default function SignIn() {
             <Button
               type="submit"
               disabled={isPending || isSessionPending}
-              className="bg-foreground hover:bg-foreground/90 h-11 w-full rounded-xl text-sm font-semibold text-white transition-colors"
+              className="bg-foreground hover:bg-foreground/90 text-background h-11 w-full rounded-xl text-sm font-semibold transition-colors"
             >
               {isPending ? "Giriş yapılıyor..." : "Giriş Yap"}
             </Button>

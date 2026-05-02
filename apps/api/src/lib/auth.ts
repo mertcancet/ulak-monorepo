@@ -12,6 +12,16 @@ const isLocalAuthHost =
   authUrlHost === "127.0.0.1" ||
   authUrlHost === "::1";
 
+const socialProviders =
+  env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+    ? {
+        google: {
+          clientId: env.GOOGLE_CLIENT_ID,
+          clientSecret: env.GOOGLE_CLIENT_SECRET,
+        },
+      }
+    : undefined;
+
 const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   // @ts-expect-error
@@ -44,6 +54,7 @@ const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  socialProviders,
   plugins: [openAPI()],
 });
 

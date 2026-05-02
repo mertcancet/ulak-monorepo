@@ -318,7 +318,7 @@ export default function Dashboard() {
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <div className="bg-foreground flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold text-white">
+            <div className="bg-foreground text-background flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
               1
             </div>
             <button
