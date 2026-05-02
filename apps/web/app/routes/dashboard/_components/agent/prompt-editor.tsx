@@ -1,7 +1,12 @@
 import { Textarea } from "~/components/ui/textarea";
 import { DEFAULT_PROMPT } from "./constants";
 
-export const PromptEditor = () => {
+interface PromptEditorProps {
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+export const PromptEditor = ({ value, onChange }: PromptEditorProps) => {
   return (
     <div className="bg-card border-border flex flex-1 flex-col overflow-hidden rounded-xl border shadow-sm">
       <div className="border-border bg-secondary/20 flex items-center justify-between border-b p-4">
@@ -19,7 +24,8 @@ export const PromptEditor = () => {
         <Textarea
           className="text-foreground/80 scrollbar-thin flex-1 resize-none border-none bg-transparent p-6 text-sm leading-relaxed font-medium focus-visible:ring-0"
           placeholder="Agent talimatlarını buraya girin..."
-          defaultValue={DEFAULT_PROMPT}
+          value={value ?? DEFAULT_PROMPT}
+          onChange={event => onChange?.(event.target.value)}
         />
       </div>
     </div>

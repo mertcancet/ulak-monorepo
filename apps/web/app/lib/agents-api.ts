@@ -1,55 +1,25 @@
+import type {
+  AgentDetail,
+  AgentListItem,
+  CreateAgentInput,
+  Paginated,
+  UpdateAgentInput,
+} from "@cleon/shared";
+
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+const DEFAULT_WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
 
 type ApiError = {
   title?: string;
   detail?: string;
 };
 
-export type AgentFlowDocument = {
-  nodes: unknown[];
-  edges: unknown[];
-  viewport?: unknown;
-  metadata?: Record<string, unknown>;
-};
-
-export type AgentListItem = {
-  id: string;
-  ownerUserId: string;
-  name: string;
-  description: string | null;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  hasFlow: boolean;
-  flowVersion: number | null;
-  flowUpdatedAt: string | null;
-};
-
-export type AgentDetail = {
-  id: string;
-  ownerUserId: string;
-  name: string;
-  description: string | null;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  flow: AgentFlowDocument | null;
-  flowVersion: number | null;
-  flowUpdatedAt: string | null;
-};
-
-type CreateAgentInput = {
-  name: string;
-  description?: string;
-  isActive?: boolean;
-  flow: AgentFlowDocument;
-};
-
-type UpdateAgentInput = {
-  name?: string;
-  description?: string;
-  isActive?: boolean;
-  flow?: AgentFlowDocument;
+export type {
+  AgentDetail,
+  AgentListItem,
+  CreateAgentInput,
+  Paginated,
+  UpdateAgentInput,
 };
 
 const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
@@ -82,24 +52,50 @@ const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
 };
 
 export const agentsApi = {
-  listAgents: () => request<AgentListItem[]>("/agents"),
+  listAgents: (workspaceId = DEFAULT_WORKSPACE_ID, page = 1, pageSize = 20) =>
+    request<Paginated<AgentListItem>>(
+      `/agents?page=${page}&pageSize=${pageSize}`,
+      {
+        headers: {
+          "cleon-workspace-id": workspaceId,
+        },
+      },
+    ),
 
-  getAgent: (agentId: string) => request<AgentDetail>(`/agents/${agentId}`),
+  getAgent: (agentId: string, workspaceId = DEFAULT_WORKSPACE_ID) =>
+    request<AgentDetail>(`/agents/${agentId}`, {
+      headers: {
+        "cleon-workspace-id": workspaceId,
+      },
+    }),
 
-  createAgent: (body: CreateAgentInput) =>
+  createAgent: (body: CreateAgentInput, workspaceId = body.workspaceId) =>
     request<AgentDetail>("/agents", {
       method: "POST",
       body: JSON.stringify(body),
+      headers: {
+        "cleon-workspace-id": workspaceId || DEFAULT_WORKSPACE_ID,
+      },
     }),
 
-  updateAgent: (agentId: string, body: UpdateAgentInput) =>
+  updateAgent: (
+    agentId: string,
+    body: UpdateAgentInput,
+    workspaceId = DEFAULT_WORKSPACE_ID,
+  ) =>
     request<AgentDetail>(`/agents/${agentId}`, {
       method: "PATCH",
       body: JSON.stringify(body),
+      headers: {
+        "cleon-workspace-id": workspaceId,
+      },
     }),
 
-  deleteAgent: (agentId: string) =>
+  deleteAgent: (agentId: string, workspaceId = DEFAULT_WORKSPACE_ID) =>
     request<void>(`/agents/${agentId}`, {
       method: "DELETE",
+      headers: {
+        "cleon-workspace-id": workspaceId,
+      },
     }),
 };

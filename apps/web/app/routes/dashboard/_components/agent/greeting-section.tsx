@@ -2,7 +2,11 @@ import { ChevronRight, Timer } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 
-export const GreetingSection = () => {
+interface GreetingSectionProps {
+  greetPrompt?: string | null;
+}
+
+export const GreetingSection = ({ greetPrompt }: GreetingSectionProps) => {
   return (
     <div className="bg-card border-border rounded-xl border p-4 shadow-sm shadow-black/5">
       <div className="mb-4 flex items-center justify-between">
@@ -45,6 +49,14 @@ export const GreetingSection = () => {
           </span>
         </Button>
       </div>
+      {greetPrompt && (
+        <div className="bg-secondary/30 border-border mt-3 rounded-lg border p-3">
+          <p className="text-muted-foreground text-[11px] font-semibold uppercase">
+            Mevcut Karşılama Metni
+          </p>
+          <p className="text-foreground mt-1 text-xs">{greetPrompt}</p>
+        </div>
+      )}
     </div>
   );
 };

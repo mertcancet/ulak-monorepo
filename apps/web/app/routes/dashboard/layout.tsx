@@ -132,7 +132,7 @@ const DashboardLayout = () => {
   const { data: session, isPending: isSessionPending } =
     authClient.useSession();
   const [collapsed, setCollapsed] = useState(false);
-  const hideSidebar = location.pathname === "/dashboard/agent-flow";
+  const hideSidebar = false;
 
   useEffect(() => {
     if (!isSessionPending && !session) {
@@ -316,13 +316,6 @@ const DashboardLayout = () => {
               />
             </SidebarSection>
             <SidebarSection title="Agent" collapsed={collapsed}>
-              <SidebarItem
-                icon={Settings}
-                label="Agent Flow"
-                href="/dashboard/agent-flow"
-                active={location.pathname === "/dashboard/agent-flow"}
-                collapsed={collapsed}
-              />
               <SidebarItem
                 icon={Settings}
                 label="Agent"

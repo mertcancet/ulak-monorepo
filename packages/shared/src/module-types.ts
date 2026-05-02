@@ -69,6 +69,75 @@ export interface CreateToolInput {
 
 export type UpdateToolInput = Partial<CreateToolInput>;
 
+// Agents
+
+export interface AgentFlowDocument {
+  nodes: unknown[];
+  edges: unknown[];
+  viewport?: unknown;
+  metadata?: Record<string, unknown>;
+}
+
+export interface AgentListItem {
+  id: string;
+  workspaceId: string;
+  name: string;
+  phoneNumber?: string | null;
+  llm?: LLMSettings;
+  instructions: string;
+  allowInterruptions: boolean;
+  greetPrompt?: string | null;
+  goodbyePrompt?: string | null;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+
+  // Legacy fields used by older screens
+  ownerUserId?: string;
+  description?: string | null;
+  isActive?: boolean;
+  hasFlow?: boolean;
+  flowVersion?: number | null;
+  flowUpdatedAt?: string | null;
+}
+
+export interface AgentDetail {
+  id: string;
+  workspaceId: string;
+  name: string;
+  phoneNumber?: string | null;
+  llm?: LLMSettings;
+  instructions: string;
+  allowInterruptions: boolean;
+  greetPrompt?: string | null;
+  goodbyePrompt?: string | null;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+
+  // Legacy fields used by older screens
+  ownerUserId?: string;
+  description?: string | null;
+  isActive?: boolean;
+  flow?: AgentFlowDocument | null;
+  flowVersion?: number | null;
+  flowUpdatedAt?: string | null;
+}
+
+export interface CreateAgentInput {
+  workspaceId: string;
+  name: string;
+  phoneNumber?: string | null;
+  llm?: LLMSettings;
+  instructions: string;
+  allowInterruptions?: boolean;
+  greetPrompt?: string | null;
+  goodbyePrompt?: string | null;
+  isDefault?: boolean;
+}
+
+export type UpdateAgentInput = Partial<CreateAgentInput>;
+
 // HTTP Tool Form
 
 export interface HttpToolFormHeader {

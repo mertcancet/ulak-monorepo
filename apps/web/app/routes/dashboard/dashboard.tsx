@@ -1,3 +1,4 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Bot,
   ChevronLeft,
@@ -6,7 +7,7 @@ import {
   MoreVertical,
   Search,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -25,13 +26,13 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { type AgentListItem, agentsApi } from "~/lib/agents-api";
-import { initialEdges, initialNodes } from "./_components/agent-flow/data";
+import { agentsApi } from "~/lib/agents-api";
 import DashboardHeader from "./_components/dashboard-header";
 
 const DEFAULT_VOICE_NAME = "Autonoe";
 const DEFAULT_VOICE_IMAGE =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDFE04qOA0LzD1UUmktDRXDrl-UvuwAudLMxFGmnVqVdBZ7AeN9gf8LnFm_8gm39d6ACuczz67VSE-kiF9AI_Ax8clL_F03_gZeC77QphBQfMOh3rpENrHLnEQS8chh18ss_rUF-f53uqawef7bYC0Twexri6KFpWgF6hjN-C6xynZtie99MQmzGy-P4moWodPMU0xg-L8WLPE4h700MImRJyeM7AKMocGaW4hJBkEe_ai97yh2It8vddTIoyIShRSJy0LtzcjlF_A";
+const WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString("tr-TR", {
@@ -41,12 +42,26 @@ const formatDate = (iso: string) =>
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [agents, setAgents] = useState<AgentListItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isCreating, setIsCreating] = useState(false);
+  const queryClient = useQueryClient();
   const [deletingAgentId, setDeletingAgentId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [actionErrorMessage, setActionErrorMessage] = useState<string | null>(
+    null,
+  );
+
+  const {
+    data: agentsResponse,
+    isLoading: isAgentsLoading,
+    error: agentsQueryError,
+  } = useQuery({
+    queryKey: ["agents", WORKSPACE_ID, 1, 20],
+    queryFn: () => agentsApi.listAgents(WORKSPACE_ID, 1, 20),
+  });
+
+  const agents = agentsResponse?.data ?? [];
+  const errorMessage =
+    actionErrorMessage ??
+    (agentsQueryError instanceof Error ? agentsQueryError.message : null);
 
   const filteredAgents = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
@@ -60,64 +75,18 @@ export default function Dashboard() {
     );
   }, [agents, searchTerm]);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadAgents = async () => {
-      setIsLoading(true);
-      setErrorMessage(null);
-
-      try {
-        const rows = await agentsApi.listAgents();
-        if (!cancelled) {
-          setAgents(rows);
-        }
-      } catch (error) {
-        if (!cancelled) {
-          setErrorMessage(
-            error instanceof Error
-              ? error.message
-              : "Temsilci listesi alinamadi.",
-          );
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    void loadAgents();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const handleCreateAgent = async () => {
-    setIsCreating(true);
-    setErrorMessage(null);
-
-    try {
-      const clonedNodes = structuredClone(initialNodes);
-      const clonedEdges = structuredClone(initialEdges);
-
-      const createdAgent = await agentsApi.createAgent({
-        name: "Yeni Agent",
-        flow: {
-          nodes: clonedNodes,
-          edges: clonedEdges,
-        },
+  const deleteMutation = useMutation({
+    mutationFn: (agentId: string) => agentsApi.deleteAgent(agentId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["agents", WORKSPACE_ID, 1, 20],
       });
+    },
+  });
 
-      navigate(`/dashboard/agent-flow?agentId=${createdAgent.id}`);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Temsilci olusturulamadi.",
-      );
-    } finally {
-      setIsCreating(false);
-    }
+  const handleCreateAgent = () => {
+    setActionErrorMessage(null);
+    navigate("/dashboard/agent?draft=true");
   };
 
   const handleDeleteAgent = async (agentId: string) => {
@@ -127,13 +96,12 @@ export default function Dashboard() {
     if (!approved) return;
 
     setDeletingAgentId(agentId);
-    setErrorMessage(null);
+    setActionErrorMessage(null);
 
     try {
-      await agentsApi.deleteAgent(agentId);
-      setAgents(prev => prev.filter(agent => agent.id !== agentId));
+      await deleteMutation.mutateAsync(agentId);
     } catch (error) {
-      setErrorMessage(
+      setActionErrorMessage(
         error instanceof Error ? error.message : "Temsilci silinemedi.",
       );
     } finally {
@@ -161,12 +129,8 @@ export default function Dashboard() {
             <Download className="h-3.5 w-3.5" />
             İçe Aktar
           </Button>
-          <Button
-            type="button"
-            onClick={handleCreateAgent}
-            disabled={isCreating}
-          >
-            <span>{isCreating ? "Oluşturuluyor..." : "Temsilci Oluştur"}</span>
+          <Button type="button" onClick={handleCreateAgent}>
+            <span>Temsilci Oluştur</span>
           </Button>
         </div>
       </DashboardHeader>
@@ -201,7 +165,7 @@ export default function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading && (
+              {isAgentsLoading && (
                 <TableRow>
                   <TableCell
                     className="text-muted-foreground py-10 text-center text-sm"
@@ -212,7 +176,7 @@ export default function Dashboard() {
                 </TableRow>
               )}
 
-              {!isLoading && filteredAgents.length === 0 && (
+              {!isAgentsLoading && filteredAgents.length === 0 && (
                 <TableRow>
                   <TableCell
                     className="text-muted-foreground py-10 text-center text-sm"
@@ -223,7 +187,7 @@ export default function Dashboard() {
                 </TableRow>
               )}
 
-              {!isLoading &&
+              {!isAgentsLoading &&
                 filteredAgents.map(agent => (
                   <TableRow
                     key={agent.id}
@@ -238,9 +202,7 @@ export default function Dashboard() {
                           type="button"
                           className="text-foreground hover:text-brand text-left text-sm font-semibold transition-colors"
                           onClick={() =>
-                            navigate(
-                              `/dashboard/agent-flow?agentId=${agent.id}`,
-                            )
+                            navigate(`/dashboard/agent?agentId=${agent.id}`)
                           }
                         >
                           {agent.name}
@@ -287,9 +249,7 @@ export default function Dashboard() {
                         >
                           <DropdownMenuItem
                             onClick={() =>
-                              navigate(
-                                `/dashboard/agent-flow?agentId=${agent.id}`,
-                              )
+                              navigate(`/dashboard/agent?agentId=${agent.id}`)
                             }
                           >
                             Düzenle

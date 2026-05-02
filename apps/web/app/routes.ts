@@ -6,7 +6,6 @@ export default [
   route("dashboard", "routes/dashboard/layout.tsx", [
     index("routes/dashboard/dashboard.tsx"),
     route("agent", "routes/dashboard/agent.tsx"),
-    route("agent-flow", "routes/dashboard/agent-flow.tsx"),
     route("knowledge-base", "routes/dashboard/knowledge-base.tsx"),
     route("numbers", "routes/dashboard/numbers.tsx"),
     route("bulk-calls", "routes/dashboard/bulk-calls.tsx"),

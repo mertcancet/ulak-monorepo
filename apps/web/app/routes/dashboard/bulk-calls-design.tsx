@@ -34,11 +34,12 @@ export default function BulkCallsDesignPage() {
 
       try {
         const rows = await agentsApi.listAgents();
+        const items = rows.data;
         if (cancelled) return;
 
-        setAgents(rows);
-        if (rows.length > 0) {
-          setSelectedAgentId(rows[0]?.id ?? "");
+        setAgents(items);
+        if (items.length > 0) {
+          setSelectedAgentId(items[0]?.id ?? "");
         }
       } catch (error) {
         if (cancelled) return;
