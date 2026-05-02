@@ -8,7 +8,6 @@ import { Select } from "~/components/ui/select";
 import { Slider } from "~/components/ui/slider";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
-import { useCreateHttpTool } from "./use-create-http-tool";
 
 export type { HttpToolFormData };
 
@@ -20,8 +19,6 @@ interface HttpToolFormProps {
 export function HttpToolForm({ data, onChange }: HttpToolFormProps) {
   const [newParamName, setNewParamName] = useState("");
   const [newParamDesc, setNewParamDesc] = useState("");
-
-  const { mutate: createTool, isPending } = useCreateHttpTool();
 
   const isValidUrl = (url: string) => {
     try {
@@ -36,9 +33,6 @@ export function HttpToolForm({ data, onChange }: HttpToolFormProps) {
     data.url.trim() !== "" && !isValidUrl(data.url)
       ? "Geçerli bir URL girin (örn. https://example.com/path)"
       : null;
-
-  const canCreate =
-    data.name.trim() !== "" && data.url.trim() !== "" && !urlError;
 
   const update = (partial: Partial<HttpToolFormData>) => {
     onChange({ ...data, ...partial });
@@ -354,15 +348,6 @@ export function HttpToolForm({ data, onChange }: HttpToolFormProps) {
           </div>
         )}
       </section>
-
-      <div className="flex justify-end pt-2">
-        <Button
-          onClick={() => createTool(data)}
-          disabled={!canCreate || isPending}
-        >
-          {isPending ? "Oluşturuluyor..." : "Oluştur"}
-        </Button>
-      </div>
     </div>
   );
 }

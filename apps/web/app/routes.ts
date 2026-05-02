@@ -22,6 +22,12 @@ export default [
     route("tools/new", "routes/dashboard/tools-new.tsx"),
     route("tools/http/new", "routes/dashboard/tools-http-new.tsx"),
     route("tools/end-call/new", "routes/dashboard/tools-end-call-new.tsx"),
+    route("tools/http/:id/edit", "routes/dashboard/tools-http-edit.tsx"),
+    route(
+      "tools/end-call/:id/edit",
+      "routes/dashboard/tools-end-call-edit.tsx",
+    ),
+    route("tools/:id", "routes/dashboard/tools-edit.tsx"),
   ]),
 
   route("auth", "routes/auth/layout.tsx", [

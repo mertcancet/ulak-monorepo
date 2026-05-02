@@ -1,10 +1,8 @@
 import type { EndCallToolFormData } from "@cleon/shared";
-import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
-import { useCreateEndCallTool } from "./use-create-end-call-tool";
 
 export type { EndCallToolFormData };
 
@@ -17,10 +15,6 @@ export function EndCallToolForm({ data, onChange }: EndCallToolFormProps) {
   const update = (partial: Partial<EndCallToolFormData>) => {
     onChange({ ...data, ...partial });
   };
-
-  const { mutate: createTool, isPending } = useCreateEndCallTool();
-
-  const canCreate = data.name.trim() !== "";
 
   return (
     <div className="flex flex-col gap-8">
@@ -92,15 +86,6 @@ export function EndCallToolForm({ data, onChange }: EndCallToolFormProps) {
           Ajan bu araci tetiklediginde gorusme guvenli sekilde sonlandirilir.
         </p>
       </section>
-
-      <div className="flex justify-end pt-2">
-        <Button
-          onClick={() => createTool(data)}
-          disabled={!canCreate || isPending}
-        >
-          {isPending ? "Oluşturuluyor..." : "Oluştur"}
-        </Button>
-      </div>
     </div>
   );
 }

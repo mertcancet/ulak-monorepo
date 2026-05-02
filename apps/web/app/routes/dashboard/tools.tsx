@@ -119,7 +119,11 @@ export default function ToolsPage() {
             {tools.map(tool => (
               <Link
                 key={tool.id}
-                to={`/dashboard/tools/${tool.id}`}
+                to={
+                  tool.settings.type === "HTTP"
+                    ? `/dashboard/tools/http/${tool.id}/edit`
+                    : `/dashboard/tools/end-call/${tool.id}/edit`
+                }
                 className="border-border bg-background hover:bg-secondary flex items-center gap-4 rounded-xl border p-4 transition-colors"
               >
                 <div className="bg-secondary flex size-10 items-center justify-center rounded-lg">
