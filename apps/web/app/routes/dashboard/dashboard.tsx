@@ -3,7 +3,6 @@ import {
   Bot,
   ChevronLeft,
   ChevronRight,
-  Download,
   MoreVertical,
   Search,
 } from "lucide-react";
@@ -125,10 +124,6 @@ export default function Dashboard() {
               onChange={event => setSearchTerm(event.target.value)}
             />
           </div>
-          <Button type="button" variant="secondary">
-            <Download className="h-3.5 w-3.5" />
-            İçe Aktar
-          </Button>
           <Button type="button" onClick={handleCreateAgent}>
             <span>Temsilci Oluştur</span>
           </Button>
