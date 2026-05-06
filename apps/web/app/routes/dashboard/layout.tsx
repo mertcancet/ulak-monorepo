@@ -15,8 +15,8 @@ import {
   Phone,
   Settings,
   ShieldCheck,
-  ToolCase,
   Users,
+  Wrench,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -242,6 +242,13 @@ const DashboardLayout = () => {
                 collapsed={collapsed}
               />
               <SidebarItem
+                icon={Wrench}
+                label="Araçlar"
+                href="/dashboard/tools"
+                active={location.pathname.startsWith("/dashboard/tools")}
+                collapsed={collapsed}
+              />
+              <SidebarItem
                 icon={BookOpen}
                 label="Bilgi Bankası"
                 href="/dashboard/knowledge-base"
@@ -312,22 +319,6 @@ const DashboardLayout = () => {
                 label="Ayarlar"
                 href="/dashboard/settings"
                 active={location.pathname === "/dashboard/settings"}
-                collapsed={collapsed}
-              />
-            </SidebarSection>
-            <SidebarSection title="Agent" collapsed={collapsed}>
-              <SidebarItem
-                icon={Settings}
-                label="Agent"
-                href="/dashboard/agent"
-                active={location.pathname === "/dashboard/agent"}
-                collapsed={collapsed}
-              />
-              <SidebarItem
-                icon={ToolCase}
-                label="Tools"
-                href="/dashboard/tools"
-                active={location.pathname === "/dashboard/tools"}
                 collapsed={collapsed}
               />
             </SidebarSection>
