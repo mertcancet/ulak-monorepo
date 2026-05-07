@@ -144,6 +144,27 @@ export const messages = {
           },
         },
       },
+      legacyProblem: {
+        badge: "SORUN",
+        title: "Eski nesil çağrı merkezleri sizi anlamıyor",
+        quotes: {
+          0: "Bu konuda yardımcı olamam.",
+          1: "Görüşmeyi sonlandırmam gerekiyor.",
+          2: "Üzgünüm, anlamadım.",
+          3: "Tekrar eder misiniz?",
+        },
+        cards: {
+          emotions: {
+            title: "Duygularınızı anlamıyor",
+          },
+          latency: {
+            title: "Yüksek gecikmeyle boğuşuyor",
+          },
+          conversation: {
+            title: "Gerçek konuşmaya hazır değil",
+          },
+        },
+      },
       painPoints: {
         sectionTitle:
           "Geleneksel müşteri hizmetleri modern talebi karşılayamıyor.",
@@ -540,6 +561,27 @@ export const messages = {
             0: "Agent, Flow Builder, Knowledge Base, and Tools operate in one control layer.",
             1: "Call History, Analytics, and AI QA create a continuous optimization loop.",
             2: "Workspace and permission architecture enables secure team-based operations.",
+          },
+        },
+      },
+      legacyProblem: {
+        badge: "THE PROBLEM",
+        title: "Legacy call centers don\u2019t understand you",
+        quotes: {
+          0: "I can\u2019t help you with that.",
+          1: "I have to end the call now.",
+          2: "Sorry, I don\u2019t understand.",
+          3: "Could you repeat that?",
+        },
+        cards: {
+          emotions: {
+            title: "Cascaded agents don\u2019t understand your emotions",
+          },
+          latency: {
+            title: "Cascaded agents suffer from high latency",
+          },
+          conversation: {
+            title: "Cascaded agents aren\u2019t built for conversations",
           },
         },
       },

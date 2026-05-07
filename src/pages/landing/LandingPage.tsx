@@ -5,6 +5,7 @@ import { Features } from "./components/Features";
 import { Footer } from "./components/Footer";
 import { HeroSection } from "./components/HeroSection";
 import { HowItWorks } from "./components/HowItWorks";
+import { LegacyProblemSection } from "./components/LegacyProblemSection";
 import { PainPointsSection } from "./components/PainPointsSection";
 import { PositioningSection } from "./components/PositioningSection";
 import { SocialProofSection } from "./components/SocialProffSection";
@@ -16,6 +17,7 @@ export default function LandingPage() {
       <main>
         <HeroSection />
         <SocialProofSection />
+        <LegacyProblemSection />
         <PositioningSection />
         <PainPointsSection />
         <Features />
