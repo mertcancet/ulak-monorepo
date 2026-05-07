@@ -6,6 +6,11 @@ import { Navbar } from "./Navbar";
 export function HeroSection() {
   const t = useTranslations();
   const demoPath = useLocalizedPath("/demo");
+  const highlights = [
+    t("landing.hero.highlights.0"),
+    t("landing.hero.highlights.1"),
+    t("landing.hero.highlights.2"),
+  ];
 
   return (
     <section className="relative overflow-hidden bg-background">
@@ -25,7 +30,7 @@ export function HeroSection() {
             WebkitTextFillColor: "transparent",
           }}
         >
-          Cleon AI
+          CleonAI
         </h1>
         <p className="mt-6 max-w-3xl text-base leading-8 text-slate-300 md:text-xl">
           {t("landing.hero.description")}
@@ -41,6 +46,16 @@ export function HeroSection() {
           >
             <a href="#features">{t("landing.hero.secondaryButton")}</a>
           </Button>
+        </div>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          {highlights.map(item => (
+            <span
+              key={item}
+              className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold tracking-wide text-slate-300"
+            >
+              {item}
+            </span>
+          ))}
         </div>
       </div>
     </section>

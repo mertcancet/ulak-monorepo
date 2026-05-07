@@ -1,13 +1,14 @@
-import { TestCaseSection } from '@/components/layout/TestCaseSection';
-import { AnalyticsPreview } from './components/AnalyticsPreview';
-import { CTA } from './components/CTA';
-import { Features } from './components/Features';
-import { Footer } from './components/Footer';
-import { HeroSection } from './components/HeroSection';
-import { HowItWorks } from './components/HowItWorks';
-import { OurApproach } from './components/OurApproach';
-import { SocialProofSection } from './components/SocialProffSection';
-import { UseCasesSection } from './components/UseCasesSection';
+import { TestCaseSection } from "@/components/layout/TestCaseSection";
+import { AnalyticsPreview } from "./components/AnalyticsPreview";
+import { CTA } from "./components/CTA";
+import { Features } from "./components/Features";
+import { Footer } from "./components/Footer";
+import { HeroSection } from "./components/HeroSection";
+import { HowItWorks } from "./components/HowItWorks";
+import { PainPointsSection } from "./components/PainPointsSection";
+import { PositioningSection } from "./components/PositioningSection";
+import { SocialProofSection } from "./components/SocialProffSection";
+import { UseCasesSection } from "./components/UseCasesSection";
 
 export default function LandingPage() {
   return (
@@ -15,10 +16,11 @@ export default function LandingPage() {
       <main>
         <HeroSection />
         <SocialProofSection />
+        <PositioningSection />
+        <PainPointsSection />
         <Features />
         <UseCasesSection />
         <TestCaseSection />
-        <OurApproach />
         <HowItWorks />
         <AnalyticsPreview />
         <CTA />

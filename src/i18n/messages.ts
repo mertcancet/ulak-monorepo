@@ -116,6 +116,59 @@ export const messages = {
           "Agent oluştur, konuşma akışını görsel olarak tasarla, bilgi tabanını bağla ve çağrı performansını tek panelden yönet. CleonAI web uygulamasında geliştirdiğimiz tüm çekirdek modüller burada.",
         primaryButton: "Canlı Demoyu Planla",
         secondaryButton: "Modülleri İncele",
+        highlights: {
+          0: "Dakikalar içinde canlıya çık",
+          1: "Gerçek operasyonlara uygun akışlar",
+          2: "Kalite ve maliyet takibi tek panelde",
+        },
+      },
+      positioning: {
+        badge: "NEDEN CLEONAI",
+        title: "Demo vaatleri değil, operasyon gerçeği",
+        description:
+          "Rakiplerde sık görülen genel AI iddiaları yerine, CleonAI doğrudan sahada kullandığınız modüller ve ölçülebilir sonuçlar üzerine konumlanır.",
+        legacy: {
+          title: "Geleneksel yaklaşımın sorunları",
+          pains: {
+            0: "Sabit IVR menüleri karmaşık senaryolarda yetersiz kalır.",
+            1: "Dağınık araçlar ekip verimini düşürür ve görünürlüğü azaltır.",
+            2: "Test ve kalite döngüsü zayıf olduğu için üretimde hata oranı artar.",
+          },
+        },
+        cleon: {
+          title: "CleonAI yaklaşımı",
+          strengths: {
+            0: "Agent, Flow Builder, Knowledge Base ve Tools tek operasyon katmanında birleşir.",
+            1: "Call History, Analytics ve AI QA ile sürekli iyileştirme döngüsü kurulur.",
+            2: "Workspace + yetki yapısı ile ekip bazlı güvenli kullanım sağlanır.",
+          },
+        },
+      },
+      painPoints: {
+        sectionTitle:
+          "Geleneksel müşteri hizmetleri modern talebi karşılayamıyor.",
+        items: {
+          ivr: {
+            title: "IVR sistemleri arık öldü",
+            description:
+              "Katı menü yapıları ve yavaş yönlendirme müşterileri sinir ediyor ve genel deneyimi zedeli yor.",
+          },
+          scale: {
+            title: "İnsan odaklı çağrı merkezleri ölçeklenemiyor",
+            description:
+              "Geleneksel çağrı merkezleri artan talebi karşılayamıyor; yoğun dönemlerde kalite eksiklikleri anında görünür hale geliyor.",
+          },
+          cost: {
+            title: "Yükselen operasyon maliyetleri",
+            description:
+              "İşgücü ve eğitim ciddi bir yük oluşturuyor; hacim büyüdükçe maliyetlerin kontrolü güleşiyor.",
+          },
+          ai: {
+            title: "Yüzeysel AI araçları üretimde tutunmuyor",
+            description:
+              "Hazır çözümler demoda çalışabilir; ancak gerçek entegrasyon ve kurumsal performans söz konusu olduğunda yetersiz kalıyor.",
+          },
+        },
       },
       socialProof: {
         lead: "Tek platformda uçtan uca çağrı otomasyonu",
@@ -235,9 +288,9 @@ export const messages = {
       },
       ourApproach: {
         badge: "SUNUM ADIMI",
-        titleLine1: "İster küçük bir ekip olun,",
-        titleLine2: "ister büyük bir operasyon;",
-        titleHighlight: "Yanınızdayız",
+        titleLine1: "Hızlı başlat,",
+        titleLine2: "doğru ölçeklendir;",
+        titleHighlight: "CleonAI ile",
         description:
           "Ürün ekibimiz tüm süreç boyunca sizinle birlikte çalışır. Analiz, kurulum ve iyileştirme aşamalarında yanınızda oluruz.",
         stepLabel: "ADIM",
@@ -267,7 +320,7 @@ export const messages = {
             status: "Optimize",
           },
         },
-        ctaTitle: "Müşteri başarısı bizim başarısı",
+        ctaTitle: "Başarınız önceliğimiz",
         ctaDescription:
           "Her adımda destek, her aşamada iyileştirme. CleonAI, işletmenizin büyümesinin ortağıdır.",
         ctaButton: "Süreci Başlatalım",
@@ -462,6 +515,59 @@ export const messages = {
           "Create agents, design conversation flows visually, connect your knowledge base, and track call performance from a single dashboard. This landing now reflects the core modules already built in our CleonAI web app.",
         primaryButton: "Schedule Live Demo",
         secondaryButton: "Explore Modules",
+        highlights: {
+          0: "Go live in minutes",
+          1: "Workflows built for real operations",
+          2: "Quality and cost visibility in one dashboard",
+        },
+      },
+      positioning: {
+        badge: "WHY CLEONAI",
+        title: "Not demo promises, real operations",
+        description:
+          "Instead of broad AI claims, CleonAI is positioned around the modules you actively run in production and the outcomes you can measure.",
+        legacy: {
+          title: "Limitations of legacy approach",
+          pains: {
+            0: "Rigid IVR-style flows break on complex real-world scenarios.",
+            1: "Fragmented tools reduce team velocity and operational visibility.",
+            2: "Weak testing and QA loops increase production failure risk.",
+          },
+        },
+        cleon: {
+          title: "CleonAI approach",
+          strengths: {
+            0: "Agent, Flow Builder, Knowledge Base, and Tools operate in one control layer.",
+            1: "Call History, Analytics, and AI QA create a continuous optimization loop.",
+            2: "Workspace and permission architecture enables secure team-based operations.",
+          },
+        },
+      },
+      painPoints: {
+        sectionTitle:
+          "Traditional customer operations cannot keep up with modern demand.",
+        items: {
+          ivr: {
+            title: "IVR systems are dead",
+            description:
+              "Rigid menu trees and slow routing frustrate customers and damage the overall experience.",
+          },
+          scale: {
+            title: "Human call centers don’t scale",
+            description:
+              "Traditional call centers cannot handle rising demand, and peak periods quickly expose quality gaps.",
+          },
+          cost: {
+            title: "Rising operational costs",
+            description:
+              "Labor and training create a heavy burden, and costs become harder to control as volume grows.",
+          },
+          ai: {
+            title: "AI wrappers fail in production",
+            description:
+              "Off-the-shelf tools may work in demos, but fail to integrate deeply or perform in real enterprise environments.",
+          },
+        },
       },
       socialProof: {
         lead: "End-to-end call automation in one platform",
@@ -581,9 +687,9 @@ export const messages = {
       },
       ourApproach: {
         badge: "DELIVERY STEPS",
-        titleLine1: "Whether you are a small team,",
-        titleLine2: "or a large operation;",
-        titleHighlight: "we are with you",
+        titleLine1: "Start fast,",
+        titleLine2: "scale right;",
+        titleHighlight: "with CleonAI",
         description:
           "Our product team works with you throughout the whole journey. We stay by your side during analysis, setup, and optimization stages.",
         stepLabel: "STEP",
@@ -613,7 +719,7 @@ export const messages = {
             status: "Optimized",
           },
         },
-        ctaTitle: "Your success is our success",
+        ctaTitle: "Your success is our priority",
         ctaDescription:
           "Support at every step, optimization at every stage. CleonAI is a growth partner for your business.",
         ctaButton: "Start the Process",
