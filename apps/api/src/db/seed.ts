@@ -63,6 +63,15 @@ async function main() {
           "https://static.wikia.nocookie.net/adventuretimewithfinnandjake/images/8/81/BMO.png",
       },
     }),
+    auth.api.signUpEmail({
+      body: {
+        email: "mertcancet95@gmail.com",
+        password: "Mertcan123",
+        name: "Mert Can Cetinkaya",
+        image:
+          "https://static.wikia.nocookie.net/adventuretimewithfinnandjake/images/8/81/BMO.png",
+      },
+    }),
   ]);
 
   console.log("Seed finished.");

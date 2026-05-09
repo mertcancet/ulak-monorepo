@@ -1,11 +1,10 @@
 /** biome-ignore-all lint/a11y/useButtonType: false positive */
+import type { UpdateKnowledgeBaseInput } from "@cleon/shared";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookOpen, BookText, File, Link } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import cleonClient from "~/lib/cleon-client";
+import { useState } from "react";
 import {
-  type BusinessItem,
-  type KnowledgeBaseItem,
-  type KnowledgeBaseSource,
+  DEFAULT_WORKSPACE_ID,
   knowledgeBaseApi,
 } from "~/lib/knowledge-base-api";
 import { cn } from "~/lib/utils";
@@ -16,369 +15,114 @@ import FileTab from "./_components/knowledge-base/file-tab";
 import TextTab from "./_components/knowledge-base/text-tab";
 import WebsiteTab from "./_components/knowledge-base/website-tab";
 
-const slugify = (value: string) => {
-  const slug = value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "");
-
-  return slug.slice(0, 42);
-};
+const WORKSPACE_ID = DEFAULT_WORKSPACE_ID;
 
 export default function KnowledgeBasePage() {
   const [activeTab, setActiveTab] = useState<"text" | "file" | "website">(
     "text",
   );
-  const [businesses, setBusinesses] = useState<BusinessItem[]>([]);
-  const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(
-    null,
-  );
-  const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBaseItem[]>([]);
-  const [selectedKnowledgeBaseId, setSelectedKnowledgeBaseId] = useState<
-    string | null
-  >(null);
-  const [sources, setSources] = useState<KnowledgeBaseSource[]>([]);
-  const [isBootstrapping, setIsBootstrapping] = useState(true);
-  const [isDialogSubmitting, setIsDialogSubmitting] = useState(false);
-  const [isDeletingKnowledgeBase, setIsDeletingKnowledgeBase] = useState(false);
-  const [deletingSourceId, setDeletingSourceId] = useState<string | null>(null);
-  const [savingSourceId, setSavingSourceId] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const selectedKnowledgeBase = useMemo(
-    () =>
-      knowledgeBases.find(
-        knowledgeBase => knowledgeBase.id === selectedKnowledgeBaseId,
-      ) ?? null,
-    [knowledgeBases, selectedKnowledgeBaseId],
-  );
+  const {
+    data: knowledgeBases = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["knowledge-bases", WORKSPACE_ID],
+    queryFn: () => knowledgeBaseApi.list(WORKSPACE_ID),
+  });
 
-  const textSources = useMemo(
-    () => sources.filter(source => source.sourceType === "text"),
-    [sources],
-  );
+  const createMutation = useMutation({
+    mutationFn: knowledgeBaseApi.create,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["knowledge-bases"] }),
+  });
 
-  const fileSources = useMemo(
-    () => sources.filter(source => source.sourceType === "file"),
-    [sources],
-  );
+  const updateMutation = useMutation({
+    mutationFn: ({
+      id,
+      body,
+    }: {
+      id: string;
+      body: UpdateKnowledgeBaseInput;
+    }) => knowledgeBaseApi.update(id, body, WORKSPACE_ID),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["knowledge-bases"] }),
+  });
 
-  const websiteSources = useMemo(
-    () => sources.filter(source => source.sourceType === "website"),
-    [sources],
-  );
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => knowledgeBaseApi.delete(id, WORKSPACE_ID),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["knowledge-bases"] }),
+  });
 
-  const loadSources = useCallback(async (knowledgeBaseId: string) => {
-    // const nextSources = await knowledgeBaseApi.listSources(knowledgeBaseId);
-    const nextSources = await cleonClient["knowledge-base"]
-      ["knowledge-bases"]({ id: knowledgeBaseId })
-      .sources.get();
+  const textKBs = knowledgeBases.filter(kb => kb.type === "text");
+  const fileKBs = knowledgeBases.filter(kb => kb.type === "file");
+  const websiteKBs = knowledgeBases.filter(kb => kb.type === "website");
 
-    const safeSources = Array.isArray(nextSources.data) ? nextSources.data : [];
-    setSources(safeSources);
-  }, []);
+  const handleCreate = async ({
+    knowledgeBaseName,
+    sourceType,
+    textContent,
+    websiteUrl,
+    files,
+  }: CreateKnowledgeBaseDialogInput) => {
+    await createMutation.mutateAsync({
+      name: knowledgeBaseName,
+      type: sourceType,
+      workspaceId: WORKSPACE_ID,
+      textContent: sourceType === "text" ? textContent : undefined,
+      websiteUrl: sourceType === "website" ? websiteUrl : undefined,
+      fileName:
+        sourceType === "file" ? (files[0]?.name ?? undefined) : undefined,
+    });
+    setActiveTab(sourceType);
+  };
 
-  const refreshKnowledgeBases = useCallback(
-    async (businessId: string, preferredKnowledgeBaseId?: string | null) => {
-      const nextKnowledgeBasesRaw =
-        await knowledgeBaseApi.listKnowledgeBases(businessId);
-      const nextKnowledgeBases = Array.isArray(nextKnowledgeBasesRaw)
-        ? nextKnowledgeBasesRaw
-        : [];
+  const handleUpdateText = async (id: string, textContent: string) => {
+    await updateMutation.mutateAsync({ id, body: { textContent } });
+  };
 
-      setKnowledgeBases(nextKnowledgeBases);
-
-      const nextSelectedKnowledgeBaseId =
-        preferredKnowledgeBaseId &&
-        nextKnowledgeBases.some(
-          knowledgeBase => knowledgeBase.id === preferredKnowledgeBaseId,
-        )
-          ? preferredKnowledgeBaseId
-          : (nextKnowledgeBases[0]?.id ?? null);
-
-      setSelectedKnowledgeBaseId(nextSelectedKnowledgeBaseId);
-
-      if (!nextSelectedKnowledgeBaseId) {
-        setSources([]);
-      }
-    },
-    [],
-  );
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const bootstrap = async () => {
-      setIsBootstrapping(true);
-      setErrorMessage(null);
-
-      try {
-        const nextBusinessesRaw = await knowledgeBaseApi.listBusinesses();
-        const nextBusinesses = Array.isArray(nextBusinessesRaw)
-          ? nextBusinessesRaw
-          : [];
-
-        if (cancelled) return;
-
-        setBusinesses(nextBusinesses);
-
-        const nextSelectedBusinessId = nextBusinesses[0]?.id ?? null;
-        setSelectedBusinessId(nextSelectedBusinessId);
-
-        if (!nextSelectedBusinessId) {
-          setKnowledgeBases([]);
-          setSelectedKnowledgeBaseId(null);
-          setSources([]);
-          return;
-        }
-
-        await refreshKnowledgeBases(nextSelectedBusinessId);
-      } catch (error) {
-        if (cancelled) return;
-
-        setErrorMessage(
-          error instanceof Error
-            ? error.message
-            : "Knowledge base verileri alinamadi.",
-        );
-      } finally {
-        if (!cancelled) {
-          setIsBootstrapping(false);
-        }
-      }
-    };
-
-    void bootstrap();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [refreshKnowledgeBases]);
-
-  useEffect(() => {
-    if (!selectedKnowledgeBaseId) return;
-
-    let cancelled = false;
-
-    const syncSources = async () => {
-      try {
-        await loadSources(selectedKnowledgeBaseId);
-      } catch (error) {
-        if (cancelled) return;
-
-        setErrorMessage(
-          error instanceof Error ? error.message : "Kaynaklar alinamadi.",
-        );
-      }
-    };
-
-    void syncSources();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [loadSources, selectedKnowledgeBaseId]);
-
-  const createKnowledgeBaseAndSource = useCallback(
-    async ({
-      knowledgeBaseName,
-      sourceType,
-      textContent,
-      websiteUrl,
-      files,
-    }: CreateKnowledgeBaseDialogInput) => {
-      setIsDialogSubmitting(true);
-      setErrorMessage(null);
-      setSuccessMessage(null);
-
-      try {
-        let businessId = selectedBusinessId;
-
-        if (!businessId) {
-          const suffix = Math.random().toString(36).slice(2, 8);
-          const generatedSlug = `${slugify(knowledgeBaseName) || "business"}-${suffix}`;
-          const createdBusiness = await knowledgeBaseApi.createBusiness({
-            name: `${knowledgeBaseName} Business`,
-            slug: generatedSlug,
-          });
-
-          businessId = createdBusiness.id;
-          setBusinesses(prevBusinesses => [createdBusiness, ...prevBusinesses]);
-          setSelectedBusinessId(createdBusiness.id);
-        }
-
-        const knowledgeBase = await knowledgeBaseApi.createKnowledgeBase(
-          businessId,
-          {
-            name: knowledgeBaseName,
-          },
-        );
-
-        if (sourceType === "text") {
-          await knowledgeBaseApi.createSource(knowledgeBase.id, {
-            title: `${knowledgeBaseName} Metin`,
-            sourceType: "text",
-            content: textContent,
-          });
-        }
-
-        if (sourceType === "website") {
-          await knowledgeBaseApi.createSource(knowledgeBase.id, {
-            title: websiteUrl || `${knowledgeBaseName} Website`,
-            sourceType: "website",
-            websiteUrl,
-          });
-        }
-
-        if (sourceType === "file") {
-          await Promise.all(
-            files.map(file =>
-              knowledgeBaseApi.createSource(knowledgeBase.id, {
-                title: file.name,
-                sourceType: "file",
-                fileName: file.name,
-                fileMimeType: file.type || "application/octet-stream",
-                fileSizeBytes: file.size,
-                storagePath: `uploads/${file.name}`,
-              }),
-            ),
-          );
-        }
-
-        await refreshKnowledgeBases(businessId, knowledgeBase.id);
-        setActiveTab(sourceType);
-        setSuccessMessage("Bilgi bankasi olusturuldu.");
-      } catch (error) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : "Bilgi bankasi olusturulamadi.";
-
-        setErrorMessage(message);
-        throw error;
-      } finally {
-        setIsDialogSubmitting(false);
-      }
-    },
-    [refreshKnowledgeBases, selectedBusinessId],
-  );
-
-  const handleDeleteKnowledgeBase = useCallback(async () => {
-    if (!selectedBusinessId || !selectedKnowledgeBaseId) return;
-
+  const handleDelete = async (id: string) => {
     const approved = window.confirm(
       "Bu bilgi bankasini silmek istedigine emin misin?",
     );
-
     if (!approved) return;
-
-    setIsDeletingKnowledgeBase(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
-    try {
-      await knowledgeBaseApi.deleteKnowledgeBase(selectedKnowledgeBaseId);
-      await refreshKnowledgeBases(selectedBusinessId);
-      setSuccessMessage("Bilgi bankasi silindi.");
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Bilgi bankasi silinemedi.",
-      );
-    } finally {
-      setIsDeletingKnowledgeBase(false);
-    }
-  }, [refreshKnowledgeBases, selectedBusinessId, selectedKnowledgeBaseId]);
-
-  const handleDeleteSource = useCallback(
-    async (sourceId: string) => {
-      if (!selectedKnowledgeBaseId) return;
-
-      setDeletingSourceId(sourceId);
-      setErrorMessage(null);
-      setSuccessMessage(null);
-
-      try {
-        await knowledgeBaseApi.deleteSource(sourceId);
-        await loadSources(selectedKnowledgeBaseId);
-        setSuccessMessage("Kaynak silindi.");
-      } catch (error) {
-        setErrorMessage(
-          error instanceof Error ? error.message : "Kaynak silinemedi.",
-        );
-      } finally {
-        setDeletingSourceId(null);
-      }
-    },
-    [loadSources, selectedKnowledgeBaseId],
-  );
-
-  const handleSaveTextSource = useCallback(
-    async (sourceId: string, content: string) => {
-      if (!selectedKnowledgeBaseId) return;
-
-      setSavingSourceId(sourceId);
-      setErrorMessage(null);
-      setSuccessMessage(null);
-
-      try {
-        await knowledgeBaseApi.updateSource(sourceId, {
-          content,
-        });
-
-        await loadSources(selectedKnowledgeBaseId);
-        setSuccessMessage("Metin kaynagi guncellendi.");
-      } catch (error) {
-        setErrorMessage(
-          error instanceof Error
-            ? error.message
-            : "Metin kaynagi guncellenemedi.",
-        );
-      } finally {
-        setSavingSourceId(null);
-      }
-    },
-    [loadSources, selectedKnowledgeBaseId],
-  );
+    await deleteMutation.mutateAsync(id);
+  };
 
   return (
     <div className="bg-background animate-in fade-in flex h-full overflow-hidden duration-500">
-      {/* Sub-Sidebar: Bilgi Bankasi Listesi */}
+      {/* Sub-Sidebar */}
       <aside className="border-border bg-card flex w-72 shrink-0 flex-col border-r">
         <div className="border-border flex h-16 items-center justify-between border-b p-4">
           <div className="flex items-center gap-2">
             <BookOpen className="text-muted-foreground h-4 w-4" />
             <h2 className="text-sm font-semibold">Bilgi Bankasi</h2>
             <span className="text-muted-foreground text-[11px]">
-              ({businesses.length} business)
+              ({knowledgeBases.length})
             </span>
           </div>
           <AddKnowledgeBaseDialog
-            onCreate={createKnowledgeBaseAndSource}
-            isSubmitting={isDialogSubmitting}
+            onCreate={handleCreate}
+            isSubmitting={createMutation.isPending}
           />
         </div>
 
-        <div className="border-border space-y-2 border-b p-4">
+        <div className="border-border flex-1 space-y-2 overflow-y-auto border-b p-4">
           {knowledgeBases.length > 0 ? (
-            knowledgeBases.map(knowledgeBase => (
-              <button
-                key={knowledgeBase.id}
-                onClick={() => setSelectedKnowledgeBaseId(knowledgeBase.id)}
-                className={cn(
-                  "border-border flex w-full cursor-pointer flex-col items-start rounded-lg border p-2 text-left",
-                  selectedKnowledgeBaseId === knowledgeBase.id &&
-                    "bg-secondary",
-                )}
+            knowledgeBases.map(kb => (
+              <div
+                key={kb.id}
+                className="border-border flex w-full flex-col items-start rounded-lg border p-2 text-left"
               >
                 <span className="text-foreground w-full truncate text-sm font-medium">
-                  {knowledgeBase.name}
+                  {kb.name}
                 </span>
-                <span className="text-muted-foreground w-full truncate text-[11px]">
-                  {knowledgeBase.id.slice(0, 8)}...
+                <span className="text-muted-foreground w-full truncate text-[11px] capitalize">
+                  {kb.type}
                 </span>
-              </button>
+              </div>
             ))
           ) : (
             <div className="border-border text-muted-foreground rounded-lg border border-dashed p-3 text-xs">
@@ -457,66 +201,43 @@ export default function KnowledgeBasePage() {
         </div>
       </aside>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="bg-background scrollbar-thin flex-1 overflow-y-auto">
-        {isBootstrapping ? (
+        {isLoading ? (
           <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
             Yukleniyor...
           </div>
+        ) : error ? (
+          <div className="border-destructive/20 bg-destructive/5 text-destructive mx-4 mt-4 rounded-lg border px-3 py-2 text-sm">
+            {error instanceof Error ? error.message : "Bir hata olustu."}
+          </div>
         ) : (
           <>
-            {errorMessage && (
-              <div className="border-destructive/20 bg-destructive/5 text-destructive mx-4 mt-4 rounded-lg border px-3 py-2 text-sm">
-                {errorMessage}
-              </div>
+            {activeTab === "text" && (
+              <TextTab
+                items={textKBs}
+                onSave={handleUpdateText}
+                onDelete={handleDelete}
+                isSaving={updateMutation.isPending}
+                isDeleting={deleteMutation.isPending}
+                deletingId={deleteMutation.variables ?? null}
+              />
             )}
-
-            {successMessage && (
-              <div className="border-success/20 bg-success/5 text-success mx-4 mt-4 rounded-lg border px-3 py-2 text-sm">
-                {successMessage}
-              </div>
+            {activeTab === "file" && (
+              <FileTab
+                items={fileKBs}
+                onDelete={handleDelete}
+                isDeleting={deleteMutation.isPending}
+                deletingId={deleteMutation.variables ?? null}
+              />
             )}
-
-            {!selectedKnowledgeBase ? (
-              <div className="text-muted-foreground flex h-full items-center justify-center px-6 text-center text-sm">
-                Gosterilecek bilgi bankasi yok. Yeni bir bilgi bankasi olusturup
-                kaynak ekleyebilirsin.
-              </div>
-            ) : (
-              <>
-                {activeTab === "text" && (
-                  <TextTab
-                    knowledgeBase={selectedKnowledgeBase}
-                    textSources={textSources}
-                    onSaveSource={handleSaveTextSource}
-                    onDeleteSource={handleDeleteSource}
-                    savingSourceId={savingSourceId}
-                    deletingSourceId={deletingSourceId}
-                    onDeleteKnowledgeBase={handleDeleteKnowledgeBase}
-                    isDeletingKnowledgeBase={isDeletingKnowledgeBase}
-                  />
-                )}
-                {activeTab === "file" && (
-                  <FileTab
-                    knowledgeBase={selectedKnowledgeBase}
-                    files={fileSources}
-                    onDeleteSource={handleDeleteSource}
-                    deletingSourceId={deletingSourceId}
-                    onDeleteKnowledgeBase={handleDeleteKnowledgeBase}
-                    isDeletingKnowledgeBase={isDeletingKnowledgeBase}
-                  />
-                )}
-                {activeTab === "website" && (
-                  <WebsiteTab
-                    knowledgeBase={selectedKnowledgeBase}
-                    websites={websiteSources}
-                    onDeleteSource={handleDeleteSource}
-                    deletingSourceId={deletingSourceId}
-                    onDeleteKnowledgeBase={handleDeleteKnowledgeBase}
-                    isDeletingKnowledgeBase={isDeletingKnowledgeBase}
-                  />
-                )}
-              </>
+            {activeTab === "website" && (
+              <WebsiteTab
+                items={websiteKBs}
+                onDelete={handleDelete}
+                isDeleting={deleteMutation.isPending}
+                deletingId={deleteMutation.variables ?? null}
+              />
             )}
           </>
         )}

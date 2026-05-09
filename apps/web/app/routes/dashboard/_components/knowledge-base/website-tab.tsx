@@ -1,41 +1,32 @@
 import { LinkIcon, Trash2 } from "lucide-react";
-import type {
-  KnowledgeBaseItem,
-  KnowledgeBaseSource,
-} from "~/lib/knowledge-base-api";
-import TabHeader from "./tab-header";
+import type { KnowledgeBase } from "~/lib/knowledge-base-api";
 
 type WebsiteTabProps = {
-  knowledgeBase: KnowledgeBaseItem | null;
-  websites: KnowledgeBaseSource[];
-  onDeleteSource: (sourceId: string) => void;
-  deletingSourceId: string | null;
-  onDeleteKnowledgeBase: () => void;
-  isDeletingKnowledgeBase: boolean;
+  items: KnowledgeBase[];
+  onDelete: (id: string) => void;
+  isDeleting: boolean;
+  deletingId: string | null;
 };
 
 const WebsiteTab = ({
-  knowledgeBase,
-  websites,
-  onDeleteSource,
-  deletingSourceId,
-  onDeleteKnowledgeBase,
-  isDeletingKnowledgeBase,
+  items,
+  onDelete,
+  isDeleting,
+  deletingId,
 }: WebsiteTabProps) => {
   return (
     <div>
-      <TabHeader
-        title="Website"
-        knowledgeBase={knowledgeBase}
-        sourceCount={websites.length}
-        onDeleteKnowledgeBase={onDeleteKnowledgeBase}
-        isDeletingKnowledgeBase={isDeletingKnowledgeBase}
-      />
+      <div className="border-border mb-8 flex h-16 items-center border-b px-4">
+        <h1 className="text-foreground text-xl font-bold">Website</h1>
+        <span className="text-muted-foreground ml-3 text-sm">
+          ({items.length} kaynak)
+        </span>
+      </div>
 
       <div className="px-4">
-        {websites.length > 0 ? (
+        {items.length > 0 ? (
           <div className="space-y-4">
-            {websites.map(source => (
+            {items.map(source => (
               <div
                 key={source.id}
                 className="group bg-card border-border rounded-xl border p-4 transition-all hover:shadow-md"
@@ -47,7 +38,7 @@ const WebsiteTab = ({
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-foreground max-w-[380px] truncate text-sm font-semibold">
-                        {source.title}
+                        {source.name}
                       </h3>
                       <p className="text-muted-foreground max-w-[380px] truncate text-xs">
                         {source.websiteUrl ?? "URL bilgisi yok"}
@@ -59,14 +50,11 @@ const WebsiteTab = ({
                     className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer rounded-md p-2 transition-colors"
                     title="Sil"
                     aria-label="Sil"
-                    onClick={() => onDeleteSource(source.id)}
-                    disabled={deletingSourceId === source.id}
+                    onClick={() => onDelete(source.id)}
+                    disabled={isDeleting && deletingId === source.id}
                   >
                     <Trash2 className="h-5 w-5" />
                   </button>
-                </div>
-                <div className="text-muted-foreground mt-2 text-[11px]">
-                  Durum: {source.processingStatus}
                 </div>
               </div>
             ))}

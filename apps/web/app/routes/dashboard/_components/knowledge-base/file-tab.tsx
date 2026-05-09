@@ -1,51 +1,26 @@
 import { FileText, Trash2 } from "lucide-react";
-import type {
-  KnowledgeBaseItem,
-  KnowledgeBaseSource,
-} from "~/lib/knowledge-base-api";
-import TabHeader from "./tab-header";
+import type { KnowledgeBase } from "~/lib/knowledge-base-api";
 
 type FileTabProps = {
-  knowledgeBase: KnowledgeBaseItem | null;
-  files: KnowledgeBaseSource[];
-  onDeleteSource: (sourceId: string) => void;
-  deletingSourceId: string | null;
-  onDeleteKnowledgeBase: () => void;
-  isDeletingKnowledgeBase: boolean;
+  items: KnowledgeBase[];
+  onDelete: (id: string) => void;
+  isDeleting: boolean;
+  deletingId: string | null;
 };
 
-const formatBytes = (bytes: number | null) => {
-  if (!bytes) return "-";
-
-  if (bytes < 1024) return `${bytes} B`;
-
-  const kb = bytes / 1024;
-  if (kb < 1024) return `${kb.toFixed(1)} KB`;
-
-  return `${(kb / 1024).toFixed(1)} MB`;
-};
-
-const FileTab = ({
-  knowledgeBase,
-  files,
-  onDeleteSource,
-  deletingSourceId,
-  onDeleteKnowledgeBase,
-  isDeletingKnowledgeBase,
-}: FileTabProps) => {
+const FileTab = ({ items, onDelete, isDeleting, deletingId }: FileTabProps) => {
   return (
     <div>
-      <TabHeader
-        title="Dosya"
-        knowledgeBase={knowledgeBase}
-        sourceCount={files.length}
-        onDeleteKnowledgeBase={onDeleteKnowledgeBase}
-        isDeletingKnowledgeBase={isDeletingKnowledgeBase}
-      />
+      <div className="border-border mb-8 flex h-16 items-center border-b px-4">
+        <h1 className="text-foreground text-xl font-bold">Dosya</h1>
+        <span className="text-muted-foreground ml-3 text-sm">
+          ({items.length} kaynak)
+        </span>
+      </div>
       <div className="px-4">
-        {files.length > 0 ? (
+        {items.length > 0 ? (
           <div className="space-y-4">
-            {files.map(file => (
+            {items.map(file => (
               <div
                 key={file.id}
                 className="group bg-card border-border flex items-center justify-between rounded-xl border p-4 transition-all hover:shadow-md"
@@ -56,11 +31,18 @@ const FileTab = ({
                   </div>
                   <div className="min-w-0">
                     <h3 className="text-foreground max-w-[220px] truncate text-sm font-semibold">
-                      {file.fileName ?? file.title}
+                      {file.fileName ?? file.name}
                     </h3>
-                    <p className="text-muted-foreground text-xs">
-                      {formatBytes(file.fileSizeBytes)}
-                    </p>
+                    {file.fileUrl && (
+                      <a
+                        href={file.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-foreground truncate text-xs"
+                      >
+                        {file.fileUrl}
+                      </a>
+                    )}
                   </div>
                 </div>
                 <button
@@ -68,8 +50,8 @@ const FileTab = ({
                   className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 ml-3 cursor-pointer rounded-md p-2 transition-colors"
                   title="Sil"
                   aria-label="Sil"
-                  onClick={() => onDeleteSource(file.id)}
-                  disabled={deletingSourceId === file.id}
+                  onClick={() => onDelete(file.id)}
+                  disabled={isDeleting && deletingId === file.id}
                 >
                   <Trash2 className="h-5 w-5" />
                 </button>

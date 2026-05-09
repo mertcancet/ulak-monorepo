@@ -1,1 +1,1 @@
-export { cleonApi } from "./server";
+export type { cleonApi } from "./server";

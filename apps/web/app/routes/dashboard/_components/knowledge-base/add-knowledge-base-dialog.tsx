@@ -100,7 +100,7 @@ const AddKnowledgeBaseDialog = ({
       await onCreate({
         knowledgeBaseName: trimmedName,
         sourceType,
-        websiteUrl: websiteUrl.trim(),
+        websiteUrl: `https://${websiteUrl.trim()}`,
         textContent: textContent.trim(),
         files: uploadedFiles,
       });
@@ -263,9 +263,10 @@ const AddKnowledgeBaseDialog = ({
                     id="website-url"
                     value={websiteUrl}
                     onChange={event => setWebsiteUrl(event.target.value)}
-                    placeholder="https://example.com"
+                    placeholder="example.com"
                     className="h-11"
                     disabled={isSubmitting}
+                    prefix="https://"
                   />
                 </div>
               )}

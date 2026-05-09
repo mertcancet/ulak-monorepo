@@ -1,104 +1,78 @@
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
-import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import type {
-  KnowledgeBaseItem,
-  KnowledgeBaseSource,
-} from "~/lib/knowledge-base-api";
-import TabHeader from "./tab-header";
+import type { KnowledgeBase } from "~/lib/knowledge-base-api";
 
 type TextTabProps = {
-  knowledgeBase: KnowledgeBaseItem | null;
-  textSources: KnowledgeBaseSource[];
-  onSaveSource: (sourceId: string, content: string) => void;
-  onDeleteSource: (sourceId: string) => void;
-  savingSourceId: string | null;
-  deletingSourceId: string | null;
-  onDeleteKnowledgeBase: () => void;
-  isDeletingKnowledgeBase: boolean;
+  items: KnowledgeBase[];
+  onSave: (id: string, textContent: string) => void;
+  onDelete: (id: string) => void;
+  isSaving: boolean;
+  isDeleting: boolean;
+  deletingId: string | null;
 };
 
 const TextTab = ({
-  knowledgeBase,
-  textSources,
-  onSaveSource,
-  onDeleteSource,
-  savingSourceId,
-  deletingSourceId,
-  onDeleteKnowledgeBase,
-  isDeletingKnowledgeBase,
+  items,
+  onSave,
+  onDelete,
+  isSaving,
+  isDeleting,
+  deletingId,
 }: TextTabProps) => {
-  const [selectedSourceId, setSelectedSourceId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    items[0]?.id ?? null,
+  );
   const [text, setText] = useState("");
 
   useEffect(() => {
-    if (textSources.length === 0) {
-      setSelectedSourceId(null);
+    if (items.length === 0) {
+      setSelectedId(null);
       setText("");
       return;
     }
+    const hasSelected = items.some(item => item.id === selectedId);
+    const nextId = hasSelected ? selectedId : items[0].id;
+    setSelectedId(nextId);
+    const nextItem = items.find(item => item.id === nextId);
+    setText(nextItem?.textContent ?? "");
+  }, [items, selectedId]);
 
-    const hasSelectedSource = textSources.some(
-      source => source.id === selectedSourceId,
-    );
-
-    const nextSourceId = hasSelectedSource
-      ? selectedSourceId
-      : textSources[0].id;
-    setSelectedSourceId(nextSourceId);
-
-    const nextSource = textSources.find(source => source.id === nextSourceId);
-    setText(nextSource?.content ?? "");
-  }, [textSources, selectedSourceId]);
-
-  const selectedSource =
-    textSources.find(source => source.id === selectedSourceId) ?? null;
-
-  const isDirty = (selectedSource?.content ?? "") !== text;
+  const selectedItem = items.find(item => item.id === selectedId) ?? null;
+  const isDirty = (selectedItem?.textContent ?? "") !== text;
 
   return (
     <div>
-      <TabHeader
-        title="Metin"
-        knowledgeBase={knowledgeBase}
-        sourceCount={textSources.length}
-        onDeleteKnowledgeBase={onDeleteKnowledgeBase}
-        isDeletingKnowledgeBase={isDeletingKnowledgeBase}
-      />
+      <div className="border-border mb-8 flex h-16 items-center border-b px-4">
+        <h1 className="text-foreground text-xl font-bold">Metin</h1>
+        <span className="text-muted-foreground ml-3 text-sm">
+          ({items.length} kaynak)
+        </span>
+      </div>
       <div className="px-3">
-        {textSources.length > 0 ? (
+        {items.length > 0 ? (
           <>
-            <Label
-              htmlFor="text-source"
-              className="text-muted-foreground/80 ml-1 text-[11px] font-bold tracking-wider uppercase"
-            >
-              Metin Kaynagi
-            </Label>
             <select
-              id="text-source"
-              className="border-border bg-card mt-2 w-full rounded-md border px-3 py-2 text-sm"
-              value={selectedSourceId ?? ""}
+              className="border-border bg-card w-full rounded-md border px-3 py-2 text-sm"
+              value={selectedId ?? ""}
               onChange={event => {
-                const nextSource = textSources.find(
-                  source => source.id === event.target.value,
+                const nextItem = items.find(
+                  item => item.id === event.target.value,
                 );
-
-                setSelectedSourceId(event.target.value);
-                setText(nextSource?.content ?? "");
+                setSelectedId(event.target.value);
+                setText(nextItem?.textContent ?? "");
               }}
             >
-              {textSources.map(source => (
-                <option key={source.id} value={source.id}>
-                  {source.title}
+              {items.map(item => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
                 </option>
               ))}
             </select>
 
             <Textarea
-              id="text"
-              placeholder="Metni buraya girin veya görüntüleyin..."
+              placeholder="Metni buraya girin..."
               className="mt-4 min-h-[260px] w-full p-3 text-base"
               value={text}
               onChange={e => setText(e.target.value)}
@@ -107,12 +81,10 @@ const TextTab = ({
             <div className="mt-4 flex items-center justify-end gap-2">
               <Button
                 variant="outline"
-                onClick={() => {
-                  if (!selectedSource) return;
-                  onDeleteSource(selectedSource.id);
-                }}
+                onClick={() => selectedItem && onDelete(selectedItem.id)}
                 disabled={
-                  !selectedSource || deletingSourceId === selectedSource.id
+                  !selectedItem ||
+                  (isDeleting && deletingId === selectedItem.id)
                 }
               >
                 <Trash2 className="h-4 w-4" /> Sil
@@ -120,13 +92,9 @@ const TextTab = ({
               <Button
                 onClick={() => {
                   if (!selectedSource) return;
-                  onSaveSource(selectedSource.id, text);
+                  onSave(selectedItem.id, text);
                 }}
-                disabled={
-                  !selectedSource ||
-                  !isDirty ||
-                  savingSourceId === selectedSource.id
-                }
+                disabled={!selectedItem || !isDirty || isSaving}
               >
                 Kaydet
               </Button>
