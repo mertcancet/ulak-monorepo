@@ -129,7 +129,7 @@ const AddKnowledgeBaseDialog = ({
           <Plus className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="overflow-hidden border-none p-0 shadow-2xl sm:max-w-[600px] md:max-w-[800px]">
+      <DialogContent className="overflow-hidden border-none p-0 shadow-2xl sm:max-w-150 md:max-w-200">
         <div className="p-6 pb-0">
           <DialogHeader>
             <DialogTitle className="text-xl">
@@ -300,7 +300,7 @@ const AddKnowledgeBaseDialog = ({
                       <Label className="text-muted-foreground/80 ml-1 text-[10px] font-bold uppercase">
                         Secilen Dosyalar ({uploadedFiles.length})
                       </Label>
-                      <div className="max-h-[160px] space-y-2 overflow-y-auto pr-1">
+                      <div className="max-h-40 space-y-2 overflow-y-auto pr-1">
                         {uploadedFiles.map((file, index) => (
                           <div
                             key={`${file.name}-${index}`}
@@ -311,7 +311,7 @@ const AddKnowledgeBaseDialog = ({
                                 <FileIcon className="text-primary/70 h-4 w-4" />
                               </div>
                               <div className="flex flex-col">
-                                <span className="max-w-[200px] truncate text-sm font-medium">
+                                <span className="max-w-50 truncate text-sm font-medium">
                                   {file.name}
                                 </span>
                                 <span className="text-muted-foreground text-[10px]">
@@ -349,7 +349,7 @@ const AddKnowledgeBaseDialog = ({
                   </Label>
                   <textarea
                     id="manual-text"
-                    className="border-border/50 bg-secondary/30 focus:bg-background focus:ring-primary/20 min-h-[120px] w-full rounded-xl border p-3 text-sm transition-all focus:ring-2 focus:outline-none"
+                    className="border-border/50 bg-secondary/30 focus:bg-background focus:ring-primary/20 min-h-30 w-full rounded-xl border p-3 text-sm transition-all focus:ring-2 focus:outline-none"
                     placeholder="Bilgi bankasina eklemek istedigin metni buraya yapistir..."
                     value={textContent}
                     onChange={event => setTextContent(event.target.value)}

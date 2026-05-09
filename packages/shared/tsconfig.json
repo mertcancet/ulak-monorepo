@@ -1,7 +1,6 @@
 {
   "include": ["src"],
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "build",
     "target": "esnext",
     "module": "nodenext",

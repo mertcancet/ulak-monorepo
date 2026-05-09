@@ -1,10 +1,10 @@
 import { CheckCircle2, Copy, Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import type { KnowledgeBaseItem } from "~/lib/knowledge-base-api";
+import type { KnowledgeBase } from "~/lib/knowledge-base-api";
 
 type TabHeaderProps = {
   title: string;
-  knowledgeBase: KnowledgeBaseItem | null;
+  knowledgeBase: KnowledgeBase | null;
   sourceCount: number;
   onDeleteKnowledgeBase: () => void;
   isDeletingKnowledgeBase: boolean;

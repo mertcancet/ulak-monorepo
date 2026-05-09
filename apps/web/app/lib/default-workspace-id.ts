@@ -1,0 +1,1 @@
+export const DEFAULT_WORKSPACE_ID = "019e0cbd-4e10-78c3-9e82-770ac78613d0";

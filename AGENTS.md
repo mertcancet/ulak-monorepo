@@ -761,32 +761,62 @@ describe("agentsApi", () => {
 
 ### Web ↔ API Communication
 
-**`apps/web/app/lib/agents-api.ts` örneği:**
+**Fetcher Kullanımı (Merkezi Request Handler)**
+
+Tüm API istemci dosyaları `apps/web/app/lib/fetcher.ts`'ten `request` fonksiyonunu kullanmalıdır:
 
 ```typescript
-const apiBaseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
-
-const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
-  const response = await fetch(`${apiBaseUrl}${path}`, {
-    ...init,
-    credentials: "include",
-    headers: { "content-type": "application/json", ...init?.headers },
-  });
-
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response.json();
-};
+import { request } from "./fetcher";
 
 export const agentsApi = {
-  listAgents: () => request<AgentListItem[]>("/agents"),
-  getAgent: (id: string) => request<AgentDetail>(`/agents/${id}`),
+  listAgents: () => 
+    request<AgentListItem[]>("/agents"),
+  
+  getAgent: (id: string) => 
+    request<AgentDetail>(`/agents/${id}`),
+  
   createAgent: (input: CreateAgentInput) =>
     request<AgentDetail>("/agents", {
       method: "POST",
-      body: JSON.stringify(input),
+      body: input,  // Otomatik olarak JSON'a çevrilir
     }),
 };
 ```
+
+**Workspace Header ile Kullanım**
+
+Workspace ID gibi custom header'lar gerekiyorsa, `options` parametresine ekleyin:
+
+```typescript
+import { request } from "./fetcher";
+
+export const knowledgeBaseApi = {
+  list: (workspaceId: string) =>
+    request<KnowledgeBase[]>("/knowledge-base", {
+      headers: { "cleon-workspace-id": workspaceId },
+    }),
+
+  create: (body: CreateKnowledgeBaseInput) =>
+    request<{ id: string }>("/knowledge-base", {
+      method: "POST",
+      body,
+      headers: { "cleon-workspace-id": body.workspaceId },
+    }),
+};
+```
+
+**⚠️ Önemli Kurallar:**
+
+1. **Her API client dosyasında kendi `request` fonksiyonu yazmayın** — `fetcher.ts`'ten import edin
+2. **Body otomatik JSON'a çevrilir** — `JSON.stringify()` yapmanıza gerek yok
+3. **Query parametreleri:** `query` option'u kullanın:
+   ```typescript
+   request<Items[]>("/items", {
+     query: { page: 1, limit: 10, search: "term" }
+   })
+   ```
+4. **Error Handling:** Request başarısız olursa `Error` throw eder, UI'da `.catch()` veya `try/catch` kullanın
+5. **Response Types:** Generic type parametresi ile response type'ını belirtin
 
 **Better Auth Integration:**
 

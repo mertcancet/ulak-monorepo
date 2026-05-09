@@ -37,10 +37,10 @@ const WebsiteTab = ({
                       <LinkIcon className="text-accent h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-foreground max-w-[380px] truncate text-sm font-semibold">
+                      <h3 className="text-foreground max-w-95 truncate text-sm font-semibold">
                         {source.name}
                       </h3>
-                      <p className="text-muted-foreground max-w-[380px] truncate text-xs">
+                      <p className="text-muted-foreground max-w-95 truncate text-xs">
                         {source.websiteUrl ?? "URL bilgisi yok"}
                       </p>
                     </div>
