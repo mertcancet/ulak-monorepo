@@ -1,5 +1,5 @@
+import type { KnowledgeBase } from "@cleon/shared";
 import { LinkIcon, Trash2 } from "lucide-react";
-import type { KnowledgeBase } from "~/lib/knowledge-base-api";
 
 type WebsiteTabProps = {
   items: KnowledgeBase[];
