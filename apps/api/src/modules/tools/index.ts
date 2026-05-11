@@ -1,8 +1,9 @@
+import { toolsInsertSchema, toolsSelectSchema } from "@cleon/shared";
 import { desc, eq, getColumns, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
-import { tools, toolsInsertSchema, toolsSelectSchema } from "~/db/schema";
+import { tools } from "~/db/schema";
 import models from "~/plugins/models";
 import { checkPermissions } from "~/shared/auth-helpers";
 import paginatedQuerySchema, {
