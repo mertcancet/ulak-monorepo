@@ -1,16 +1,14 @@
+import {
+  agentInsertSchema,
+  agentSelectSchema,
+  agentUpdateSchema,
+  toolsSelectSchema,
+} from "@cleon/shared";
 import { and, desc, eq, getColumns, ne, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
-import {
-  agent_tools,
-  agentInsertSchema,
-  agentSelectSchema,
-  agents,
-  agentUpdateSchema,
-  tools,
-  toolsSelectSchema,
-} from "~/db/schema";
+import { agent_tools, agents, tools } from "~/db/schema";
 import models from "~/plugins/models";
 import { checkPermissions } from "~/shared/auth-helpers";
 import env from "~/shared/env";

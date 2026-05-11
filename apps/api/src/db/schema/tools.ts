@@ -9,9 +9,6 @@ import {
   text,
   uuid,
 } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
-import { z } from "zod";
-import { toolSettingsSchema } from "~/modules/tools/types";
 import { agents } from "./agents";
 import { workspaces } from "./workspaces";
 
@@ -46,21 +43,3 @@ export const agent_tools = pgTable(
     }),
   ],
 );
-
-export const toolsSelectSchema = createSelectSchema(tools, {
-  settings: toolSettingsSchema,
-});
-
-export const toolsInsertSchema = createInsertSchema(tools, {
-  workspaceId: z.uuidv7(),
-  name: z
-    .string()
-    .min(3)
-    .regex(/^[a-z][a-z0-9_-]*$/, {
-      message:
-        "Tool name should only contain alphanumeric characters, underscores and hyphens.",
-    }),
-  settings: toolSettingsSchema,
-}).omit({ id: true, workspaceId: true });
-
-export const toolsUpdateSchema = toolsInsertSchema.partial();

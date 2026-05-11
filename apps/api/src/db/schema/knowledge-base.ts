@@ -4,8 +4,6 @@ import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod";
 import { workspaces } from "./workspaces";
 
-// --- END TYPE EXPORTS ---
-
 export const knowledgeBaseTypeEnum = pgEnum("knowledge_base_type", [
   "file",
   "text",
@@ -64,7 +62,7 @@ const addTypeSpecificValidation = (
 
   if (data.type === "text" && !data.textContent) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["textContent"],
       message: "textContent is required when type is 'text'",
     });
@@ -72,7 +70,7 @@ const addTypeSpecificValidation = (
 
   if (data.type === "website" && !data.websiteUrl) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["websiteUrl"],
       message: "websiteUrl is required when type is 'website'",
     });
@@ -81,7 +79,7 @@ const addTypeSpecificValidation = (
   if (data.type === "file") {
     if (!data.fileName) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         path: ["fileName"],
         message: "fileName is required when type is 'file'",
       });
@@ -89,7 +87,7 @@ const addTypeSpecificValidation = (
 
     if (!data.fileUrl) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         path: ["fileUrl"],
         message: "fileUrl is required when type is 'file'",
       });

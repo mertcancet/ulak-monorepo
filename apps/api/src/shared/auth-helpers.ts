@@ -1,33 +1,11 @@
+import type { Permission, ResourceKind } from "@cleon/shared";
 import { and, eq } from "drizzle-orm";
-import { z } from "zod";
 import db from "~/db";
 import { roles, user_roles, workspaces } from "~/db/schema";
-
-const permissions = [
-  "view",
-  "share",
-  "invite",
-  "create",
-  "update",
-  "delete",
-  "*",
-] as const;
-
-type Permission = (typeof permissions)[number];
-type ResourceKind = keyof z.infer<typeof rolePermissionSchema>;
 
 export type ResourcePermission = {
   [kind in ResourceKind]?: Permission[];
 };
-
-const permissionSchema = z.enum(permissions).array().optional();
-
-export const rolePermissionSchema = z.object({
-  workspace: permissionSchema,
-  role: permissionSchema,
-  agent: permissionSchema,
-  tool: permissionSchema,
-});
 
 export type CheckPermissionRequest =
   | {

@@ -1,4 +1,3 @@
-import type { ToolSettings } from "@cleon/shared";
 import { Ajv } from "ajv";
 import { z } from "zod";
 
@@ -40,4 +39,26 @@ export const toolSettingsSchema = z.discriminatedUnion("type", [
   endCallTool,
 ]);
 
-export type { ToolSettings };
+export const toolsSelectSchema = z.object({
+  id: z.uuidv7(),
+  workspaceId: z.uuidv7(),
+  name: z
+    .string()
+    .min(3)
+    .regex(/^[a-z][a-z0-9_-]*$/, {
+      message:
+        "Tool name should only contain alphanumeric characters, underscores and hyphens.",
+    }),
+  description: z.string(),
+  disallowInterruptions: z.boolean().default(false),
+  settings: toolSettingsSchema,
+});
+
+export const toolsInsertSchema = toolsSelectSchema.omit({
+  id: true,
+  workspaceId: true,
+});
+
+export const toolsUpdateSchema = toolsInsertSchema.partial();
+
+export type ToolSettings = z.infer<typeof toolSettingsSchema>;

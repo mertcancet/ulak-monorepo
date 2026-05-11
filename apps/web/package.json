@@ -9,6 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@cleon/shared": "workspace:",
     "@elysiajs/eden": "^1.4.8",
     "@react-router/node": "7.12.0",
     "@react-router/serve": "7.12.0",
