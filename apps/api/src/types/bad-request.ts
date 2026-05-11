@@ -1,17 +1,8 @@
+import type { StatusMap } from "elysia";
 import { z } from "zod";
-import type { AutocompleteString } from ".";
-
-const titles = [
-  "Bad Request",
-  "Unauthorized",
-  "Forbidden",
-  "Not Found",
-] as const;
 
 const badRequestSchema = z.object({
-  title: z
-    .string()
-    .transform(v => v as AutocompleteString<(typeof titles)[number]>),
+  title: z.string().transform(v => v as keyof StatusMap),
   detail: z.string().optional(),
   status: z.number().gt(99).lt(600),
   instance: z.string(),

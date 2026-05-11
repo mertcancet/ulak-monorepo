@@ -8,6 +8,7 @@ import knowledgeBaseModule from "~/modules/knowledge-base";
 import errorHandler from "~/plugins/error-handler";
 import env from "~/shared/env";
 import { BetterAuthOpenAPI } from "./lib/auth";
+import rolesModule from "./modules/roles";
 import toolsModule from "./modules/tools";
 import workspacesModule from "./modules/workspaces";
 
@@ -78,6 +79,7 @@ const app = new Elysia()
   .use(agentsModule())
   .use(toolsModule())
   .use(workspacesModule())
+  .use(rolesModule())
   .use(knowledgeBaseModule())
   .listen(env.PORT);
 

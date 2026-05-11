@@ -1,9 +1,18 @@
+import { desc, eq } from "drizzle-orm";
 import Elysia from "elysia";
+import { z } from "zod";
 import db from "~/db";
-import { workspaces } from "~/db/schema";
+import {
+  roles,
+  user_roles,
+  workspace_members,
+  workspaceInsertSchema,
+  workspaceSelectSchema,
+  workspaces,
+} from "~/db/schema";
 import models from "~/plugins/models";
+import type { ResourcePermission } from "~/shared/auth-helpers";
 import authModule from "../auth";
-import { workspaceSchema } from "./types";
 
 const workspacesModule = () =>
   new Elysia({
@@ -13,24 +22,114 @@ const workspacesModule = () =>
   })
     .use(models())
     .use(authModule())
-    .post(
+    .get(
       "",
-      async ({ body }) => {
-        // TODO: Permission Check - workspace resource
-        const [workspace] = await db
-          .insert(workspaces)
-          .values(body)
-          .returning({ id: workspaces.id });
-
-        return workspace;
+      async ({ session }) => {
+        return await db
+          .select({
+            id: workspaces.id,
+            name: workspaces.name,
+          })
+          .from(workspaces)
+          .innerJoin(
+            workspace_members,
+            eq(workspace_members.workspaceId, workspaces.id),
+          )
+          .where(eq(workspace_members.userId, session.userId))
+          .orderBy(desc(workspaces.id));
       },
       {
         requireAuth: true,
-        body: workspaceSchema,
+        response: workspaceSelectSchema.array(),
+      },
+    )
+    .post(
+      "",
+      async ({ body, session, problem }) => {
+        return await db.transaction(async tx => {
+          const [workspace] = await tx
+            .insert(workspaces)
+            .values({ ...body, ownerId: session.userId })
+            .returning({ id: workspaces.id });
+
+          if (!workspace) throw problem({ title: "Bad Request" });
+
+          await tx.insert(workspace_members).values({
+            userId: session.userId,
+            workspaceId: workspace.id,
+          });
+
+          // TODO: Ownership kontrolü ve davet, rol ekleme, güncelleme zafiyetleri.
+
+          const defaultRoles = await tx
+            .insert(roles)
+            .values([
+              {
+                name: "Workspace Admin",
+                workspaceId: workspace.id,
+                permissions: {
+                  agent: ["*"],
+                  role: ["*"],
+                  tool: ["*"],
+                  workspace: ["invite", "update"],
+                } satisfies ResourcePermission,
+              },
+              {
+                name: "Member",
+                workspaceId: workspace.id,
+                permissions: {
+                  agent: ["view"],
+                  tool: ["view"],
+                } satisfies ResourcePermission,
+              },
+            ])
+            .returning({ id: roles.id });
+
+          await tx.insert(user_roles).values(
+            defaultRoles.map(r => ({
+              roleId: r.id,
+              userId: session.userId,
+            })),
+          );
+
+          return workspace;
+        });
+      },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+        body: workspaceInsertSchema,
         response: {
           201: "created.response",
+          400: z.any(),
         },
       },
     );
+// .patch(
+//   ":id",
+//   async ({ params: { id }, body, session, headers, problem }) => {
+//     const workspaceId = headers["cleon-workspace-id"];
+
+//     const isAllowed = await checkPermissions({
+//       user: {
+//         id: session.userId,
+//       },
+//       resource: {
+//         kind: "wo",
+//         workspaceId,
+//       },
+//       action: "update",
+//     });
+
+//     if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+//     await db.update(agents).set(body).where(eq(agents.id, id));
+//   },
+//   {
+//     requireAuth: true,
+//     headers: "headers.workspaceId",
+//     body: agentUpdateSchema,
+//   },
+// );
 
 export default workspacesModule;

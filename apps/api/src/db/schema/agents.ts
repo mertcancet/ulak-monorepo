@@ -51,15 +51,13 @@ export const agentSelectSchema = createSelectSchema(agents, {
 export const agentInsertSchema = createInsertSchema(agents, {
   llm: llmSettingsSchema,
   name: z.string().min(3),
-  workspaceId: z.uuidv7(),
 }).omit({
   id: true,
+  workspaceId: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const agentUpdateSchema = agentInsertSchema.partial().omit({
-  workspaceId: true,
-});
+export const agentUpdateSchema = agentInsertSchema.partial();
 
 export type Agent = z.infer<typeof agentSelectSchema>;

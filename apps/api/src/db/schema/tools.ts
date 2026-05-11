@@ -35,10 +35,10 @@ export const agent_tools = pgTable(
   {
     agentId: uuid()
       .notNull()
-      .references(() => agents.id),
+      .references(() => agents.id, { onDelete: "cascade" }),
     toolId: uuid()
       .notNull()
-      .references(() => tools.id),
+      .references(() => tools.id, { onDelete: "cascade" }),
   },
   table => [
     primaryKey({

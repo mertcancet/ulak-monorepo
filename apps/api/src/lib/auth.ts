@@ -1,4 +1,4 @@
-import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
+import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { betterAuth } from "better-auth";
 import { openAPI } from "better-auth/plugins";
 import type { OpenAPIV3 } from "openapi-types";
@@ -23,25 +23,23 @@ const socialProviders =
     : undefined;
 
 const auth = betterAuth({
-  baseURL: env.BETTER_AUTH_URL,
-  // @ts-expect-error
   database: drizzleAdapter(db, {
     provider: "pg",
     usePlural: true,
     schema,
   }),
-  experimental: { joins: true },
   appName: "Cleon",
   basePath: "/auth",
   trustedOrigins: env.CORS_ORIGINS,
-  // user: {
-  //   additionalFields: {
-  //     attributes: {
-  //       type: "json",
-  //       input: false,
-  //     },
-  //   },
-  // },
+  user: {
+    additionalFields: {
+      metadata: {
+        type: "json",
+        input: false,
+        required: false,
+      },
+    },
+  },
   advanced: {
     cookiePrefix: "cleon",
     database: {
@@ -58,10 +56,8 @@ const auth = betterAuth({
   plugins: [openAPI()],
 });
 
-// @ts-expect-error
 let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>;
 const getAuthOpenAPISchema = async () =>
-  // @ts-expect-error
   (_schema ??= auth.api.generateOpenAPISchema());
 
 export const BetterAuthOpenAPI = {
@@ -70,7 +66,9 @@ export const BetterAuthOpenAPI = {
       const reference: typeof paths = Object.create(null);
       for (const path of Object.keys(paths)) {
         const key = prefix + path;
+        // @ts-expect-error
         reference[key] = paths[path];
+        // @ts-expect-error
         for (const method of Object.keys(paths[path])) {
           const operation = (reference[key] as Record<string, unknown>)[
             method

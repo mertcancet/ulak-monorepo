@@ -1,5 +1,5 @@
 import { DrizzleQueryError } from "drizzle-orm";
-import Elysia from "elysia";
+import Elysia, { ElysiaCustomStatusResponse } from "elysia";
 import { DatabaseError } from "pg";
 import env from "~/shared/env";
 import problemDetails from "./problem-details";
@@ -67,6 +67,9 @@ const errorHandler = () =>
           status: 500,
         });
       }
+
+      if (error instanceof ElysiaCustomStatusResponse) return error.response;
+      else if (error instanceof Response) return error;
 
       console.error(error);
 

@@ -98,7 +98,7 @@ const agentsModule = () =>
 
         const [data] = await db
           .insert(agents)
-          .values(body)
+          .values({ ...body, workspaceId })
           .returning({ id: agents.id });
 
         return data;

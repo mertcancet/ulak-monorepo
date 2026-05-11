@@ -16,12 +16,13 @@
     "format:web": "biome check --write --unsafe ./apps/web",
     "check:api": "biome check --reporter=summary ./apps/api",
     "check:web": "biome check --reporter=summary ./apps/web",
-    "dk": "bun --cwd apps/api node_modules/drizzle-kit/bin.cjs"
+    "dk": "cd apps/api && tsx node_modules/drizzle-kit/bin.cjs"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
-    "lefthook": "^2.1.5",
-    "prettier": "^3.8.1",
-    "prettier-plugin-tailwindcss": "^0.7.2"
+    "lefthook": "^2.1.6",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.7.4",
+    "tsx": "^4.21.0"
   }
 }
