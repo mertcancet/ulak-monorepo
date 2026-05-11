@@ -15,7 +15,6 @@
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/*": ["./app/*"],
-      "@cleon/api": ["../../apps/api/src/shared"],
       "@cleon/auth": ["../../apps/api/src/lib/auth"],
       "~/plugins/*": ["../../apps/api/src/plugins/*"],
       "~/modules/*": ["../../apps/api/src/modules/*"],

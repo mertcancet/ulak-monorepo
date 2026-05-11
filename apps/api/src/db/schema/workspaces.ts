@@ -1,6 +1,5 @@
 import { sql } from "drizzle-orm";
 import { index, pgTable, primaryKey, text, uuid } from "drizzle-orm/pg-core";
-import { z } from "zod";
 import { users } from "./users";
 
 export const workspaces = pgTable(
@@ -31,12 +30,3 @@ export const workspace_members = pgTable(
     }),
   ],
 );
-
-export const workspaceSelectSchema = z.object({
-  id: z.uuidv7(),
-  name: z.string().min(3),
-});
-
-export const workspaceInsertSchema = workspaceSelectSchema.omit({
-  id: true,
-});

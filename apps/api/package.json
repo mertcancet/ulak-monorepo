@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.6.9",
+    "@cleon/shared": "workspace:",
     "@elysiajs/cors": "^1.4.1",
     "@elysiajs/openapi": "^1.4.14",
     "ajv": "catalog:",

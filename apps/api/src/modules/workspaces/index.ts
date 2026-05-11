@@ -1,15 +1,9 @@
+import { workspaceInsertSchema, workspaceSelectSchema } from "@cleon/shared";
 import { desc, eq } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
-import {
-  roles,
-  user_roles,
-  workspace_members,
-  workspaceInsertSchema,
-  workspaceSelectSchema,
-  workspaces,
-} from "~/db/schema";
+import { roles, user_roles, workspace_members, workspaces } from "~/db/schema";
 import models from "~/plugins/models";
 import type { ResourcePermission } from "~/shared/auth-helpers";
 import authModule from "../auth";

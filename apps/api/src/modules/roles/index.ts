@@ -1,13 +1,13 @@
+import {
+  roleInsertSchema,
+  roleSelectSchema,
+  roleUpdateSchema,
+} from "@cleon/shared";
 import { desc, eq } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
-import {
-  roleInsertSchema,
-  roleSelectSchema,
-  roles,
-  roleUpdateSchema,
-} from "~/db/schema";
+import { roles } from "~/db/schema";
 import models from "~/plugins/models";
 import { checkPermissions } from "~/shared/auth-helpers";
 import authModule from "../auth";

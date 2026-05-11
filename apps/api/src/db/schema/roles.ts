@@ -7,12 +7,7 @@ import {
   text,
   uuid,
 } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
-import { z } from "zod";
-import {
-  type ResourcePermission,
-  rolePermissionSchema,
-} from "~/shared/auth-helpers";
+import type { ResourcePermission } from "~/shared/auth-helpers";
 import { users } from "./users";
 import { workspaces } from "./workspaces";
 
@@ -41,17 +36,3 @@ export const user_roles = pgTable(
   },
   table => [primaryKey({ columns: [table.userId, table.roleId] })],
 );
-
-export const roleSelectSchema = createSelectSchema(roles, {
-  permissions: rolePermissionSchema,
-});
-
-export const roleInsertSchema = createInsertSchema(roles, {
-  name: z.string().min(3),
-  permissions: rolePermissionSchema,
-}).omit({
-  id: true,
-  workspaceId: true,
-});
-
-export const roleUpdateSchema = roleInsertSchema.partial();
