@@ -1,11 +1,10 @@
 import type { EndCallToolFormData } from "@cleon/shared";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
+import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { toolsApi } from "~/lib/tools-api";
 
 // TODO: workspaceId'yi gerçek workspace yönetiminden al
-const WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
-
 const toCreateInput = (data: EndCallToolFormData) => ({
   name: data.name,
   description: data.description,
@@ -20,7 +19,7 @@ export function useCreateEndCallTool() {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: (data: EndCallToolFormData) =>
-      toolsApi.createTool(WORKSPACE_ID, toCreateInput(data)),
+      toolsApi.createTool(DEFAULT_WORKSPACE_ID, toCreateInput(data)),
     onSuccess: () => navigate("/dashboard/tools"),
   });
 }

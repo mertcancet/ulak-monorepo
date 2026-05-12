@@ -13,7 +13,7 @@ export const agentSelectSchema = z.object({
   id: z.uuidv7(),
   workspaceId: z.uuidv7(),
   name: z.string().min(3),
-  phoneNumber: z.string(),
+  phoneNumber: z.string().optional(),
   llm: llmSettingsSchema,
   instructions: z.string(),
   allowInterruptions: z.boolean().default(true),

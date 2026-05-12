@@ -1,24 +1,12 @@
-import type {
-  AgentDetail,
-  AgentListItem,
-  CreateAgentInput,
-  Paginated,
-  UpdateAgentInput,
-} from "@cleon/shared";
+import type { Agent, Paginated } from "@cleon/shared";
 import { DEFAULT_WORKSPACE_ID } from "./default-workspace-id";
 import { request } from "./fetcher";
 
-export type {
-  AgentDetail,
-  AgentListItem,
-  CreateAgentInput,
-  Paginated,
-  UpdateAgentInput,
-};
+export type UpdateAgentInput = Partial<Agent>;
 
 export const agentsApi = {
   listAgents: (workspaceId = DEFAULT_WORKSPACE_ID, page = 1, pageSize = 20) =>
-    request<Paginated<AgentListItem>>("/agents", {
+    request<Paginated<Agent>>("/agents", {
       query: { page, pageSize },
       headers: {
         "cleon-workspace-id": workspaceId,
@@ -26,14 +14,14 @@ export const agentsApi = {
     }),
 
   getAgent: (agentId: string, workspaceId = DEFAULT_WORKSPACE_ID) =>
-    request<AgentDetail>(`/agents/${agentId}`, {
+    request<Agent>(`/agents/${agentId}`, {
       headers: {
         "cleon-workspace-id": workspaceId,
       },
     }),
 
-  createAgent: (body: CreateAgentInput, workspaceId = body.workspaceId) =>
-    request<AgentDetail>("/agents", {
+  createAgent: (body: Agent, workspaceId = body.workspaceId) =>
+    request<Agent>("/agents", {
       method: "POST",
       body,
       headers: {
@@ -46,7 +34,7 @@ export const agentsApi = {
     body: UpdateAgentInput,
     workspaceId = DEFAULT_WORKSPACE_ID,
   ) =>
-    request<AgentDetail>(`/agents/${agentId}`, {
+    request<Agent>(`/agents/${agentId}`, {
       method: "PATCH",
       body,
       headers: {

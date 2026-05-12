@@ -6,8 +6,6 @@ import type {
 } from "@cleon/shared";
 import { request } from "./fetcher";
 
-export type { CreateToolInput, Paginated, ToolItem, UpdateToolInput };
-
 export const toolsApi = {
   listTools: (workspaceId: string, page = 1, pageSize = 20) =>
     request<Paginated<ToolItem>>("/tools", {

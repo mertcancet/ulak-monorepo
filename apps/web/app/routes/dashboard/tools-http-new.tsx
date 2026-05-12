@@ -1,9 +1,9 @@
-import type { HttpToolFormData } from "@cleon/shared";
 import { ArrowLeft, Globe } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import DashboardHeader from "./_components/dashboard-header";
+import type { HttpToolFormData } from "./_components/tools/http-tool-form";
 import {
   defaultHttpToolData,
   HttpToolForm,

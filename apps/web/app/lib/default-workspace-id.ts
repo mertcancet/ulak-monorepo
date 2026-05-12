@@ -1,1 +1,1 @@
-export const DEFAULT_WORKSPACE_ID = "019e0cbd-4e10-78c3-9e82-770ac78613d0";
+export const DEFAULT_WORKSPACE_ID = "019e1bc2-bd3f-7a4c-afee-e62af9e7519e";

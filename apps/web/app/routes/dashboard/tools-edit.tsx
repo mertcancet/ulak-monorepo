@@ -1,22 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, Navigate, useParams } from "react-router";
 import { Button } from "~/components/ui/button";
+import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { toolsApi } from "~/lib/tools-api";
 import DashboardHeader from "./_components/dashboard-header";
-
-// TODO: workspaceId'yi gerçek workspace yönetiminden al
-const WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
 
 export default function ToolsEditPage() {
   const { id } = useParams();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["tool", WORKSPACE_ID, id],
+    queryKey: ["tool", DEFAULT_WORKSPACE_ID, id],
     queryFn: async () => {
       if (!id) {
         throw new Error("Tool id gerekli");
       }
-      return toolsApi.getTool(WORKSPACE_ID, id);
+      return toolsApi.getTool(DEFAULT_WORKSPACE_ID, id);
     },
     enabled: Boolean(id),
   });

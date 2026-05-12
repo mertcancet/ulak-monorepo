@@ -1,13 +1,13 @@
+import {
+  knowledgeBaseInsertSchema,
+  knowledgeBaseSelectSchema,
+  knowledgeBaseUpdateSchema,
+} from "@cleon/shared";
 import { desc, eq } from "drizzle-orm";
 import Elysia from "elysia";
 import z from "zod";
 import db from "~/db";
-import {
-  knowledgeBase,
-  knowledgeBaseInsertSchema,
-  knowledgeBaseSelectSchema,
-  knowledgeBaseUpdateSchema,
-} from "~/db/schema";
+import { knowledgeBase } from "~/db/schema";
 import models from "~/plugins/models";
 import authModule from "../auth";
 
@@ -26,7 +26,7 @@ const knowledgeBaseModule = () =>
 
         if (!workspaceId)
           return problem({
-            title: "Workspace ID is required in header 'cleon-workspace-id'",
+            title: "Bad Request",
             status: 400,
           });
 
@@ -50,7 +50,7 @@ const knowledgeBaseModule = () =>
 
         if (!workspaceId)
           return problem({
-            title: "Workspace ID is required in header 'cleon-workspace-id'",
+            title: "Bad Request",
             status: 400,
           });
 
@@ -65,7 +65,7 @@ const knowledgeBaseModule = () =>
         } = body;
 
         if (!name || !type)
-          return problem({ title: "Name and type are required", status: 400 });
+          return problem({ title: "Bad Request", status: 400 });
 
         const [data] = await db
           .insert(knowledgeBase)
@@ -97,7 +97,7 @@ const knowledgeBaseModule = () =>
 
         if (!workspaceId)
           return problem({
-            title: "Workspace ID is required in header 'cleon-workspace-id'",
+            title: "Bad Request",
             status: 400,
           });
 
@@ -106,8 +106,7 @@ const knowledgeBaseModule = () =>
           .from(knowledgeBase)
           .where(eq(knowledgeBase.id, id));
 
-        if (!data)
-          return problem({ title: "Knowledge Base not found", status: 404 });
+        if (!data) return problem({ title: "Not Found", status: 404 });
 
         return data;
       },
@@ -124,7 +123,7 @@ const knowledgeBaseModule = () =>
 
         if (!workspaceId)
           return problem({
-            title: "Workspace ID is required in header 'cleon-workspace-id'",
+            title: "Bad Request",
             status: 400,
           });
 
@@ -146,7 +145,7 @@ const knowledgeBaseModule = () =>
 
         if (!workspaceId)
           return problem({
-            title: "Workspace ID is required in header 'cleon-workspace-id'",
+            title: "Bad Request",
             status: 400,
           });
 

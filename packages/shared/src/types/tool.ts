@@ -61,4 +61,25 @@ export const toolsInsertSchema = toolsSelectSchema.omit({
 
 export const toolsUpdateSchema = toolsInsertSchema.partial();
 
+const httpToolFormSchema = toolsSelectSchema
+  .pick({ name: true, description: true, disallowInterruptions: true })
+  .extend({
+    ...httpTool.omit({ type: true }).shape,
+  });
+
+const endCallToolFormSchema = toolsSelectSchema
+  .pick({ name: true, description: true, disallowInterruptions: true })
+  .extend({
+    endInstructions: endCallTool.shape.end_instructions,
+  });
+
+export type ToolItem = z.infer<typeof toolsSelectSchema>;
+export type CreateToolInput = z.infer<typeof toolsInsertSchema>;
+export type UpdateToolInput = z.infer<typeof toolsUpdateSchema>;
 export type ToolSettings = z.infer<typeof toolSettingsSchema>;
+
+export type EndCallToolSettings = Extract<ToolSettings, { type: "EndCall" }>;
+export type HttpToolSettings = Extract<ToolSettings, { type: "HTTP" }>;
+
+export type HttpToolFormData = z.infer<typeof httpToolFormSchema>;
+export type EndCallToolFormData = z.infer<typeof endCallToolFormSchema>;

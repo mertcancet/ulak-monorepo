@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { agentsApi } from "~/lib/agents-api";
+import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { AgentHeader } from "./_components/agent/agent-header";
 import { ConfigSidebar } from "./_components/agent/config-sidebar/index";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
@@ -9,8 +10,6 @@ import { GreetingSection } from "./_components/agent/greeting-section";
 import { PromptEditor } from "./_components/agent/prompt-editor";
 import { QuickSelectToolbar } from "./_components/agent/quick-select";
 import { TestingPanel } from "./_components/agent/testing-panel";
-
-const WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
 
 /**
  * AgentConfigPage
@@ -39,8 +38,8 @@ export default function AgentConfigPage() {
     isLoading: isAgentLoading,
     error: agentQueryError,
   } = useQuery({
-    queryKey: ["agent", WORKSPACE_ID, agentId],
-    queryFn: () => agentsApi.getAgent(agentId, WORKSPACE_ID),
+    queryKey: ["agent", DEFAULT_WORKSPACE_ID, agentId],
+    queryFn: () => agentsApi.getAgent(agentId, DEFAULT_WORKSPACE_ID),
     enabled: !isDraftMode && Boolean(agentId),
   });
 
@@ -63,9 +62,9 @@ export default function AgentConfigPage() {
   const { mutateAsync: createAgent, isPending: isSaving } = useMutation({
     mutationFn: () =>
       agentsApi.createAgent({
-        workspaceId: WORKSPACE_ID,
+        workspaceId: DEFAULT_WORKSPACE_ID,
         name: agentName,
-        phoneNumber: null,
+        phoneNumber: "",
         llm: {
           provider: "google",
           model: "gemini-2.0-flash",
@@ -82,7 +81,7 @@ export default function AgentConfigPage() {
       }),
     onSuccess: async createdAgent => {
       await queryClient.invalidateQueries({
-        queryKey: ["agents", WORKSPACE_ID, 1, 20],
+        queryKey: ["agents", DEFAULT_WORKSPACE_ID, 1, 20],
       });
       navigate(`/dashboard/agent?agentId=${createdAgent.id}`, {
         replace: true,
@@ -115,15 +114,15 @@ export default function AgentConfigPage() {
           goodbyePrompt: agentDetail.goodbyePrompt ?? "",
           isDefault: agentDetail.isDefault,
         },
-        WORKSPACE_ID,
+        DEFAULT_WORKSPACE_ID,
       );
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["agents", WORKSPACE_ID, 1, 20],
+        queryKey: ["agents", DEFAULT_WORKSPACE_ID, 1, 20],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["agent", WORKSPACE_ID, agentId],
+        queryKey: ["agent", DEFAULT_WORKSPACE_ID, agentId],
       });
       setPublishSuccess("Temsilci başarıyla yayınlandı.");
     },

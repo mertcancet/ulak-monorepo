@@ -26,12 +26,12 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { agentsApi } from "~/lib/agents-api";
+import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import DashboardHeader from "./_components/dashboard-header";
 
 const DEFAULT_VOICE_NAME = "Autonoe";
 const DEFAULT_VOICE_IMAGE =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDFE04qOA0LzD1UUmktDRXDrl-UvuwAudLMxFGmnVqVdBZ7AeN9gf8LnFm_8gm39d6ACuczz67VSE-kiF9AI_Ax8clL_F03_gZeC77QphBQfMOh3rpENrHLnEQS8chh18ss_rUF-f53uqawef7bYC0Twexri6KFpWgF6hjN-C6xynZtie99MQmzGy-P4moWodPMU0xg-L8WLPE4h700MImRJyeM7AKMocGaW4hJBkEe_ai97yh2It8vddTIoyIShRSJy0LtzcjlF_A";
-const WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString("tr-TR", {
@@ -53,8 +53,8 @@ export default function Dashboard() {
     isLoading: isAgentsLoading,
     error: agentsQueryError,
   } = useQuery({
-    queryKey: ["agents", WORKSPACE_ID, 1, 20],
-    queryFn: () => agentsApi.listAgents(WORKSPACE_ID, 1, 20),
+    queryKey: ["agents", DEFAULT_WORKSPACE_ID, 1, 20],
+    queryFn: () => agentsApi.listAgents(DEFAULT_WORKSPACE_ID, 1, 20),
   });
 
   const agents = agentsResponse?.data ?? [];

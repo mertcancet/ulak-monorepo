@@ -8,6 +8,7 @@ import { ArrowLeft, PhoneOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { Button } from "~/components/ui/button";
+import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { toolsApi } from "~/lib/tools-api";
 import DashboardHeader from "./_components/dashboard-header";
 import {
@@ -16,7 +17,6 @@ import {
 } from "./_components/tools/end-call-tool-form";
 
 // TODO: workspaceId'yi gerçek workspace yönetiminden al
-const WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
 
 const toEndCallFormData = (tool: ToolItem): EndCallToolFormData => {
   if (tool.settings.type !== "EndCall") {
@@ -26,7 +26,7 @@ const toEndCallFormData = (tool: ToolItem): EndCallToolFormData => {
   return {
     name: tool.name,
     description: tool.description,
-    disallowInterruptions: Boolean(tool.disallowInterruptions),
+    disallowInterruptions: tool.disallowInterruptions,
     endInstructions: tool.settings.end_instructions ?? "",
   };
 };
@@ -52,12 +52,12 @@ export default function ToolsEndCallEditPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["tool", WORKSPACE_ID, id],
+    queryKey: ["tool", DEFAULT_WORKSPACE_ID, id],
     queryFn: async () => {
       if (!id) {
         throw new Error("Tool id gerekli");
       }
-      return toolsApi.getTool(WORKSPACE_ID, id);
+      return toolsApi.getTool(DEFAULT_WORKSPACE_ID, id);
     },
     enabled: Boolean(id),
   });
@@ -74,14 +74,18 @@ export default function ToolsEndCallEditPage() {
       if (!id) {
         throw new Error("Tool id gerekli");
       }
-      return toolsApi.updateTool(WORKSPACE_ID, id, toUpdateInput(formData));
+      return toolsApi.updateTool(
+        DEFAULT_WORKSPACE_ID,
+        id,
+        toUpdateInput(formData),
+      );
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["tools", WORKSPACE_ID],
+        queryKey: ["tools", DEFAULT_WORKSPACE_ID],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["tool", WORKSPACE_ID, id],
+        queryKey: ["tool", DEFAULT_WORKSPACE_ID, id],
       });
       navigate("/dashboard/tools");
     },

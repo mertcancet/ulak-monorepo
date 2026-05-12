@@ -1,93 +1,62 @@
-import type {
-  HttpToolFormData,
-  ToolItem,
-  UpdateToolInput,
-} from "@cleon/shared";
+import type { ToolItem, UpdateToolInput } from "@cleon/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Globe } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { Button } from "~/components/ui/button";
+import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { toolsApi } from "~/lib/tools-api";
 import DashboardHeader from "./_components/dashboard-header";
+import type { HttpToolFormData } from "./_components/tools/http-tool-form";
 import {
   defaultHttpToolData,
   HttpToolForm,
 } from "./_components/tools/http-tool-form";
 
 // TODO: workspaceId'yi gerçek workspace yönetiminden al
-const WORKSPACE_ID = "019ddf6a-0046-7ee7-9ec3-12fe24bc631c";
 
 const toHttpFormData = (tool: ToolItem): HttpToolFormData => {
   if (tool.settings.type !== "HTTP") {
     return defaultHttpToolData;
   }
 
-  const headers = Object.entries(tool.settings.headers ?? {}).map(
-    ([key, value]) => ({
-      id: crypto.randomUUID(),
-      key,
-      value,
-    }),
-  );
-
-  const parameters = Object.entries(tool.settings.parameters ?? {}).map(
-    ([name, value]) => {
-      const parameterValue =
-        typeof value === "object" && value !== null ? value : {};
-
-      return {
-        id: crypto.randomUUID(),
-        name,
-        description:
-          typeof parameterValue.description === "string"
-            ? parameterValue.description
-            : "",
-        required: Boolean(parameterValue.required),
-      };
-    },
-  );
-
   return {
     name: tool.name,
     description: tool.description,
-    executionMode: "sync",
-    requireSpeechBefore: false,
-    waitForSpeechBefore: false,
-    forbidSpeechAfter: false,
-    allowToolChaining: !tool.disallowInterruptions,
+    disallowInterruptions: tool.disallowInterruptions,
     method: tool.settings.method,
     url: tool.settings.url,
-    headers,
-    timeoutSeconds: tool.settings.timeout ?? 15,
-    parameters,
+    headers: tool.settings.headers,
+    timeout: tool.settings.timeout ?? 15,
+    parameters: tool.settings.parameters,
+    body_type: tool.settings.body_type,
+    body: tool.settings.body,
+    query_params: tool.settings.query_params,
+    follow_redirects: tool.settings.follow_redirects ?? false,
+    max_retry: tool.settings.max_retry ?? 0,
+    error_message: tool.settings.error_message,
+    success_message: tool.settings.success_message ?? "",
   };
 };
 
 const toUpdateInput = (data: HttpToolFormData): UpdateToolInput => ({
   name: data.name,
   description: data.description,
-  disallowInterruptions: !data.allowToolChaining,
+  disallowInterruptions: data.disallowInterruptions,
   settings: {
     type: "HTTP",
     url: data.url,
     method: data.method,
-    headers: Object.fromEntries(
-      data.headers.filter(h => h.key.trim()).map(h => [h.key, h.value]),
-    ),
-    timeout: data.timeoutSeconds,
-    parameters: Object.fromEntries(
-      data.parameters.map(p => [
-        p.name,
-        {
-          type: "string",
-          description: p.description,
-          required: p.required,
-        },
-      ]),
-    ),
-    body_type: "json",
-    error_message: "",
+    headers: data.headers,
+    timeout: data.timeout,
+    parameters: data.parameters,
+    body_type: data.body_type,
+    body: data.body,
+    query_params: data.query_params,
+    follow_redirects: data.follow_redirects,
+    max_retry: data.max_retry,
+    error_message: data.error_message,
+    success_message: data.success_message,
   },
 });
 
@@ -102,12 +71,12 @@ export default function ToolsHttpEditPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["tool", WORKSPACE_ID, id],
+    queryKey: ["tool", DEFAULT_WORKSPACE_ID, id],
     queryFn: async () => {
       if (!id) {
         throw new Error("Tool id gerekli");
       }
-      return toolsApi.getTool(WORKSPACE_ID, id);
+      return toolsApi.getTool(DEFAULT_WORKSPACE_ID, id);
     },
     enabled: Boolean(id),
   });
@@ -124,14 +93,18 @@ export default function ToolsHttpEditPage() {
       if (!id) {
         throw new Error("Tool id gerekli");
       }
-      return toolsApi.updateTool(WORKSPACE_ID, id, toUpdateInput(formData));
+      return toolsApi.updateTool(
+        DEFAULT_WORKSPACE_ID,
+        id,
+        toUpdateInput(formData),
+      );
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["tools", WORKSPACE_ID],
+        queryKey: ["tools", DEFAULT_WORKSPACE_ID],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["tool", WORKSPACE_ID, id],
+        queryKey: ["tool", DEFAULT_WORKSPACE_ID, id],
       });
       navigate("/dashboard/tools");
     },
