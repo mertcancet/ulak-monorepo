@@ -1,8 +1,6 @@
-import type { Agent, Paginated } from "@cleon/shared";
+import type { Agent, AgentInsert, AgentUpdate, Paginated } from "@cleon/shared";
 import { DEFAULT_WORKSPACE_ID } from "./default-workspace-id";
 import { request } from "./fetcher";
-
-export type UpdateAgentInput = Partial<Agent>;
 
 export const agentsApi = {
   listAgents: (workspaceId = DEFAULT_WORKSPACE_ID, page = 1, pageSize = 20) =>
@@ -20,18 +18,18 @@ export const agentsApi = {
       },
     }),
 
-  createAgent: (body: Agent, workspaceId = body.workspaceId) =>
-    request<Agent>("/agents", {
+  createAgent: (body: AgentInsert, workspaceId = DEFAULT_WORKSPACE_ID) =>
+    request<Pick<Agent, "id">>("/agents", {
       method: "POST",
       body,
       headers: {
-        "cleon-workspace-id": workspaceId || DEFAULT_WORKSPACE_ID,
+        "cleon-workspace-id": workspaceId,
       },
     }),
 
   updateAgent: (
     agentId: string,
-    body: UpdateAgentInput,
+    body: AgentUpdate,
     workspaceId = DEFAULT_WORKSPACE_ID,
   ) =>
     request<Agent>(`/agents/${agentId}`, {

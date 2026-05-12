@@ -62,7 +62,6 @@ export default function AgentConfigPage() {
   const { mutateAsync: createAgent, isPending: isSaving } = useMutation({
     mutationFn: () =>
       agentsApi.createAgent({
-        workspaceId: DEFAULT_WORKSPACE_ID,
         name: agentName,
         phoneNumber: "",
         llm: {
@@ -77,7 +76,6 @@ export default function AgentConfigPage() {
         allowInterruptions: true,
         greetPrompt: "",
         goodbyePrompt: "",
-        isDefault: false,
       }),
     onSuccess: async createdAgent => {
       await queryClient.invalidateQueries({
@@ -112,7 +110,6 @@ export default function AgentConfigPage() {
           allowInterruptions: agentDetail.allowInterruptions,
           greetPrompt: agentDetail.greetPrompt ?? "",
           goodbyePrompt: agentDetail.goodbyePrompt ?? "",
-          isDefault: agentDetail.isDefault,
         },
         DEFAULT_WORKSPACE_ID,
       );

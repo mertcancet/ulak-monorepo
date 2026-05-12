@@ -19,7 +19,6 @@ export const agentSelectSchema = z.object({
   allowInterruptions: z.boolean().default(true),
   greetPrompt: z.string().optional(),
   goodbyePrompt: z.string().optional(),
-
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -34,4 +33,6 @@ export const agentInsertSchema = agentSelectSchema.omit({
 export const agentUpdateSchema = agentInsertSchema.partial();
 
 export type Agent = z.infer<typeof agentSelectSchema>;
+export type AgentInsert = z.infer<typeof agentInsertSchema>;
+export type AgentUpdate = z.infer<typeof agentUpdateSchema>;
 export type LLMSettings = z.infer<typeof llmSettingsSchema>;
