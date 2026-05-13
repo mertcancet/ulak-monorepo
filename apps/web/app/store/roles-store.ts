@@ -1,43 +1,41 @@
 import type { Role } from "@cleon/shared";
 import { useCallback, useEffect } from "react";
 import { create } from "zustand";
-
-import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { rolesApi } from "~/lib/roles-api";
+import { useWorkspaceStore } from "~/store/workspace-store";
 
 interface RolesState {
   roles: Role[];
-  workspaceId: string;
   isLoading: boolean;
   error: string | null;
-  setWorkspaceId: (workspaceId: string) => void;
   clearRoles: () => void;
-  fetchRoles: (workspaceId?: string) => Promise<Role[]>;
+  fetchRoles: (selectedWorkspaceId?: string | null) => Promise<Role[]>;
   refreshRoles: () => Promise<Role[]>;
 }
 
 export const useRolesStore = create<RolesState>((set, get) => ({
   roles: [],
-  workspaceId: DEFAULT_WORKSPACE_ID,
   isLoading: false,
   error: null,
-  setWorkspaceId: (workspaceId: string) => {
-    set({ workspaceId });
-  },
   clearRoles: () => {
     set({ roles: [], error: null, isLoading: false });
   },
-  fetchRoles: async (workspaceId?: string) => {
-    const nextWorkspaceId = workspaceId ?? get().workspaceId;
+  fetchRoles: async (selectedWorkspaceId?: string | null) => {
+    const nextWorkspaceId =
+      selectedWorkspaceId ?? useWorkspaceStore.getState().selectedWorkspaceId;
+
+    if (!nextWorkspaceId) {
+      set({ roles: [], isLoading: false, error: null });
+      return [];
+    }
 
     set({
       isLoading: true,
       error: null,
-      workspaceId: nextWorkspaceId,
     });
 
     try {
-      const roles = await rolesApi.listRoles(nextWorkspaceId);
+      const roles = await rolesApi.listRoles();
       set({ roles, isLoading: false });
 
       return roles;
@@ -49,23 +47,30 @@ export const useRolesStore = create<RolesState>((set, get) => ({
     }
   },
   refreshRoles: async () => {
-    return get().fetchRoles(get().workspaceId);
+    return get().fetchRoles(useWorkspaceStore.getState().selectedWorkspaceId);
   },
 }));
 
-export const useRoles = (workspaceId = DEFAULT_WORKSPACE_ID) => {
+export const useRoles = () => {
+  const { selectedWorkspaceId } = useWorkspaceStore();
   const roles = useRolesStore(state => state.roles);
   const isLoading = useRolesStore(state => state.isLoading);
   const error = useRolesStore(state => state.error);
+  const clearRoles = useRolesStore(state => state.clearRoles);
   const fetchRoles = useRolesStore(state => state.fetchRoles);
 
   useEffect(() => {
-    void fetchRoles(workspaceId);
-  }, [fetchRoles, workspaceId]);
+    if (!selectedWorkspaceId) {
+      clearRoles();
+      return;
+    }
+
+    void fetchRoles(selectedWorkspaceId);
+  }, [clearRoles, fetchRoles, selectedWorkspaceId]);
 
   const refresh = useCallback(
-    () => fetchRoles(workspaceId),
-    [fetchRoles, workspaceId],
+    () => fetchRoles(selectedWorkspaceId),
+    [fetchRoles, selectedWorkspaceId],
   );
 
   return {

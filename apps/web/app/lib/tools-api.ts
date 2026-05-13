@@ -7,46 +7,31 @@ import type {
 import { request } from "./fetcher";
 
 export const toolsApi = {
-  listTools: (workspaceId: string, page = 1, pageSize = 20) =>
+  listTools: (page = 1, pageSize = 20) =>
     request<Paginated<ToolItem>>("/tools", {
       query: { page, pageSize },
-      headers: {
-        "cleon-workspace-id": workspaceId,
-      },
     }),
 
-  getTool: (workspaceId: string, id: string) =>
-    request<ToolItem>(`/tools/${id}`, {
-      headers: {
-        "cleon-workspace-id": workspaceId,
-      },
-    }),
+  getTool: (id: string) => request<ToolItem>(`/tools/${id}`, {}),
 
-  createTool: (workspaceId: string, body: CreateToolInput) =>
+  createTool: (body: CreateToolInput) =>
     request<{ id: string }>("/tools", {
       method: "POST",
       body,
-      headers: {
-        "cleon-workspace-id": workspaceId,
-      },
     }),
 
-  updateTool: (workspaceId: string, id: string, body: UpdateToolInput) =>
+  updateTool: (id: string, body: UpdateToolInput) =>
     request<void>(`/tools/${id}`, {
       method: "PATCH",
       body,
-      headers: {
-        "cleon-workspace-id": workspaceId,
-      },
+
       parseAs: "void",
     }),
 
-  deleteTool: (workspaceId: string, id: string) =>
+  deleteTool: (id: string) =>
     request<void>(`/tools/${id}`, {
       method: "DELETE",
-      headers: {
-        "cleon-workspace-id": workspaceId,
-      },
+
       parseAs: "void",
     }),
 };

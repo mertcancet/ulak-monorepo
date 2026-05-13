@@ -26,14 +26,14 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { agentsApi } from "~/lib/agents-api";
-import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
+import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 
 const DEFAULT_VOICE_NAME = "Autonoe";
 const DEFAULT_VOICE_IMAGE =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDFE04qOA0LzD1UUmktDRXDrl-UvuwAudLMxFGmnVqVdBZ7AeN9gf8LnFm_8gm39d6ACuczz67VSE-kiF9AI_Ax8clL_F03_gZeC77QphBQfMOh3rpENrHLnEQS8chh18ss_rUF-f53uqawef7bYC0Twexri6KFpWgF6hjN-C6xynZtie99MQmzGy-P4moWodPMU0xg-L8WLPE4h700MImRJyeM7AKMocGaW4hJBkEe_ai97yh2It8vddTIoyIShRSJy0LtzcjlF_A";
 
-const formatDate = (iso: string) =>
+const _formatDate = (iso: string) =>
   new Date(iso).toLocaleString("tr-TR", {
     dateStyle: "short",
     timeStyle: "short",
@@ -48,13 +48,15 @@ export default function Dashboard() {
     null,
   );
 
+  const { selectedWorkspaceId } = useWorkspaceStore();
   const {
     data: agentsResponse,
     isLoading: isAgentsLoading,
     error: agentsQueryError,
   } = useQuery({
-    queryKey: ["agents", DEFAULT_WORKSPACE_ID, 1, 20],
-    queryFn: () => agentsApi.listAgents(DEFAULT_WORKSPACE_ID, 1, 20),
+    queryKey: ["agents", selectedWorkspaceId, 1, 20],
+    queryFn: () => agentsApi.listAgents(1, 20),
+    enabled: !!selectedWorkspaceId,
   });
 
   const agents = agentsResponse?.data ?? [];
@@ -66,11 +68,9 @@ export default function Dashboard() {
     const normalized = searchTerm.trim().toLowerCase();
     if (!normalized) return agents;
 
+    // Sadece agent.name ile filtrele
     return agents.filter(agent =>
-      [agent.name, agent.description ?? ""]
-        .join(" ")
-        .toLowerCase()
-        .includes(normalized),
+      agent.name.toLowerCase().includes(normalized),
     );
   }, [agents, searchTerm]);
 
@@ -78,7 +78,7 @@ export default function Dashboard() {
     mutationFn: (agentId: string) => agentsApi.deleteAgent(agentId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["agents", WORKSPACE_ID, 1, 20],
+        queryKey: ["agents", selectedWorkspaceId, 1, 20],
       });
     },
   });
@@ -206,7 +206,7 @@ export default function Dashboard() {
                     </TableCell>
                     <TableCell className="py-4">
                       <span className="bg-secondary text-secondary-foreground inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium">
-                        {agent.hasFlow ? "Sohbet Akışı" : "Boş"}
+                        Boş
                       </span>
                     </TableCell>
                     <TableCell className="py-4">
@@ -226,7 +226,10 @@ export default function Dashboard() {
                       -
                     </TableCell>
                     <TableCell className="text-muted-foreground py-4 text-sm">
-                      {formatDate(agent.updatedAt)}
+                      {agent.updatedAt.toLocaleString("tr-TR", {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      })}
                     </TableCell>
                     <TableCell className="py-4 pr-4 text-right">
                       <DropdownMenu>

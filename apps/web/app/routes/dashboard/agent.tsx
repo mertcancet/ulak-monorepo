@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { agentsApi } from "~/lib/agents-api";
-import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
+import { useWorkspaceStore } from "~/store/workspace-store";
 import { AgentHeader } from "./_components/agent/agent-header";
 import { ConfigSidebar } from "./_components/agent/config-sidebar/index";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
@@ -25,7 +25,7 @@ export default function AgentConfigPage() {
   const [publishSuccess, setPublishSuccess] = useState<string | null>(null);
   const [agentName, setAgentName] = useState("Yeni Agent");
   const [systemInstructions, setSystemInstructions] = useState("");
-
+  const { selectedWorkspaceId } = useWorkspaceStore();
   const agentId = searchParams.get("agentId") ?? "";
 
   const isDraftMode = useMemo(() => {
@@ -38,8 +38,8 @@ export default function AgentConfigPage() {
     isLoading: isAgentLoading,
     error: agentQueryError,
   } = useQuery({
-    queryKey: ["agent", DEFAULT_WORKSPACE_ID, agentId],
-    queryFn: () => agentsApi.getAgent(agentId, DEFAULT_WORKSPACE_ID),
+    queryKey: ["agent", selectedWorkspaceId, agentId],
+    queryFn: () => agentsApi.getAgent(agentId),
     enabled: !isDraftMode && Boolean(agentId),
   });
 
@@ -79,7 +79,7 @@ export default function AgentConfigPage() {
       }),
     onSuccess: async createdAgent => {
       await queryClient.invalidateQueries({
-        queryKey: ["agents", DEFAULT_WORKSPACE_ID, 1, 20],
+        queryKey: ["agents", selectedWorkspaceId, 1, 20],
       });
       navigate(`/dashboard/agent?agentId=${createdAgent.id}`, {
         replace: true,
@@ -93,33 +93,29 @@ export default function AgentConfigPage() {
         throw new Error("Yayinlamak icin once mevcut bir temsilci secilmeli.");
       }
 
-      return agentsApi.updateAgent(
-        agentId,
-        {
-          name: agentName,
-          phoneNumber: agentDetail.phoneNumber ?? "",
-          llm: {
-            provider: "google",
-            model: agentDetail.llm?.model ?? "",
-            instructions: systemInstructions,
-            is_realtime: agentDetail.llm?.is_realtime ?? false,
-            voice: agentDetail.llm?.voice ?? "",
-            api_key: agentDetail.llm?.api_key ?? "",
-          },
+      return agentsApi.updateAgent(agentId, {
+        name: agentName,
+        phoneNumber: agentDetail.phoneNumber ?? "",
+        llm: {
+          provider: "google",
+          model: agentDetail.llm?.model ?? "",
           instructions: systemInstructions,
-          allowInterruptions: agentDetail.allowInterruptions,
-          greetPrompt: agentDetail.greetPrompt ?? "",
-          goodbyePrompt: agentDetail.goodbyePrompt ?? "",
+          is_realtime: agentDetail.llm?.is_realtime ?? false,
+          voice: agentDetail.llm?.voice ?? "",
+          api_key: agentDetail.llm?.api_key ?? "",
         },
-        DEFAULT_WORKSPACE_ID,
-      );
+        instructions: systemInstructions,
+        allowInterruptions: agentDetail.allowInterruptions,
+        greetPrompt: agentDetail.greetPrompt ?? "",
+        goodbyePrompt: agentDetail.goodbyePrompt ?? "",
+      });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["agents", DEFAULT_WORKSPACE_ID, 1, 20],
+        queryKey: ["agents", selectedWorkspaceId, 1, 20],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["agent", DEFAULT_WORKSPACE_ID, agentId],
+        queryKey: ["agent", selectedWorkspaceId, agentId],
       });
       setPublishSuccess("Temsilci başarıyla yayınlandı.");
     },

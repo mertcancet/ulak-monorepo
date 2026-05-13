@@ -1,13 +1,10 @@
-/** biome-ignore-all lint/a11y/useButtonType: false positive */
 import type { UpdateKnowledgeBaseInput } from "@cleon/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookOpen, BookText, File, Link } from "lucide-react";
 import { useState } from "react";
-import {
-  DEFAULT_WORKSPACE_ID,
-  knowledgeBaseApi,
-} from "~/lib/knowledge-base-api";
+import { knowledgeBaseApi } from "~/lib/knowledge-base-api";
 import { cn } from "~/lib/utils";
+import { useWorkspaceStore } from "~/store/workspace-store";
 import AddKnowledgeBaseDialog, {
   type CreateKnowledgeBaseDialogInput,
 } from "./_components/knowledge-base/add-knowledge-base-dialog";
@@ -15,21 +12,19 @@ import FileTab from "./_components/knowledge-base/file-tab";
 import TextTab from "./_components/knowledge-base/text-tab";
 import WebsiteTab from "./_components/knowledge-base/website-tab";
 
-const WORKSPACE_ID = DEFAULT_WORKSPACE_ID;
-
 export default function KnowledgeBasePage() {
   const [activeTab, setActiveTab] = useState<"text" | "file" | "website">(
     "text",
   );
   const queryClient = useQueryClient();
-
+  const { selectedWorkspaceId } = useWorkspaceStore();
   const {
     data: knowledgeBases = [],
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["knowledge-bases", WORKSPACE_ID],
-    queryFn: () => knowledgeBaseApi.list(WORKSPACE_ID),
+    queryKey: ["knowledge-bases", selectedWorkspaceId],
+    queryFn: () => knowledgeBaseApi.list(),
   });
 
   const createMutation = useMutation({
@@ -45,13 +40,13 @@ export default function KnowledgeBasePage() {
     }: {
       id: string;
       body: UpdateKnowledgeBaseInput;
-    }) => knowledgeBaseApi.update(id, body, WORKSPACE_ID),
+    }) => knowledgeBaseApi.update(id, body),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["knowledge-bases"] }),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => knowledgeBaseApi.delete(id, WORKSPACE_ID),
+    mutationFn: (id: string) => knowledgeBaseApi.delete(id),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["knowledge-bases"] }),
   });
@@ -70,7 +65,7 @@ export default function KnowledgeBasePage() {
     await createMutation.mutateAsync({
       name: knowledgeBaseName,
       type: sourceType,
-      workspaceId: WORKSPACE_ID,
+      workspaceId: selectedWorkspaceId || "",
       textContent: sourceType === "text" ? textContent : undefined,
       websiteUrl: sourceType === "website" ? websiteUrl : undefined,
       fileName:
@@ -138,6 +133,7 @@ export default function KnowledgeBasePage() {
               "border-border flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2",
               activeTab === "text" && "bg-secondary",
             )}
+            type="button"
           >
             <BookText
               className={cn(
@@ -160,6 +156,7 @@ export default function KnowledgeBasePage() {
               "border-border flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2",
               activeTab === "file" && "bg-secondary",
             )}
+            type="button"
           >
             <File
               className={cn(
@@ -182,6 +179,7 @@ export default function KnowledgeBasePage() {
               "border-border flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2",
               activeTab === "website" && "bg-secondary",
             )}
+            type="button"
           >
             <Link
               className={cn(

@@ -23,6 +23,7 @@ const workspacesModule = () =>
           .select({
             id: workspaces.id,
             name: workspaces.name,
+            ownerId: workspaces.ownerId,
           })
           .from(workspaces)
           .innerJoin(

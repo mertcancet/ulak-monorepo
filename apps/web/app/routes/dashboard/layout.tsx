@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowLeftRight,
@@ -23,13 +24,23 @@ import { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { authClient } from "~/lib/auth-client";
 import { cn } from "~/lib/utils";
+import { workspacesApi } from "~/lib/workspaces-api";
 import { useRolesStore } from "~/store/roles-store";
+import { useWorkspaceStore } from "~/store/workspace-store";
+
+const SELECTED_WORKSPACE_STORAGE_KEY = "selected-workspace-id";
 
 const SidebarItem = ({
   icon: Icon,
@@ -134,8 +145,20 @@ const DashboardLayout = () => {
   const { data: session, isPending: isSessionPending } =
     authClient.useSession();
   const [collapsed, setCollapsed] = useState(false);
+  const selectedWorkspaceId = useWorkspaceStore(
+    state => state.selectedWorkspaceId,
+  );
+  const setSelectedWorkspaceId = useWorkspaceStore(
+    state => state.setSelectedWorkspaceId,
+  );
   const hideSidebar = false;
   const { fetchRoles } = useRolesStore();
+
+  const { data: workspaces, isPending: isWorkspacesPending } = useQuery({
+    queryKey: ["workspaces"],
+    queryFn: () => workspacesApi.listWorkspaces(),
+    enabled: !!session,
+  });
 
   useEffect(() => {
     if (!isSessionPending && !session) {
@@ -145,6 +168,38 @@ const DashboardLayout = () => {
       void fetchRoles();
     }
   }, [isSessionPending, navigate, session, fetchRoles]);
+
+  useEffect(() => {
+    if (!workspaces?.length) {
+      return;
+    }
+
+    if (selectedWorkspaceId) {
+      const workspaceExists = workspaces.some(
+        workspace => workspace.id === selectedWorkspaceId,
+      );
+
+      if (!workspaceExists) {
+        const fallbackWorkspaceId = workspaces[0].id;
+        setSelectedWorkspaceId(fallbackWorkspaceId);
+      }
+
+      return;
+    }
+
+    const storedWorkspaceId =
+      typeof window !== "undefined"
+        ? localStorage.getItem(SELECTED_WORKSPACE_STORAGE_KEY)
+        : null;
+    const matchingWorkspace = storedWorkspaceId
+      ? workspaces.find(workspace => workspace.id === storedWorkspaceId)
+      : null;
+
+    const nextWorkspaceId = matchingWorkspace?.id ?? workspaces[0].id;
+    setSelectedWorkspaceId(nextWorkspaceId);
+  }, [selectedWorkspaceId, workspaces, setSelectedWorkspaceId]);
+
+  // localStorage işlemi store'a taşındı, bu effect gereksiz
 
   if (isSessionPending) {
     return (
@@ -163,14 +218,19 @@ const DashboardLayout = () => {
   const userDisplayName =
     session.user.name || session.user.email?.split("@")[0] || "User";
   const userInitial = userDisplayName.charAt(0).toUpperCase();
+  const currentWorkspaceName = workspaces?.find(
+    workspace => workspace.id === selectedWorkspaceId,
+  )?.name;
+  const workspaceTriggerLabel =
+    currentWorkspaceName ?? (isWorkspacesPending ? "" : userDisplayName);
 
   return (
-    <div className="bg-background flex h-screen overflow-hidden">
+    <div className="bg-background animate-in fade-in-0 flex h-screen overflow-hidden">
       {!hideSidebar && (
         /* Sidebar — MiniMax: white bg, subtle right border */
         <aside
           className={cn(
-            "border-border bg-background z-20 flex flex-col border-r transition-all duration-300",
+            "border-border bg-background animate-in slide-in-from-left-2 z-20 flex flex-col border-r transition-all duration-300",
             collapsed ? "w-16" : "w-60",
           )}
           onMouseEnter={() => {
@@ -216,20 +276,48 @@ const DashboardLayout = () => {
 
           {!collapsed && (
             <div className="mb-3 px-3">
-              <button
-                type="button"
-                className="bg-secondary hover:bg-muted flex h-10 w-full items-center justify-between rounded-lg border-0 px-3 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="bg-brand/15 text-brand flex h-5 w-5 items-center justify-center rounded text-[9px] font-bold">
-                    {userInitial}
-                  </div>
-                  <span className="text-foreground truncate text-xs font-medium">
-                    {userDisplayName}
-                  </span>
-                </div>
-                <ChevronsUpDown className="text-muted-foreground h-3 w-3" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="bg-secondary rounded-xl hover:bg-muted flex h-10 w-full items-center justify-between border-0 px-3 transition-colors"
+                  >
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <div className="bg-brand/15 text-brand flex h-5 w-5 items-center justify-center rounded text-[9px] font-bold">
+                        {userInitial}
+                      </div>
+                      <span className="text-foreground truncate text-xs font-medium">
+                        {workspaceTriggerLabel}
+                      </span>
+                    </div>
+                    <ChevronsUpDown className="text-muted-foreground h-3 w-3 shrink-0" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="start">
+                  {workspaces?.length ? (
+                    workspaces.map(workspace => (
+                      <DropdownMenuItem
+                        key={workspace.id}
+                        onClick={() => setSelectedWorkspaceId(workspace.id)}
+                        className="rounded"
+                      >
+                        <span className="truncate text-xs">
+                          {workspace.name}
+                        </span>
+                        {selectedWorkspaceId === workspace.id && (
+                          <span className="text-brand ml-auto text-[10px]">
+                            Aktif
+                          </span>
+                        )}
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <DropdownMenuItem disabled className="rounded">
+                      <span className="text-xs">Workspace bulunamadı</span>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
 
@@ -382,7 +470,7 @@ const DashboardLayout = () => {
       )}
 
       {/* Main Content */}
-      <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+      <main className="animate-in slide-in-from-right-2 relative flex min-w-0 flex-1 flex-col overflow-hidden">
         <Outlet />
       </main>
     </div>

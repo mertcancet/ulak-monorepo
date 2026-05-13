@@ -2,18 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { Wrench } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
-import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { toolsApi } from "~/lib/tools-api";
+import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 
-// TODO: workspaceId'yi gerçek workspace yönetiminden al
-const _WORKSPACE_ID = "019e1bc2-bd3f-7a4c-afee-e62af9e7519e";
-
 export default function ToolsPage() {
+  const { selectedWorkspaceId } = useWorkspaceStore();
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["tools", DEFAULT_WORKSPACE_ID],
+    queryKey: ["tools", selectedWorkspaceId],
     queryFn: async () => {
-      return toolsApi.listTools(DEFAULT_WORKSPACE_ID);
+      return toolsApi.listTools();
     },
   });
 

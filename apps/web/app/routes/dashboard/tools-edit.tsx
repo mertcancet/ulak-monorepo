@@ -1,20 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, Navigate, useParams } from "react-router";
 import { Button } from "~/components/ui/button";
-import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { toolsApi } from "~/lib/tools-api";
+import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 
 export default function ToolsEditPage() {
   const { id } = useParams();
+  const { selectedWorkspaceId } = useWorkspaceStore();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["tool", DEFAULT_WORKSPACE_ID, id],
+    queryKey: ["tool", selectedWorkspaceId, id],
     queryFn: async () => {
       if (!id) {
         throw new Error("Tool id gerekli");
       }
-      return toolsApi.getTool(DEFAULT_WORKSPACE_ID, id);
+      return toolsApi.getTool(id);
     },
     enabled: Boolean(id),
   });

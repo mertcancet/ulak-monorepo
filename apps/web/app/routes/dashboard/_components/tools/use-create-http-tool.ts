@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { toolsApi } from "~/lib/tools-api";
 import type { HttpToolFormData } from "./http-tool-form";
 
@@ -32,7 +31,7 @@ export function useCreateHttpTool() {
 
   return useMutation({
     mutationFn: (data: HttpToolFormData) =>
-      toolsApi.createTool(DEFAULT_WORKSPACE_ID, toCreateInput(data)),
+      toolsApi.createTool(toCreateInput(data)),
     onSuccess: () => {
       navigate("/dashboard/tools");
     },

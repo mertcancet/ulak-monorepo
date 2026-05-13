@@ -1,4 +1,6 @@
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+const SELECTED_WORKSPACE_STORAGE_KEY = "selected-workspace-id";
+const WORKSPACE_HEADER_KEY = "cleon-workspace-id";
 
 type Primitive = string | number | boolean;
 
@@ -70,6 +72,14 @@ const parseJson = <T>(raw: string): T | null => {
   }
 };
 
+const getSelectedWorkspaceId = (): string | null => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return localStorage.getItem(SELECTED_WORKSPACE_STORAGE_KEY);
+};
+
 export const request = async <TResponse, TBody = unknown>(
   path: string,
   options: FetcherOptions<TBody> = {},
@@ -96,6 +106,11 @@ export const request = async <TResponse, TBody = unknown>(
 
   if (shouldEncodeJson && !requestHeaders.has("content-type")) {
     requestHeaders.set("content-type", "application/json");
+  }
+
+  const selectedWorkspaceId = getSelectedWorkspaceId();
+  if (selectedWorkspaceId && !requestHeaders.has(WORKSPACE_HEADER_KEY)) {
+    requestHeaders.set(WORKSPACE_HEADER_KEY, selectedWorkspaceId);
   }
 
   const response = await fetch(toUrl(path, query, baseUrl), {

@@ -8,8 +8,8 @@ import { ArrowLeft, PhoneOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { Button } from "~/components/ui/button";
-import { DEFAULT_WORKSPACE_ID } from "~/lib/default-workspace-id";
 import { toolsApi } from "~/lib/tools-api";
+import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 import {
   defaultEndCallToolData,
@@ -46,18 +46,19 @@ export default function ToolsEndCallEditPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [data, setData] = useState<EndCallToolFormData>(defaultEndCallToolData);
+  const { selectedWorkspaceId } = useWorkspaceStore();
 
   const {
     data: tool,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["tool", DEFAULT_WORKSPACE_ID, id],
+    queryKey: ["tool", selectedWorkspaceId, id],
     queryFn: async () => {
       if (!id) {
         throw new Error("Tool id gerekli");
       }
-      return toolsApi.getTool(DEFAULT_WORKSPACE_ID, id);
+      return toolsApi.getTool(id);
     },
     enabled: Boolean(id),
   });
@@ -74,18 +75,14 @@ export default function ToolsEndCallEditPage() {
       if (!id) {
         throw new Error("Tool id gerekli");
       }
-      return toolsApi.updateTool(
-        DEFAULT_WORKSPACE_ID,
-        id,
-        toUpdateInput(formData),
-      );
+      return toolsApi.updateTool(id, toUpdateInput(formData));
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["tools", DEFAULT_WORKSPACE_ID],
+        queryKey: ["tools", selectedWorkspaceId],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["tool", DEFAULT_WORKSPACE_ID, id],
+        queryKey: ["tool", selectedWorkspaceId, id],
       });
       navigate("/dashboard/tools");
     },

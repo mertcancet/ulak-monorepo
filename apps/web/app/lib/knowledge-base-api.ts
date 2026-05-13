@@ -10,36 +10,26 @@ export type {
   KnowledgeBase,
   UpdateKnowledgeBaseInput,
 };
-export { DEFAULT_WORKSPACE_ID } from "./default-workspace-id";
 
 export const knowledgeBaseApi = {
-  list: (workspaceId: string) =>
-    request<KnowledgeBase[]>("/knowledge-base", {
-      headers: { "cleon-workspace-id": workspaceId },
-    }),
+  list: () => request<KnowledgeBase[]>("/knowledge-base"),
 
   create: (body: CreateKnowledgeBaseInput) =>
     request<{ id: string }>("/knowledge-base", {
       method: "POST",
       body,
-      headers: { "cleon-workspace-id": body.workspaceId },
     }),
 
-  get: (id: string, workspaceId: string) =>
-    request<KnowledgeBase>(`/knowledge-base/${id}`, {
-      headers: { "cleon-workspace-id": workspaceId },
-    }),
+  get: (id: string) => request<KnowledgeBase>(`/knowledge-base/${id}`),
 
-  update: (id: string, body: UpdateKnowledgeBaseInput, workspaceId: string) =>
+  update: (id: string, body: UpdateKnowledgeBaseInput) =>
     request<void>(`/knowledge-base/${id}`, {
       method: "PATCH",
       body,
-      headers: { "cleon-workspace-id": workspaceId },
     }),
 
-  delete: (id: string, workspaceId: string) =>
+  delete: (id: string) =>
     request<void>(`/knowledge-base/${id}`, {
       method: "DELETE",
-      headers: { "cleon-workspace-id": workspaceId },
     }),
 };
