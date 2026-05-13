@@ -29,6 +29,7 @@ import {
 } from "~/components/ui/tooltip";
 import { authClient } from "~/lib/auth-client";
 import { cn } from "~/lib/utils";
+import { useRolesStore } from "~/store/roles-store";
 
 const SidebarItem = ({
   icon: Icon,
@@ -129,16 +130,21 @@ const SidebarSection = ({
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const { data: session, isPending: isSessionPending } =
     authClient.useSession();
   const [collapsed, setCollapsed] = useState(false);
   const hideSidebar = false;
+  const { fetchRoles } = useRolesStore();
 
   useEffect(() => {
     if (!isSessionPending && !session) {
       navigate("/auth/login", { replace: true });
+    } else if (session) {
+      // Fetch roles when session is available
+      void fetchRoles();
     }
-  }, [isSessionPending, navigate, session]);
+  }, [isSessionPending, navigate, session, fetchRoles]);
 
   if (isSessionPending) {
     return (

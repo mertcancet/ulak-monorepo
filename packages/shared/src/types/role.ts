@@ -35,3 +35,8 @@ export const roleInsertSchema = roleSelectSchema.omit({
 });
 
 export const roleUpdateSchema = roleInsertSchema.partial();
+
+export type RolePermissions = z.infer<typeof rolePermissionSchema>;
+export type Role = z.infer<typeof roleSelectSchema>;
+export type RoleInsert = z.infer<typeof roleInsertSchema>;
+export type RoleUpdate = z.infer<typeof roleUpdateSchema>;
