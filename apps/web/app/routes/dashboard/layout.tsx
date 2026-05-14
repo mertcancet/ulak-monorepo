@@ -37,7 +37,7 @@ import {
 import { authClient } from "~/lib/auth-client";
 import { cn } from "~/lib/utils";
 import { workspacesApi } from "~/lib/workspaces-api";
-import { useRolesStore } from "~/store/roles-store";
+import { useRoles, useRolesStore } from "~/store/roles-store";
 import { useWorkspaceStore } from "~/store/workspace-store";
 
 const SELECTED_WORKSPACE_STORAGE_KEY = "selected-workspace-id";
@@ -141,7 +141,9 @@ const SidebarSection = ({
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { permissions } = useRoles();
 
+  console.log(permissions);
   const { data: session, isPending: isSessionPending } =
     authClient.useSession();
   const [collapsed, setCollapsed] = useState(false);
@@ -328,20 +330,26 @@ const DashboardLayout = () => {
             )}
           >
             <SidebarSection title="İnşa Et" collapsed={collapsed}>
-              <SidebarItem
-                icon={Bot}
-                label="Temsilciler"
-                href="/dashboard"
-                active={location.pathname === "/dashboard"}
-                collapsed={collapsed}
-              />
-              <SidebarItem
-                icon={Wrench}
-                label="Araçlar"
-                href="/dashboard/tools"
-                active={location.pathname.startsWith("/dashboard/tools")}
-                collapsed={collapsed}
-              />
+              {permissions?.agent?.includes("*") ||
+              permissions?.agent?.includes("view") ? (
+                <SidebarItem
+                  icon={Bot}
+                  label="Temsilciler"
+                  href="/dashboard"
+                  active={location.pathname === "/dashboard"}
+                  collapsed={collapsed}
+                />
+              ) : null}
+              {permissions?.tool?.includes("*") ||
+              permissions?.tool?.includes("view") ? (
+                <SidebarItem
+                  icon={Wrench}
+                  label="Araçlar"
+                  href="/dashboard/tools"
+                  active={location.pathname.startsWith("/dashboard/tools")}
+                  collapsed={collapsed}
+                />
+              ) : null}
               <SidebarItem
                 icon={BookOpen}
                 label="Bilgi Bankası"

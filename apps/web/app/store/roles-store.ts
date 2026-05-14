@@ -5,28 +5,28 @@ import { rolesApi } from "~/lib/roles-api";
 import { useWorkspaceStore } from "~/store/workspace-store";
 
 interface RolesState {
-  roles: Role[];
+  roles: Role | null;
   isLoading: boolean;
   error: string | null;
   clearRoles: () => void;
-  fetchRoles: (selectedWorkspaceId?: string | null) => Promise<Role[]>;
-  refreshRoles: () => Promise<Role[]>;
+  fetchRoles: (selectedWorkspaceId?: string | null) => Promise<Role | null>;
+  refreshRoles: () => Promise<Role | null>;
 }
 
 export const useRolesStore = create<RolesState>((set, get) => ({
-  roles: [],
+  roles: null,
   isLoading: false,
   error: null,
   clearRoles: () => {
-    set({ roles: [], error: null, isLoading: false });
+    set({ roles: null, error: null, isLoading: false });
   },
   fetchRoles: async (selectedWorkspaceId?: string | null) => {
     const nextWorkspaceId =
       selectedWorkspaceId ?? useWorkspaceStore.getState().selectedWorkspaceId;
 
     if (!nextWorkspaceId) {
-      set({ roles: [], isLoading: false, error: null });
-      return [];
+      set({ roles: null, isLoading: false, error: null });
+      return null;
     }
 
     set({
@@ -36,9 +36,23 @@ export const useRolesStore = create<RolesState>((set, get) => ({
 
     try {
       const roles = await rolesApi.listRoles();
-      set({ roles, isLoading: false });
+      const filteredRoles = roles.filter(
+        role => role.workspaceId === nextWorkspaceId,
+      );
+      const selectedRole =
+        filteredRoles.find(
+          role =>
+            role.permissions.workspace?.includes("*") &&
+            role.permissions.role?.includes("*") &&
+            role.permissions.agent?.includes("*") &&
+            role.permissions.tool?.includes("*"),
+        ) ??
+        filteredRoles[0] ??
+        null;
 
-      return roles;
+      set({ roles: selectedRole, isLoading: false });
+
+      return selectedRole;
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : "Roller yuklenemedi.";
@@ -75,6 +89,8 @@ export const useRoles = () => {
 
   return {
     roles,
+    roleId: roles?.id ?? null,
+    permissions: roles?.permissions ?? null,
     isLoading,
     error,
     refresh,

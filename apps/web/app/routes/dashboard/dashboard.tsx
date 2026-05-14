@@ -26,6 +26,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { agentsApi } from "~/lib/agents-api";
+import { useRoles } from "~/store/roles-store";
 import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 
@@ -47,6 +48,9 @@ export default function Dashboard() {
   const [actionErrorMessage, setActionErrorMessage] = useState<string | null>(
     null,
   );
+  const { permissions } = useRoles();
+
+  console.log(permissions);
 
   const { selectedWorkspaceId } = useWorkspaceStore();
   const {
@@ -124,9 +128,12 @@ export default function Dashboard() {
               onChange={event => setSearchTerm(event.target.value)}
             />
           </div>
-          <Button type="button" onClick={handleCreateAgent}>
-            <span>Temsilci Oluştur</span>
-          </Button>
+          {permissions?.agent?.includes("*") ||
+          permissions?.agent?.includes("create") ? (
+            <Button type="button" onClick={handleCreateAgent}>
+              <span>Temsilci Oluştur</span>
+            </Button>
+          ) : null}
         </div>
       </DashboardHeader>
 

@@ -3,6 +3,7 @@ import { Wrench } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { toolsApi } from "~/lib/tools-api";
+import { useRoles } from "~/store/roles-store";
 import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 
@@ -16,16 +17,19 @@ export default function ToolsPage() {
   });
 
   const tools = data?.data ?? [];
-
+  const { permissions } = useRoles();
   return (
     <div className="animate-in fade-in flex h-full flex-col overflow-hidden duration-300">
       <DashboardHeader>
         <h1 className="text-foreground font-display text-base font-semibold">
           Araçlar
         </h1>
-        <Button asChild>
-          <Link to="/dashboard/tools/new">Araç oluştur</Link>
-        </Button>
+        {permissions?.tool?.includes("*") ||
+        permissions?.tool?.includes("create") ? (
+          <Button asChild>
+            <Link to="/dashboard/tools/new">Araç oluştur</Link>
+          </Button>
+        ) : null}
       </DashboardHeader>
 
       <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-6">

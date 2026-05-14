@@ -7,6 +7,7 @@ import {
   Save,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import { useRoles } from "~/store/roles-store";
 import DashboardHeader from "../dashboard-header";
 import { AgentMeta } from "./agent-meta";
 import { AGENT_MOCK_DATA } from "./constants";
@@ -36,6 +37,9 @@ export const AgentHeader = ({
   isPublishing = false,
   canPublish = true,
 }: AgentHeaderProps) => {
+  const { permissions } = useRoles();
+
+  console.log(permissions);
   const handleEditName = () => {
     const current = title ?? "";
     const next = window.prompt("Temsilci adını düzenle", current);
@@ -113,15 +117,18 @@ export const AgentHeader = ({
           >
             <HistoryIcon className="h-4 w-4" />
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={onPublish}
-            disabled={!canPublish || isPublishing}
-          >
-            <Rocket className="h-3.5 w-3.5" />
-            <span>{isPublishing ? "Yayınlanıyor..." : "Yayınla"}</span>
-          </Button>
+          {permissions?.agent?.includes("*") ||
+          permissions?.agent?.includes("update") ? (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onPublish}
+              disabled={!canPublish || isPublishing}
+            >
+              <Rocket className="h-3.5 w-3.5" />
+              <span>{isPublishing ? "Yayınlanıyor..." : "Yayınla"}</span>
+            </Button>
+          ) : null}
         </div>
       </div>
     </DashboardHeader>
