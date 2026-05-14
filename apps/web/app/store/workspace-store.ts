@@ -11,7 +11,7 @@ export const useWorkspaceStore = create<WorkspaceState>(set => ({
       ? localStorage.getItem("selected-workspace-id")
       : null,
   setSelectedWorkspaceId: id => {
-    localStorage.setItem("selected-workspace-id", id);
     set({ selectedWorkspaceId: id });
+    localStorage.setItem("selected-workspace-id", id);
   },
 }));

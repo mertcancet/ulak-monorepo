@@ -143,7 +143,6 @@ const DashboardLayout = () => {
   const location = useLocation();
   const { permissions } = useRoles();
 
-  console.log(permissions);
   const { data: session, isPending: isSessionPending } =
     authClient.useSession();
   const [collapsed, setCollapsed] = useState(false);
