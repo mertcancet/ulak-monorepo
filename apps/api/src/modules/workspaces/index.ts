@@ -54,8 +54,6 @@ const workspacesModule = () =>
             workspaceId: workspace.id,
           });
 
-          // TODO: Ownership kontrolü ve davet, rol ekleme, güncelleme zafiyetleri.
-
           const defaultRoles = await tx
             .insert(roles)
             .values([

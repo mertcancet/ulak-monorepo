@@ -7,17 +7,12 @@ export type ResourcePermission = {
   [kind in ResourceKind]?: Permission[];
 };
 
-export type CheckPermissionRequest =
-  | {
-      user: { id: string };
-      resource: { kind: ResourceKind; workspaceId: string };
-      action: Permission;
-    }
-  | {
-      user: { id: string };
-      resource: { workspaceId: string };
-      actions: ResourcePermission;
-    };
+export type CheckPermissionRequest = {
+  user: { id: string };
+  resource: { kind: ResourceKind; workspaceId: string };
+  action: Permission;
+  targetAuthority?: ResourcePermission;
+};
 
 export async function checkPermissions(request: CheckPermissionRequest) {
   const isOwner = await isWorkspaceOwner({
@@ -32,13 +27,6 @@ export async function checkPermissions(request: CheckPermissionRequest) {
     workspaceId: request.resource.workspaceId,
   });
 
-  if ("actions" in request) {
-    return hasAuthorityOver(
-      roles.map(r => r.permissions),
-      request.actions,
-    );
-  }
-
   const isAllowed = roles
     .flatMap(r => r.permissions)
     .some(
@@ -46,6 +34,15 @@ export async function checkPermissions(request: CheckPermissionRequest) {
         r[request.resource.kind]?.includes(request.action) ||
         r[request.resource.kind]?.includes("*"),
     );
+
+  if (request.targetAuthority) {
+    const hasAuthority = hasAuthorityOver(
+      roles.map(r => r.permissions),
+      request.targetAuthority,
+    );
+
+    return isAllowed && hasAuthority;
+  }
 
   return isAllowed;
 }
