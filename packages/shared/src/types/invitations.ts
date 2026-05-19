@@ -20,9 +20,9 @@ export const invitationSelectSchema = z.object({
   expiresAt: z.date(),
 });
 
-export const invitationInsertSchema = invitationSelectSchema.pick({
-  userId: true,
-  roles: true,
+export const invitationCreateSchema = z.object({
+  email: z.email(),
+  roles: z.uuidv7().array(),
 });
 
 export const invitationUpdateSchema = invitationSelectSchema.pick({
@@ -30,5 +30,5 @@ export const invitationUpdateSchema = invitationSelectSchema.pick({
 });
 
 export type Invitation = z.infer<typeof invitationSelectSchema>;
-export type InvitationInsert = z.infer<typeof invitationInsertSchema>;
+export type InvitationCreate = z.infer<typeof invitationCreateSchema>;
 export type InvitationUpdate = z.infer<typeof invitationUpdateSchema>;

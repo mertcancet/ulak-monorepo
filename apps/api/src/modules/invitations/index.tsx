@@ -1,5 +1,5 @@
 import {
-  invitationInsertSchema,
+  invitationCreateSchema,
   invitationSelectSchema,
   invitationUpdateSchema,
 } from "@cleon/shared";
@@ -72,24 +72,29 @@ const invitationsModule = () =>
       async ({ headers, session, user, body, problem }) => {
         const workspaceId = headers["cleon-workspace-id"];
 
-        const { userId, roles: roleIds } = body;
+        const { email, roles: roleIds } = body;
+
+        const [invitedUser] = await db
+          .select({
+            id: users.id,
+            emailVerified: users.emailVerified,
+          })
+          .from(users)
+          .where(eq(users.email, email));
+
+        if (!invitedUser) return problem({ title: "Bad Request" });
 
         const [member] = await db
           .select()
           .from(workspace_members)
           .where(
             and(
-              eq(workspace_members.userId, userId),
+              eq(workspace_members.userId, invitedUser.id),
               eq(workspace_members.workspaceId, workspaceId),
             ),
           );
 
-        if (member) {
-          return problem({
-            title: "Bad Request",
-            code: "invitations.membership_exists",
-          });
-        }
+        if (member) return problem({ title: "Bad Request" });
 
         const targetRoles = await db
           .select()
@@ -116,6 +121,7 @@ const invitationsModule = () =>
           .insert(invitations)
           .values({
             ...body,
+            userId: invitedUser.id,
             workspaceId,
             status: "pending",
             invitedBy: session.userId,
@@ -125,34 +131,18 @@ const invitationsModule = () =>
 
         const inviteURL = `${env.FRONTEND_URL}/workspaces`;
 
-        const invitedUser = db
-          .select({
-            email: users.email,
-            emailVerified: users.emailVerified,
-          })
-          .from(users)
-          .where(eq(users.id, userId))
-          .as("invited_user");
-
-        const [result] = await db
-          .select({
-            workspace: workspaces.name,
-            email: invitedUser.email,
-            emailVerified: invitedUser.emailVerified,
-          })
+        const [workspace] = await db
+          .select({ name: workspaces.name })
           .from(workspaces)
-          .where(eq(workspaces.id, workspaceId))
-          .crossJoin(invitedUser);
+          .where(eq(workspaces.id, workspaceId));
 
-        if (!result)
+        if (!workspace)
           throw problem({ title: "Internal Server Error", status: 500 });
 
-        const { workspace, email, emailVerified } = result;
-
-        if (emailVerified) {
+        if (invitedUser.emailVerified) {
           const html = await render(
             <WorkspaceInviteEmail
-              workspace={workspace}
+              workspace={workspace.name}
               inviteURL={inviteURL}
               invitedBy={{
                 email: user.email,
@@ -162,7 +152,7 @@ const invitationsModule = () =>
           );
 
           void emailService.send({
-            subject: `You've been invited to join ${workspace}`,
+            subject: `You've been invited to join ${workspace.name}`,
             to: email,
             html,
           });
@@ -173,7 +163,7 @@ const invitationsModule = () =>
       {
         requireAuth: true,
         headers: "headers.workspaceId",
-        body: invitationInsertSchema,
+        body: invitationCreateSchema,
         response: {
           201: "created.response",
           403: z.any(),
