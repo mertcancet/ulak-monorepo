@@ -11,7 +11,7 @@ export type CheckPermissionRequest = {
   user: { id: string };
   resource: { kind: ResourceKind; workspaceId: string };
   action: Permission;
-  targetAuthority?: ResourcePermission;
+  targetAuthority?: ResourcePermission | ResourcePermission[];
 };
 
 export async function checkPermissions(request: CheckPermissionRequest) {
@@ -66,21 +66,24 @@ export async function isWorkspaceOwner({
 
 export function hasAuthorityOver(
   source: ResourcePermission | ResourcePermission[],
-  target: ResourcePermission,
+  target: ResourcePermission | ResourcePermission[],
 ) {
   const sourceList = Array.isArray(source) ? source : [source];
+  const targetList = Array.isArray(target) ? target : [target];
 
-  for (const [resource, actions] of Object.entries(target)) {
-    const kind = resource as ResourceKind;
-    const sourceActions = sourceList.flatMap(s => s[kind] || []);
+  for (const targetPermission of targetList) {
+    for (const [resource, actions] of Object.entries(targetPermission)) {
+      const kind = resource as ResourceKind;
+      const sourceActions = sourceList.flatMap(s => s[kind] || []);
 
-    if (sourceActions.includes("*")) continue;
+      if (sourceActions.includes("*")) continue;
 
-    const hasUnauthorizedAction = actions.some(
-      action => !sourceActions.includes(action),
-    );
+      const hasUnauthorizedAction = actions.some(
+        action => !sourceActions.includes(action),
+      );
 
-    if (hasUnauthorizedAction) return false;
+      if (hasUnauthorizedAction) return false;
+    }
   }
 
   return true;

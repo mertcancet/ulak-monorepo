@@ -9,10 +9,11 @@ const problemDetails = () =>
       title = "Bad Request",
       status: statusCode = 400,
       detail,
+      code,
       errors,
     }: Pick<
       Partial<BadRequest>,
-      "title" | "detail" | "status" | "errors"
+      "title" | "detail" | "status" | "errors" | "code"
     > = {}) {
       return Response.json(
         {
@@ -20,6 +21,7 @@ const problemDetails = () =>
           detail,
           status: statusCode,
           instance: `${request.method} ${new URL(request.url).pathname}`,
+          code,
           errors,
         } satisfies BadRequest,
         { status: statusCode },

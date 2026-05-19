@@ -6,7 +6,7 @@ import db from "~/db";
 import * as schema from "~/db/schema";
 import env from "~/shared/env";
 
-const authUrlHost = new URL(env.BETTER_AUTH_URL).hostname;
+const authUrlHost = new URL(env.BASE_URL).hostname;
 const isLocalAuthHost =
   authUrlHost === "localhost" ||
   authUrlHost === "127.0.0.1" ||

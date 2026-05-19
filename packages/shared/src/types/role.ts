@@ -3,7 +3,6 @@ import { z } from "zod";
 export const permissions = [
   "view",
   "share",
-  "invite",
   "create",
   "update",
   "delete",
@@ -20,6 +19,8 @@ export const rolePermissionSchema = z.object({
   role: permissionSchema,
   agent: permissionSchema,
   tool: permissionSchema,
+  invitation: permissionSchema,
+  knowledge_base: permissionSchema,
 });
 
 export const roleSelectSchema = z.object({

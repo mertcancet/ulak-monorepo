@@ -64,7 +64,8 @@ const workspacesModule = () =>
                   agent: ["*"],
                   role: ["*"],
                   tool: ["*"],
-                  workspace: ["invite", "update"],
+                  workspace: ["update"],
+                  invitation: ["view", "create", "delete", "update"],
                 } satisfies ResourcePermission,
               },
               {
@@ -78,6 +79,7 @@ const workspacesModule = () =>
             ])
             .returning({ id: roles.id });
 
+          // TODO: Bu rolleri workspace owner a eklemeye gerek yok.
           await tx.insert(user_roles).values(
             defaultRoles.map(r => ({
               roleId: r.id,

@@ -8,6 +8,7 @@ import knowledgeBaseModule from "~/modules/knowledge-base";
 import errorHandler from "~/plugins/error-handler";
 import env from "~/shared/env";
 import { BetterAuthOpenAPI } from "./lib/auth";
+import invitationsModule from "./modules/invitations";
 import rolesModule from "./modules/roles";
 import toolsModule from "./modules/tools";
 import workspacesModule from "./modules/workspaces";
@@ -79,6 +80,7 @@ const app = new Elysia()
   .use(agentsModule())
   .use(toolsModule())
   .use(workspacesModule())
+  .use(invitationsModule())
   .use(rolesModule())
   .use(knowledgeBaseModule())
   .listen(env.PORT);
@@ -86,5 +88,3 @@ const app = new Elysia()
 console.log(
   `Server running at http://${app.server?.hostname}:${app.server?.port}`,
 );
-
-export type cleonApi = typeof app;

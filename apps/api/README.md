@@ -144,7 +144,7 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres?schema=publi
 
 # Better Auth
 BETTER_AUTH_SECRET=          # Long random secret (min 32 chars)
-BETTER_AUTH_URL=http://localhost:3000
+BASE_URL=http://localhost:3000
 
 # CORS
 CORS_ORIGINS=http://localhost:3000,http://localhost:5173

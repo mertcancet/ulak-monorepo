@@ -1,7 +1,7 @@
 {
   "name": "callingai-monorepo",
   "private": true,
-  "packageManager": "pnpm@11.0.9",
+  "packageManager": "pnpm@11.1.3",
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "dev:web": "pnpm --filter web dev",
@@ -16,7 +16,8 @@
     "format:web": "biome check --write --unsafe ./apps/web",
     "check:api": "biome check --reporter=summary ./apps/api",
     "check:web": "biome check --reporter=summary ./apps/web",
-    "dk": "cd apps/api && tsx node_modules/drizzle-kit/bin.cjs"
+    "dk": "cd apps/api && tsx node_modules/drizzle-kit/bin.cjs",
+    "email": "pnpm --filter api email"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
