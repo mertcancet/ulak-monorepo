@@ -1,4 +1,8 @@
-import { invitationInsertSchema, invitationUpdateSchema } from "@cleon/shared";
+import {
+  invitationInsertSchema,
+  invitationSelectSchema,
+  invitationUpdateSchema,
+} from "@cleon/shared";
 import dayjs from "dayjs";
 import { and, eq, inArray } from "drizzle-orm";
 import Elysia from "elysia";
@@ -57,6 +61,10 @@ const invitationsModule = () =>
       {
         requireAuth: true,
         headers: "headers.workspaceId",
+        response: {
+          200: invitationSelectSchema.array(),
+          403: z.any(),
+        },
       },
     )
     .post(
