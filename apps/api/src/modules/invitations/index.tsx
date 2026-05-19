@@ -218,6 +218,32 @@ const invitationsModule = () =>
         body: invitationUpdateSchema,
       },
     )
+    .delete(
+      ":id",
+      async ({ headers, session, params, problem }) => {
+        const workspaceId = headers["cleon-workspace-id"];
+        const { id } = params;
+
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "invitation",
+            workspaceId,
+          },
+          action: "delete",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        await db.delete(invitations).where(eq(invitations.id, id));
+      },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+      },
+    )
     .post(
       "accept",
       async ({ session, body, problem }) => {
@@ -266,7 +292,6 @@ const invitationsModule = () =>
         body: "invitation.id",
       },
     )
-
     .post(
       "decline",
       async ({ session, body, problem }) => {
