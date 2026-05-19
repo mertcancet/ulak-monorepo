@@ -66,6 +66,7 @@ const workspacesModule = () =>
                   tool: ["*"],
                   workspace: ["update"],
                   invitation: ["view", "create", "delete", "update"],
+                  user: ["add-role", "remove-role"],
                 } satisfies ResourcePermission,
               },
               {

@@ -11,6 +11,7 @@ import { BetterAuthOpenAPI } from "./lib/auth";
 import invitationsModule from "./modules/invitations";
 import rolesModule from "./modules/roles";
 import toolsModule from "./modules/tools";
+import usersModule from "./modules/users";
 import workspacesModule from "./modules/workspaces";
 
 const app = new Elysia()
@@ -79,6 +80,7 @@ const app = new Elysia()
   .use(authModule())
   .use(agentsModule())
   .use(toolsModule())
+  .use(usersModule())
   .use(workspacesModule())
   .use(invitationsModule())
   .use(rolesModule())

@@ -6,6 +6,8 @@ export const permissions = [
   "create",
   "update",
   "delete",
+  "add-role",
+  "remove-role",
   "*",
 ] as const;
 
@@ -21,6 +23,7 @@ export const rolePermissionSchema = z.object({
   tool: permissionSchema,
   invitation: permissionSchema,
   knowledge_base: permissionSchema,
+  user: permissionSchema,
 });
 
 export const roleSelectSchema = z.object({

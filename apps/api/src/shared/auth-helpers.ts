@@ -1,7 +1,7 @@
 import type { Permission, ResourceKind } from "@cleon/shared";
 import { and, eq } from "drizzle-orm";
 import db from "~/db";
-import { roles, user_roles, workspaces } from "~/db/schema";
+import { roles, user_roles, workspace_members, workspaces } from "~/db/schema";
 
 export type ResourcePermission = {
   [kind in ResourceKind]?: Permission[];
@@ -62,6 +62,25 @@ export async function isWorkspaceOwner({
     .where(eq(workspaces.id, workspaceId));
 
   return workspace?.ownerId === userId;
+}
+
+type IsWorkspaceMemberParams = IsWorkspaceOwnerParams;
+
+export async function isWorkspaceMember({
+  userId,
+  workspaceId,
+}: IsWorkspaceMemberParams) {
+  const result = await db
+    .select()
+    .from(workspace_members)
+    .where(
+      and(
+        eq(workspace_members.userId, userId),
+        eq(workspace_members.workspaceId, workspaceId),
+      ),
+    );
+
+  return result.length > 0;
 }
 
 export function hasAuthorityOver(
