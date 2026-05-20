@@ -9,6 +9,11 @@ const models = () =>
     "headers.workspaceId": z
       .looseObject(z.object({ "cleon-workspace-id": z.uuidv7() }).shape)
       .toJSONSchema(),
+    "headers.workspaceId-optional": z
+      .looseObject(
+        z.object({ "cleon-workspace-id": z.uuidv7().optional() }).shape,
+      )
+      .toJSONSchema(),
     "headers.cleonAgentSecret": z
       .looseObject(z.object({ "cleon-agent-secret": z.string() }).shape)
       .toJSONSchema(),
