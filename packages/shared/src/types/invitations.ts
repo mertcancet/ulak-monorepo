@@ -13,6 +13,7 @@ export const invitationSelectSchema = z.object({
   id: z.uuidv7(),
   workspaceId: z.uuidv7(),
   userId: z.uuidv7(),
+  email: z.email(),
   invitedBy: z.uuidv7(),
   roles: z.uuidv7().array(),
   status: invitationStatusSchema.default("pending"),
@@ -29,11 +30,6 @@ export const invitationUpdateSchema = invitationSelectSchema.pick({
   roles: true,
 });
 
-export const invitationWithEmailSchema = invitationSelectSchema.extend({
-  email: z.email(),
-});
-
 export type Invitation = z.infer<typeof invitationSelectSchema>;
-export type InvitationWithEmail = z.infer<typeof invitationWithEmailSchema>;
 export type InvitationCreate = z.infer<typeof invitationCreateSchema>;
 export type InvitationUpdate = z.infer<typeof invitationUpdateSchema>;

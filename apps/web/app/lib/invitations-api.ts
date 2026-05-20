@@ -1,7 +1,7 @@
 import type {
+  Invitation,
   InvitationCreate,
   InvitationUpdate,
-  InvitationWithEmail,
 } from "@cleon/shared";
 import { request } from "./fetcher";
 
@@ -10,7 +10,7 @@ export const invitationsApi = {
     workspaceId: string | undefined,
     scope: "personal" | "workspace",
   ) =>
-    request<InvitationWithEmail[]>("/invitations", {
+    request<Invitation[]>("/invitations", {
       ...(workspaceId
         ? { headers: { "cleon-workspace-id": workspaceId } }
         : {}),

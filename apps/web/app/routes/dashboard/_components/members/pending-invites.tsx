@@ -1,4 +1,4 @@
-import type { InvitationWithEmail } from "@cleon/shared";
+import type { Invitation } from "@cleon/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
@@ -6,7 +6,7 @@ import { Button } from "~/components/ui/button";
 import { invitationsApi } from "~/lib/invitations-api";
 
 const statusVariantMap: Record<
-  InvitationWithEmail["status"],
+  Invitation["status"],
   "secondary" | "outline" | "destructive"
 > = {
   pending: "secondary",
@@ -15,7 +15,7 @@ const statusVariantMap: Record<
   expired: "destructive",
 };
 
-const statusLabelMap: Record<InvitationWithEmail["status"], string> = {
+const statusLabelMap: Record<Invitation["status"], string> = {
   pending: "Bekliyor",
   accepted: "Kabul edildi",
   declined: "Reddedildi",

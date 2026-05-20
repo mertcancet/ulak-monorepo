@@ -1,10 +1,10 @@
 import {
   invitationCreateSchema,
+  invitationSelectSchema,
   invitationUpdateSchema,
-  invitationWithEmailSchema,
 } from "@cleon/shared";
 import dayjs from "dayjs";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, getColumns, inArray } from "drizzle-orm";
 import Elysia from "elysia";
 import { render } from "jsx-email";
 import { z } from "zod";
@@ -40,8 +40,12 @@ const invitationsModule = () =>
       async ({ headers, query, session, problem }) => {
         if (query.scope === "personal") {
           return await db
-            .select()
+            .select({
+              ...getColumns(invitations),
+              email: users.email,
+            })
             .from(invitations)
+            .innerJoin(users, eq(users.id, invitations.userId))
             .where(
               and(
                 eq(invitations.userId, session.userId),
@@ -73,14 +77,7 @@ const invitationsModule = () =>
 
         return await db
           .select({
-            id: invitations.id,
-            workspaceId: invitations.workspaceId,
-            userId: invitations.userId,
-            invitedBy: invitations.invitedBy,
-            roles: invitations.roles,
-            status: invitations.status,
-            createdAt: invitations.createdAt,
-            expiresAt: invitations.expiresAt,
+            ...getColumns(invitations),
             email: users.email,
           })
           .from(invitations)
@@ -94,7 +91,7 @@ const invitationsModule = () =>
           scope: z.enum(["personal", "workspace"]),
         }),
         response: {
-          200: invitationWithEmailSchema.array(),
+          200: invitationSelectSchema.array(),
           403: z.any(),
         },
       },
@@ -152,10 +149,10 @@ const invitationsModule = () =>
         const [data] = await db
           .insert(invitations)
           .values({
-            ...body,
-            userId: invitedUser.id,
             workspaceId,
+            userId: invitedUser.id,
             status: "pending",
+            roles: roleIds,
             invitedBy: session.userId,
             expiresAt: dayjs().add(48, "hours").toDate(),
           })
