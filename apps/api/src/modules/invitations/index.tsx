@@ -1,7 +1,7 @@
 import {
   invitationCreateSchema,
-  invitationSelectSchema,
   invitationUpdateSchema,
+  invitationWithEmailSchema,
 } from "@cleon/shared";
 import dayjs from "dayjs";
 import { and, eq, inArray } from "drizzle-orm";
@@ -54,15 +54,26 @@ const invitationsModule = () =>
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
         return await db
-          .select()
+          .select({
+            id: invitations.id,
+            workspaceId: invitations.workspaceId,
+            userId: invitations.userId,
+            invitedBy: invitations.invitedBy,
+            roles: invitations.roles,
+            status: invitations.status,
+            createdAt: invitations.createdAt,
+            expiresAt: invitations.expiresAt,
+            email: users.email,
+          })
           .from(invitations)
+          .innerJoin(users, eq(users.id, invitations.userId))
           .where(eq(invitations.workspaceId, workspaceId));
       },
       {
         requireAuth: true,
         headers: "headers.workspaceId",
         response: {
-          200: invitationSelectSchema.array(),
+          200: invitationWithEmailSchema.array(),
           403: z.any(),
         },
       },

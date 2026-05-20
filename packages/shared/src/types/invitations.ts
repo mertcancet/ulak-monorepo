@@ -29,6 +29,11 @@ export const invitationUpdateSchema = invitationSelectSchema.pick({
   roles: true,
 });
 
+export const invitationWithEmailSchema = invitationSelectSchema.extend({
+  email: z.email(),
+});
+
 export type Invitation = z.infer<typeof invitationSelectSchema>;
+export type InvitationWithEmail = z.infer<typeof invitationWithEmailSchema>;
 export type InvitationCreate = z.infer<typeof invitationCreateSchema>;
 export type InvitationUpdate = z.infer<typeof invitationUpdateSchema>;

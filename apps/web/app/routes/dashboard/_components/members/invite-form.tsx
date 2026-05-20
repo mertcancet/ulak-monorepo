@@ -1,27 +1,42 @@
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Select } from "~/components/ui/select";
-
-type MemberRole = "member" | "admin";
+import { invitationsApi } from "~/lib/invitations-api";
 
 export default function InviteForm({
   inviteEmail,
   inviteRole,
+  roleOptions,
   canInvite,
   selectedWorkspaceId,
   setInviteEmail,
   setInviteRole,
-  handleInvite,
+  onSuccess,
 }: {
   inviteEmail: string;
-  inviteRole: MemberRole;
+  inviteRole: string;
+  roleOptions: { id: string; name: string }[];
   canInvite: boolean;
   selectedWorkspaceId: string;
   setInviteEmail: (email: string) => void;
-  setInviteRole: (role: MemberRole) => void;
-  handleInvite: () => void;
+  setInviteRole: (role: string) => void;
+  onSuccess?: () => void;
 }) {
+  const { mutate: sendInvite, isPending } = useMutation({
+    mutationFn: () =>
+      invitationsApi.createInvitation(selectedWorkspaceId, {
+        email: inviteEmail.trim().toLowerCase(),
+        roles: [inviteRole],
+      }),
+    onSuccess: () => {
+      setInviteEmail("");
+      setInviteRole(roleOptions[0]?.id ?? "");
+      onSuccess?.();
+    },
+  });
+
   return (
     <div className="grid gap-3 md:grid-cols-[1fr_180px_auto] md:items-end">
       <div className="flex flex-col gap-1.5">
@@ -40,18 +55,22 @@ export default function InviteForm({
         <Select
           id="invite-role"
           value={inviteRole}
-          onChange={e => setInviteRole(e.target.value as MemberRole)}
+          onChange={e => setInviteRole(e.target.value)}
         >
-          <option value="member">Member</option>
-          <option value="admin">Admin</option>
+          {roleOptions.length === 0 && <option value="">Rol bulunamadi</option>}
+          {roleOptions.map(role => (
+            <option key={role.id} value={role.id}>
+              {role.name}
+            </option>
+          ))}
         </Select>
       </div>
 
       <Button
-        onClick={handleInvite}
-        disabled={!canInvite || selectedWorkspaceId === ""}
+        onClick={() => sendInvite()}
+        disabled={!canInvite || selectedWorkspaceId === "" || isPending}
       >
-        Davet Et
+        {isPending ? "Gönderiliyor..." : "Davet Et"}
       </Button>
     </div>
   );

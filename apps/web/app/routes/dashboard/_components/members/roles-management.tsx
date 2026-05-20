@@ -61,6 +61,7 @@ export default function RolesManagement({
 }) {
   const queryClient = useQueryClient();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
   const [roleName, setRoleName] = useState("");
   const [roleDescription, setRoleDescription] = useState("");
   const [nextPermissions, setNextPermissions] = useState<RolePermissions>(
@@ -85,10 +86,29 @@ export default function RolesManagement({
     },
   });
 
-  const canSaveRole =
-    roleName.trim().length >= 3 &&
-    roleDescription.trim().length >= 3 &&
-    selectedWorkspaceId !== "";
+  const { mutate: updateRole, isPending: isUpdateRolePending } = useMutation({
+    mutationFn: (payload: {
+      workspaceId: string;
+      roleId: string;
+      body: {
+        name: string;
+        description: string;
+        permissions: RolePermissions;
+      };
+    }) =>
+      rolesApi.updateRole(payload.workspaceId, payload.roleId, payload.body),
+    onSuccess: (_data, payload) => {
+      void queryClient.invalidateQueries({
+        queryKey: ["roles", payload.workspaceId],
+      });
+      setIsSheetOpen(false);
+      resetForm();
+    },
+  });
+
+  const canSaveRole = roleName.trim().length >= 3 && selectedWorkspaceId !== "";
+  const isEditingRole = editingRoleId !== null;
+  const isSavePending = isCreateRolePending || isUpdateRolePending;
 
   const roleCountLabel = useMemo(() => {
     if (roles.length === 1) {
@@ -99,9 +119,31 @@ export default function RolesManagement({
   }, [roles.length]);
 
   const resetForm = () => {
+    setEditingRoleId(null);
     setRoleName("");
     setRoleDescription("");
     setNextPermissions(createDefaultPermissions());
+  };
+
+  const openCreateRoleSheet = () => {
+    resetForm();
+    setIsSheetOpen(true);
+  };
+
+  const openEditRoleSheet = (role: Role) => {
+    setEditingRoleId(role.id);
+    setRoleName(role.name);
+    setRoleDescription(role.description);
+    setNextPermissions(createPermissionMap(role.permissions));
+    setIsSheetOpen(true);
+  };
+
+  const handleSheetOpenChange = (open: boolean) => {
+    setIsSheetOpen(open);
+
+    if (!open) {
+      resetForm();
+    }
   };
 
   const togglePermission = (
@@ -131,13 +173,25 @@ export default function RolesManagement({
       return;
     }
 
+    const body = {
+      name: roleName.trim(),
+      description: roleDescription.trim(),
+      permissions: nextPermissions,
+    };
+
+    if (editingRoleId) {
+      updateRole({
+        workspaceId: selectedWorkspaceId,
+        roleId: editingRoleId,
+        body,
+      });
+
+      return;
+    }
+
     createRole({
       workspaceId: selectedWorkspaceId,
-      body: {
-        name: roleName.trim(),
-        description: roleDescription.trim(),
-        permissions: nextPermissions,
-      },
+      body,
     });
   };
 
@@ -160,7 +214,7 @@ export default function RolesManagement({
           </Badge>
           <Button
             variant="outline"
-            onClick={() => setIsSheetOpen(true)}
+            onClick={openCreateRoleSheet}
             disabled={selectedWorkspaceId === ""}
           >
             <Plus className="size-4" />
@@ -180,9 +234,11 @@ export default function RolesManagement({
           const permissionMap = createPermissionMap(role.permissions);
 
           return (
-            <article
+            <button
+              type="button"
               key={role.id}
-              className="border-border bg-secondary/30 rounded-xl border p-4"
+              className="border-border bg-secondary/30 hover:bg-secondary/50 w-full cursor-pointer rounded-xl border p-4 text-left transition-colors"
+              onClick={() => openEditRoleSheet(role)}
             >
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
@@ -223,17 +279,19 @@ export default function RolesManagement({
                   </div>
                 ))}
               </div>
-            </article>
+            </button>
           );
         })}
       </div>
 
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+      <Sheet open={isSheetOpen} onOpenChange={handleSheetOpenChange}>
         <SheetContent side="right" className="w-full sm:max-w-xl">
           <SheetHeader>
-            <SheetTitle>Add Role</SheetTitle>
+            <SheetTitle>{isEditingRole ? "Edit Role" : "Add Role"}</SheetTitle>
             <SheetDescription>
-              Rol adini girip resource bazinda permission secin.
+              {isEditingRole
+                ? "Rol bilgilerini ve izinlerini guncelleyin."
+                : "Rol adini girip resource bazinda permission secin."}
             </SheetDescription>
           </SheetHeader>
 
@@ -313,14 +371,14 @@ export default function RolesManagement({
           </div>
 
           <SheetFooter className="border-t">
-            <Button variant="ghost" onClick={() => setIsSheetOpen(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => handleSheetOpenChange(false)}
+            >
               Vazgec
             </Button>
-            <Button
-              onClick={saveRole}
-              disabled={!canSaveRole || isCreateRolePending}
-            >
-              Role Kaydet
+            <Button onClick={saveRole} disabled={!canSaveRole || isSavePending}>
+              {isEditingRole ? "Role Guncelle" : "Role Kaydet"}
             </Button>
           </SheetFooter>
         </SheetContent>

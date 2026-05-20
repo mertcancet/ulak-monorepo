@@ -3,7 +3,7 @@ import { Badge } from "~/components/ui/badge";
 interface MemberAssignmentItem {
   id: string;
   email: string;
-  role: "member" | "admin";
+  role: string;
   joinedAt: string;
   workspaceId: string;
   workspaceName: string;

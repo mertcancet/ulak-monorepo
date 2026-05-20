@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Building2, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { rolesApi } from "~/lib/roles-api";
@@ -14,19 +14,11 @@ import PendingInvites from "./_components/members/pending-invites";
 import RolesManagement from "./_components/members/roles-management";
 import WorkspaceSelector from "./_components/members/workspace-selector";
 
-type MemberRole = "member" | "admin";
 interface MemberItem {
   id: string;
   email: string;
-  role: MemberRole;
+  role: string;
   joinedAt: string;
-}
-
-interface PendingInviteItem {
-  id: string;
-  email: string;
-  role: MemberRole;
-  invitedAt: string;
 }
 
 interface WorkspaceItem {
@@ -87,19 +79,6 @@ const initialMembersByWorkspace: Record<string, MemberItem[]> = {
   ],
 };
 
-const initialInvitesByWorkspace: Record<string, PendingInviteItem[]> = {
-  "ws-1": [
-    {
-      id: "i-1",
-      email: "sales@example.com",
-      role: "member",
-      invitedAt: "Bugün",
-    },
-  ],
-  "ws-2": [],
-  "ws-3": [],
-};
-
 const _workspaceFallbackMember: MemberItem = {
   id: "m-default",
   email: "owner@example.com",
@@ -122,15 +101,6 @@ const initialMembers: MemberItem[] = [
   },
 ];
 
-const initialInvites: PendingInviteItem[] = [
-  {
-    id: "i-1",
-    email: "sales@example.com",
-    role: "member",
-    invitedAt: "Bugün",
-  },
-];
-
 export default function MembersPage() {
   const [_workspaces, _setWorkspaces] =
     useState<WorkspaceItem[]>(initialWorkspaces);
@@ -149,11 +119,8 @@ export default function MembersPage() {
   const [membersByWorkspace, _setMembersByWorkspace] = useState<
     Record<string, MemberItem[]>
   >(initialMembersByWorkspace);
-  const [invitesByWorkspace, setInvitesByWorkspace] = useState<
-    Record<string, PendingInviteItem[]>
-  >(initialInvitesByWorkspace);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<MemberRole>("member");
+  const [inviteRole, setInviteRole] = useState("");
 
   const { data: workspaceRoles = [] } = useQuery({
     queryKey: ["roles", selectedWorkspaceId],
@@ -161,12 +128,20 @@ export default function MembersPage() {
     enabled: (selectedWorkspaceId ?? "") !== "",
   });
 
+  useEffect(() => {
+    if (workspaceRoles.length === 0) {
+      setInviteRole("");
+      return;
+    }
+
+    const roleIds = workspaceRoles.map(r => r.id);
+    if (inviteRole === "" || !roleIds.includes(inviteRole)) {
+      setInviteRole(workspaceRoles[0]?.id ?? "");
+    }
+  }, [inviteRole, workspaceRoles]);
+
   const members = selectedWorkspaceId
     ? (membersByWorkspace[selectedWorkspaceId] ?? initialMembers)
-    : [];
-
-  const pendingInvites = selectedWorkspaceId
-    ? (invitesByWorkspace[selectedWorkspaceId] ?? initialInvites)
     : [];
 
   const memberAssignments: MemberAssignmentItem[] = _workspaces.flatMap(
@@ -186,13 +161,12 @@ export default function MembersPage() {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const hasDuplicate =
-    members.some(member => member.email.toLowerCase() === normalizedEmail) ||
-    pendingInvites.some(
-      invite => invite.email.toLowerCase() === normalizedEmail,
-    );
+  const hasDuplicate = members.some(
+    member => member.email.toLowerCase() === normalizedEmail,
+  );
 
-  const canInvite = isValidEmail(normalizedEmail) && !hasDuplicate;
+  const canInvite =
+    isValidEmail(normalizedEmail) && !hasDuplicate && inviteRole !== "";
 
   const canCreateWorkspace = newWorkspaceName.trim().length >= 3;
 
@@ -212,42 +186,6 @@ export default function MembersPage() {
     }
 
     createWorkspace(newWorkspaceName.trim());
-  };
-
-  const handleInvite = () => {
-    if (!canInvite || !selectedWorkspaceId) {
-      return;
-    }
-
-    const newInvite: PendingInviteItem = {
-      id: crypto.randomUUID(),
-      email: normalizedEmail,
-      role: inviteRole,
-      invitedAt: "Şimdi",
-    };
-
-    setInvitesByWorkspace(current => ({
-      ...current,
-      [selectedWorkspaceId]: [
-        newInvite,
-        ...(current[selectedWorkspaceId] ?? []),
-      ],
-    }));
-    setInviteEmail("");
-    setInviteRole("member");
-  };
-
-  const removeInvite = (id: string) => {
-    if (!selectedWorkspaceId) {
-      return;
-    }
-
-    setInvitesByWorkspace(current => ({
-      ...current,
-      [selectedWorkspaceId]: (current[selectedWorkspaceId] ?? []).filter(
-        item => item.id !== id,
-      ),
-    }));
   };
 
   return (
@@ -314,20 +252,17 @@ export default function MembersPage() {
               <InviteForm
                 inviteEmail={inviteEmail}
                 inviteRole={inviteRole}
+                roleOptions={workspaceRoles}
                 canInvite={canInvite}
                 selectedWorkspaceId={selectedWorkspaceId ?? ""}
                 setInviteEmail={setInviteEmail}
                 setInviteRole={setInviteRole}
-                handleInvite={handleInvite}
               />
             </section>
 
             <section className="grid gap-6 lg:grid-cols-2">
               <ActiveMembers members={members} />
-              <PendingInvites
-                pendingInvites={pendingInvites}
-                removeInvite={removeInvite}
-              />
+              <PendingInvites workspaceId={selectedWorkspaceId ?? ""} />
             </section>
 
             <MemberAssignments memberAssignments={memberAssignments} />
