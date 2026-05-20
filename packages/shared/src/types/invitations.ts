@@ -17,7 +17,7 @@ export const invitationSelectSchema = z.object({
   email: z.email(),
   invitedBy: z.object({
     name: z.string(),
-    email: z.string(),
+    email: z.email(),
   }),
   roles: z.uuidv7().array(),
   status: invitationStatusSchema.default("pending"),
