@@ -1,11 +1,24 @@
-import { workspaceInsertSchema, workspaceSelectSchema } from "@cleon/shared";
-import { desc, eq } from "drizzle-orm";
+import {
+  workspaceInsertSchema,
+  workspaceMembersSchema,
+  workspaceSelectSchema,
+} from "@cleon/shared";
+import { and, desc, eq, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
-import { roles, user_roles, workspace_members, workspaces } from "~/db/schema";
+import {
+  roles,
+  user_roles,
+  users,
+  workspace_members,
+  workspaces,
+} from "~/db/schema";
 import models from "~/plugins/models";
-import type { ResourcePermission } from "~/shared/auth-helpers";
+import {
+  checkPermissions,
+  type ResourcePermission,
+} from "~/shared/auth-helpers";
 import authModule from "../auth";
 
 const workspacesModule = () =>
@@ -80,13 +93,14 @@ const workspacesModule = () =>
             ])
             .returning({ id: roles.id });
 
-          // TODO: Bu rolleri workspace owner a eklemeye gerek yok.
-          await tx.insert(user_roles).values(
-            defaultRoles.map(r => ({
-              roleId: r.id,
-              userId: session.userId,
-            })),
-          );
+          const memberRole = defaultRoles[1];
+
+          if (!memberRole) throw problem({ title: "Internal Server Error" });
+
+          await tx.insert(user_roles).values({
+            roleId: memberRole.id,
+            userId: session.userId,
+          });
 
           return workspace;
         });
@@ -98,6 +112,60 @@ const workspacesModule = () =>
         response: {
           201: "created.response",
           400: z.any(),
+        },
+      },
+    )
+    .get(
+      ":id/members",
+      async ({ params, session, problem }) => {
+        const workspaceId = params.id;
+
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "workspace",
+            workspaceId,
+          },
+          action: "view",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        return await db
+          .select({
+            id: workspace_members.userId,
+            name: users.name,
+            email: users.email,
+            roles: sql`COALESCE(
+              JSON_AGG(
+                JSON_BUILD_OBJECT(
+                  'id', ${roles.id},
+                  'name', ${roles.name},
+                  'permissions', ${roles.permissions}
+                )
+              ),
+              '[]'::json
+            )`.as("roles"),
+          })
+          .from(workspace_members)
+          .leftJoin(users, eq(users.id, workspace_members.userId))
+          .leftJoin(user_roles, eq(user_roles.userId, workspace_members.userId))
+          .leftJoin(roles, eq(roles.id, user_roles.roleId))
+          .where(
+            and(
+              eq(workspace_members.workspaceId, workspaceId),
+              eq(roles.workspaceId, workspaceId),
+            ),
+          )
+          .groupBy(workspace_members.userId, users.name, users.email);
+      },
+      {
+        requireAuth: true,
+        response: {
+          200: workspaceMembersSchema.array(),
+          403: z.any(),
         },
       },
     );
