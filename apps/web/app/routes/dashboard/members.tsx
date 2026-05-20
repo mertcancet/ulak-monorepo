@@ -2,6 +2,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Building2, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "~/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { rolesApi } from "~/lib/roles-api";
 import { workspacesApi } from "~/lib/workspaces-api";
 import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
@@ -9,6 +11,7 @@ import ActiveMembers from "./_components/members/active-members";
 import InviteForm from "./_components/members/invite-form";
 import MemberAssignments from "./_components/members/member-assignments";
 import PendingInvites from "./_components/members/pending-invites";
+import RolesManagement from "./_components/members/roles-management";
 import WorkspaceSelector from "./_components/members/workspace-selector";
 
 type MemberRole = "member" | "admin";
@@ -149,9 +152,14 @@ export default function MembersPage() {
   const [invitesByWorkspace, setInvitesByWorkspace] = useState<
     Record<string, PendingInviteItem[]>
   >(initialInvitesByWorkspace);
-
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<MemberRole>("member");
+
+  const { data: workspaceRoles = [] } = useQuery({
+    queryKey: ["roles", selectedWorkspaceId],
+    queryFn: () => rolesApi.listRoles(selectedWorkspaceId ?? ""),
+    enabled: (selectedWorkspaceId ?? "") !== "",
+  });
 
   const members = selectedWorkspaceId
     ? (membersByWorkspace[selectedWorkspaceId] ?? initialMembers)
@@ -280,39 +288,58 @@ export default function MembersPage() {
           />
         </section>
 
-        <section className="border-border bg-background rounded-2xl border p-5">
-          <div className="mb-4 flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-foreground flex items-center gap-2 text-sm font-semibold">
-                <UserPlus className="size-4" />
-                Davet Gönder
-              </h2>
-              <p className="text-muted-foreground mt-1 text-sm">
-                Email ile ekip üyesi davet edin ve rol atayın.
-              </p>
-            </div>
-          </div>
+        <Tabs defaultValue="members" className="flex-1">
+          <TabsList>
+            <TabsTrigger value="members" className="gap-2">
+              <UserPlus className="size-4" />
+              Members
+            </TabsTrigger>
+            <TabsTrigger value="roles">Roles</TabsTrigger>
+          </TabsList>
 
-          <InviteForm
-            inviteEmail={inviteEmail}
-            inviteRole={inviteRole}
-            canInvite={canInvite}
-            selectedWorkspaceId={selectedWorkspaceId ?? ""}
-            setInviteEmail={setInviteEmail}
-            setInviteRole={setInviteRole}
-            handleInvite={handleInvite}
-          />
-        </section>
+          <TabsContent value="members" className="mt-6 space-y-6">
+            <section className="border-border bg-background rounded-2xl border p-5">
+              <div className="mb-4 flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-foreground flex items-center gap-2 text-sm font-semibold">
+                    <UserPlus className="size-4" />
+                    Davet Gönder
+                  </h2>
+                  <p className="text-muted-foreground mt-1 text-sm">
+                    Email ile ekip üyesi davet edin ve rol atayın.
+                  </p>
+                </div>
+              </div>
 
-        <section className="grid gap-6 lg:grid-cols-2">
-          <ActiveMembers members={members} />
-          <PendingInvites
-            pendingInvites={pendingInvites}
-            removeInvite={removeInvite}
-          />
-        </section>
+              <InviteForm
+                inviteEmail={inviteEmail}
+                inviteRole={inviteRole}
+                canInvite={canInvite}
+                selectedWorkspaceId={selectedWorkspaceId ?? ""}
+                setInviteEmail={setInviteEmail}
+                setInviteRole={setInviteRole}
+                handleInvite={handleInvite}
+              />
+            </section>
 
-        <MemberAssignments memberAssignments={memberAssignments} />
+            <section className="grid gap-6 lg:grid-cols-2">
+              <ActiveMembers members={members} />
+              <PendingInvites
+                pendingInvites={pendingInvites}
+                removeInvite={removeInvite}
+              />
+            </section>
+
+            <MemberAssignments memberAssignments={memberAssignments} />
+          </TabsContent>
+
+          <TabsContent value="roles" className="mt-6">
+            <RolesManagement
+              selectedWorkspaceId={selectedWorkspaceId ?? ""}
+              roles={workspaceRoles}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

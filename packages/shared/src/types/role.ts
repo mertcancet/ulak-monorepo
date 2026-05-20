@@ -30,6 +30,7 @@ export const roleSelectSchema = z.object({
   id: z.uuidv7(),
   workspaceId: z.uuidv7(),
   name: z.string().min(3),
+  description: z.string(),
   permissions: rolePermissionSchema,
 });
 

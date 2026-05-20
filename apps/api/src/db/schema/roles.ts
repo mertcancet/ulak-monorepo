@@ -19,6 +19,7 @@ export const roles = pgTable(
       .notNull()
       .references(() => workspaces.id, { onDelete: "cascade" }),
     name: text().notNull(),
+    description: text().notNull().default(""),
     permissions: jsonb().$type<ResourcePermission>().notNull().default({}),
   },
   table => [index().on(table.workspaceId)],

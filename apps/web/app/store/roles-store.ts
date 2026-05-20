@@ -35,10 +35,7 @@ export const useRolesStore = create<RolesState>((set, get) => ({
     });
 
     try {
-      const roles = await rolesApi.listRoles();
-      const filteredRoles = roles.filter(
-        role => role.workspaceId === nextWorkspaceId,
-      );
+      const filteredRoles = await rolesApi.listRoles(nextWorkspaceId);
       const selectedRole =
         filteredRoles.find(
           role =>
