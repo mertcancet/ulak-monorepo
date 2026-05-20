@@ -31,7 +31,7 @@ export default function PendingInvites({
 
   const { data: invitations = [] } = useQuery({
     queryKey: ["invitations", workspaceId],
-    queryFn: () => invitationsApi.listInvitations(workspaceId),
+    queryFn: () => invitationsApi.listInvitations(workspaceId, "workspace"),
     enabled: workspaceId !== "",
   });
 

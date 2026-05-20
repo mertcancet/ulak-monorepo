@@ -6,9 +6,15 @@ import type {
 import { request } from "./fetcher";
 
 export const invitationsApi = {
-  listInvitations: (workspaceId: string) =>
+  listInvitations: (
+    workspaceId: string | undefined,
+    scope: "personal" | "workspace",
+  ) =>
     request<InvitationWithEmail[]>("/invitations", {
-      headers: { "cleon-workspace-id": workspaceId },
+      ...(workspaceId
+        ? { headers: { "cleon-workspace-id": workspaceId } }
+        : {}),
+      query: { scope },
     }),
 
   createInvitation: (workspaceId: string, body: InvitationCreate) =>

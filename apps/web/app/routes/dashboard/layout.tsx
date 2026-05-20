@@ -12,6 +12,7 @@ import {
   Gift,
   HelpCircle,
   History,
+  Inbox,
   List,
   Phone,
   Settings,
@@ -413,6 +414,13 @@ const DashboardLayout = () => {
                 label="Üyeler"
                 href="/dashboard/members"
                 active={location.pathname === "/dashboard/members"}
+                collapsed={collapsed}
+              />
+              <SidebarItem
+                icon={Inbox}
+                label="Davetler"
+                href="/dashboard/invitations"
+                active={location.pathname === "/dashboard/invitations"}
                 collapsed={collapsed}
               />
               <SidebarItem
