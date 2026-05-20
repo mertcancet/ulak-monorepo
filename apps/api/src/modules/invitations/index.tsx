@@ -38,8 +38,6 @@ const invitationsModule = () =>
     .get(
       "",
       async ({ headers, query, session, problem }) => {
-        const workspaceId = headers["cleon-workspace-id"];
-
         if (query.scope === "personal") {
           return await db
             .select()
@@ -51,6 +49,14 @@ const invitationsModule = () =>
               ),
             );
         }
+
+        const workspaceId = headers["cleon-workspace-id"];
+
+        if (!workspaceId)
+          return problem({
+            title: "Bad Request",
+            detail: "cleon-workspace-id is missing in header.",
+          });
 
         const isAllowed = await checkPermissions({
           user: {
@@ -83,7 +89,7 @@ const invitationsModule = () =>
       },
       {
         requireAuth: true,
-        headers: "headers.workspaceId",
+        headers: "headers.workspaceId-optional",
         query: z.object({
           scope: z.enum(["personal", "workspace"]),
         }),
