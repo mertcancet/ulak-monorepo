@@ -4,7 +4,8 @@ import {
   invitationUpdateSchema,
 } from "@cleon/shared";
 import dayjs from "dayjs";
-import { and, eq, getColumns, inArray } from "drizzle-orm";
+import { and, eq, getColumns, inArray, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import Elysia from "elysia";
 import { render } from "jsx-email";
 import { z } from "zod";
@@ -38,14 +39,26 @@ const invitationsModule = () =>
     .get(
       "",
       async ({ headers, query, session, problem }) => {
+        const inviter = alias(users, "inviter");
+
         if (query.scope === "personal") {
           return await db
             .select({
               ...getColumns(invitations),
               email: users.email,
+              workspaceName: workspaces.name,
+              invitedBy: sql`COALESCE(
+                JSON_BUILD_OBJECT(
+                  'name', ${inviter.name},
+                  'email', ${inviter.email}
+                ),
+                '{}'::json
+              )`.as("invited_by"),
             })
             .from(invitations)
             .innerJoin(users, eq(users.id, invitations.userId))
+            .innerJoin(workspaces, eq(workspaces.id, invitations.workspaceId))
+            .innerJoin(inviter, eq(inviter.id, invitations.invitedBy))
             .where(
               and(
                 eq(invitations.userId, session.userId),
@@ -79,9 +92,19 @@ const invitationsModule = () =>
           .select({
             ...getColumns(invitations),
             email: users.email,
+            workspaceName: workspaces.name,
+            invitedBy: sql`COALESCE(
+              JSON_BUILD_OBJECT(
+                'name', ${inviter.name},
+                'email', ${inviter.email}
+              ),
+              '{}'::json
+            )`.as("invited_by"),
           })
           .from(invitations)
           .innerJoin(users, eq(users.id, invitations.userId))
+          .innerJoin(workspaces, eq(workspaces.id, invitations.workspaceId))
+          .innerJoin(inviter, eq(inviter.id, invitations.invitedBy))
           .where(eq(invitations.workspaceId, workspaceId));
       },
       {

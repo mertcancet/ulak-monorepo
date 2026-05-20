@@ -12,9 +12,13 @@ const invitationStatusSchema = z.enum(invitationStatuses);
 export const invitationSelectSchema = z.object({
   id: z.uuidv7(),
   workspaceId: z.uuidv7(),
+  workspaceName: z.string(),
   userId: z.uuidv7(),
   email: z.email(),
-  invitedBy: z.uuidv7(),
+  invitedBy: z.object({
+    name: z.string(),
+    email: z.string(),
+  }),
   roles: z.uuidv7().array(),
   status: invitationStatusSchema.default("pending"),
   createdAt: z.date(),
