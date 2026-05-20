@@ -37,8 +37,20 @@ const invitationsModule = () =>
     })
     .get(
       "",
-      async ({ headers, session, problem }) => {
+      async ({ headers, query, session, problem }) => {
         const workspaceId = headers["cleon-workspace-id"];
+
+        if (query.scope === "personal") {
+          return await db
+            .select()
+            .from(invitations)
+            .where(
+              and(
+                eq(invitations.userId, session.userId),
+                eq(invitations.status, "pending"),
+              ),
+            );
+        }
 
         const isAllowed = await checkPermissions({
           user: {
@@ -72,6 +84,9 @@ const invitationsModule = () =>
       {
         requireAuth: true,
         headers: "headers.workspaceId",
+        query: z.object({
+          scope: z.enum(["personal", "workspace"]),
+        }),
         response: {
           200: invitationWithEmailSchema.array(),
           403: z.any(),

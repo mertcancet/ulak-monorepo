@@ -27,5 +27,8 @@ export const invitations = pgTable(
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
     expiresAt: timestamp({ withTimezone: true }).notNull(),
   },
-  table => [index().on(table.workspaceId)],
+  table => [
+    index().on(table.workspaceId),
+    index().on(table.userId, table.status),
+  ],
 );
