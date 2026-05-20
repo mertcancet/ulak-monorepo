@@ -76,7 +76,11 @@ export default function RolesManagement({
         description: string;
         permissions: RolePermissions;
       };
-    }) => rolesApi.createRole(payload.workspaceId, payload.body),
+    }) =>
+      rolesApi.createRole(payload.workspaceId, {
+        ...payload.body,
+        description: payload.body.description || undefined,
+      }),
     onSuccess: (_data, payload) => {
       void queryClient.invalidateQueries({
         queryKey: ["roles", payload.workspaceId],
@@ -133,7 +137,7 @@ export default function RolesManagement({
   const openEditRoleSheet = (role: Role) => {
     setEditingRoleId(role.id);
     setRoleName(role.name);
-    setRoleDescription(role.description);
+    setRoleDescription(role.description || "");
     setNextPermissions(createPermissionMap(role.permissions));
     setIsSheetOpen(true);
   };
