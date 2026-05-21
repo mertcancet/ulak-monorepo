@@ -1,20 +1,22 @@
-import type { Permission, ResourceKind } from "@cleon/shared";
+import type {
+  ResourceKind,
+  ResourcePermission,
+  RolePermissions,
+} from "@cleon/shared";
 import { and, eq } from "drizzle-orm";
 import db from "~/db";
 import { roles, user_roles, workspace_members, workspaces } from "~/db/schema";
 
-export type ResourcePermission = {
-  [kind in ResourceKind]?: Permission[];
-};
-
-export type CheckPermissionRequest = {
+export type CheckPermissionRequest<K extends ResourceKind = ResourceKind> = {
   user: { id: string };
-  resource: { kind: ResourceKind; workspaceId: string };
-  action: Permission;
-  targetAuthority?: ResourcePermission | ResourcePermission[];
+  resource: { kind: K; workspaceId: string };
+  action: ResourcePermission[K];
+  targetAuthority?: RolePermissions | RolePermissions[];
 };
 
-export async function checkPermissions(request: CheckPermissionRequest) {
+export async function checkPermissions<K extends ResourceKind>(
+  request: CheckPermissionRequest<K>,
+) {
   const isOwner = await isWorkspaceOwner({
     userId: request.user.id,
     workspaceId: request.resource.workspaceId,
@@ -29,10 +31,8 @@ export async function checkPermissions(request: CheckPermissionRequest) {
 
   const isAllowed = roles
     .flatMap(r => r.permissions)
-    .some(
-      r =>
-        r[request.resource.kind]?.includes(request.action) ||
-        r[request.resource.kind]?.includes("*"),
+    .some(r =>
+      r[request.resource.kind]?.some(p => p === request.action || p === "*"),
     );
 
   if (request.targetAuthority) {
@@ -84,8 +84,8 @@ export async function isWorkspaceMember({
 }
 
 export function hasAuthorityOver(
-  source: ResourcePermission | ResourcePermission[],
-  target: ResourcePermission | ResourcePermission[],
+  source: RolePermissions | RolePermissions[],
+  target: RolePermissions | RolePermissions[],
 ) {
   const sourceList = Array.isArray(source) ? source : [source];
   const targetList = Array.isArray(target) ? target : [target];

@@ -1,3 +1,4 @@
+import type { RolePermissions } from "@cleon/shared";
 import { sql } from "drizzle-orm";
 import {
   index,
@@ -7,7 +8,6 @@ import {
   text,
   uuid,
 } from "drizzle-orm/pg-core";
-import type { ResourcePermission } from "~/shared/auth-helpers";
 import { users } from "./users";
 import { workspaces } from "./workspaces";
 
@@ -20,7 +20,7 @@ export const roles = pgTable(
       .references(() => workspaces.id, { onDelete: "cascade" }),
     name: text().notNull(),
     description: text(),
-    permissions: jsonb().$type<ResourcePermission>().notNull().default({}),
+    permissions: jsonb().$type<RolePermissions>().notNull().default({}),
   },
   table => [index().on(table.workspaceId)],
 );

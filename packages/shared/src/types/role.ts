@@ -1,29 +1,26 @@
 import { z } from "zod";
 
-export const permissions = [
+export const standardPermissions = [
   "view",
-  "share",
   "create",
   "update",
   "delete",
-  "add-role",
-  "remove-role",
   "*",
 ] as const;
 
-export type Permission = (typeof permissions)[number];
+const userPermissions = ["add-role", "remove-role", "*"] as const;
+
+export type StandardPermissions = (typeof standardPermissions)[number];
 export type ResourceKind = keyof z.infer<typeof rolePermissionSchema>;
 
-const permissionSchema = z.enum(permissions).array().optional();
-
 export const rolePermissionSchema = z.object({
-  workspace: permissionSchema,
-  role: permissionSchema,
-  agent: permissionSchema,
-  tool: permissionSchema,
-  invitation: permissionSchema,
-  knowledge_base: permissionSchema,
-  user: permissionSchema,
+  workspace: z.enum(standardPermissions).array().optional(),
+  role: z.enum(standardPermissions).array().optional(),
+  agent: z.enum(standardPermissions).array().optional(),
+  tool: z.enum(standardPermissions).array().optional(),
+  invitation: z.enum(standardPermissions).array().optional(),
+  knowledge_base: z.enum(standardPermissions).array().optional(),
+  user: z.enum(userPermissions).array().optional(),
 });
 
 export const roleSelectSchema = z.object({
@@ -42,6 +39,10 @@ export const roleInsertSchema = roleSelectSchema.omit({
 export const roleUpdateSchema = roleInsertSchema.partial();
 
 export type RolePermissions = z.infer<typeof rolePermissionSchema>;
+export type ResourcePermission = {
+  [K in keyof RolePermissions]: NonNullable<RolePermissions[K]>[number];
+};
+
 export type Role = z.infer<typeof roleSelectSchema>;
 export type RoleInsert = z.infer<typeof roleInsertSchema>;
 export type RoleUpdate = z.infer<typeof roleUpdateSchema>;

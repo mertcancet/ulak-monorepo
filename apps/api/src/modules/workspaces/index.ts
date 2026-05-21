@@ -1,4 +1,5 @@
 import {
+  type RolePermissions,
   workspaceInsertSchema,
   workspaceMembersSchema,
   workspaceSelectSchema,
@@ -15,10 +16,7 @@ import {
   workspaces,
 } from "~/db/schema";
 import models from "~/plugins/models";
-import {
-  checkPermissions,
-  type ResourcePermission,
-} from "~/shared/auth-helpers";
+import { checkPermissions } from "~/shared/auth-helpers";
 import authModule from "../auth";
 
 const workspacesModule = () =>
@@ -80,7 +78,7 @@ const workspacesModule = () =>
                   workspace: ["update"],
                   invitation: ["view", "create", "delete", "update"],
                   user: ["add-role", "remove-role"],
-                } satisfies ResourcePermission,
+                } satisfies RolePermissions,
               },
               {
                 name: "Member",
@@ -88,7 +86,7 @@ const workspacesModule = () =>
                 permissions: {
                   agent: ["view"],
                   tool: ["view"],
-                } satisfies ResourcePermission,
+                } satisfies RolePermissions,
               },
             ])
             .returning({ id: roles.id });
