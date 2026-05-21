@@ -1,10 +1,4 @@
-import type {
-  Permission,
-  ResourceKind,
-  Role,
-  RolePermissions,
-} from "@cleon/shared";
-import { permissions } from "@cleon/shared";
+import type { ResourceKind, Role, RolePermissions } from "@cleon/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -37,12 +31,11 @@ const createDefaultPermissions = (): RolePermissions => ({
   tool: ["view"],
   invitation: ["view"],
   knowledge_base: ["view"],
-  user: ["view"],
 });
 
 const createPermissionMap = (
   rolePermissions: RolePermissions,
-): Record<ResourceKind, Permission[]> => ({
+): RolePermissions => ({
   workspace: rolePermissions.workspace ?? [],
   role: rolePermissions.role ?? [],
   agent: rolePermissions.agent ?? [],
@@ -152,12 +145,12 @@ export default function RolesManagement({
 
   const togglePermission = (
     resource: ResourceKind,
-    permission: Permission,
+    permission: NonNullable<RolePermissions[ResourceKind]>[number],
     checked: boolean,
   ) => {
     setNextPermissions(current => {
       const permissionMap = createPermissionMap(current);
-      const currentSet = new Set<Permission>(permissionMap[resource]);
+      const currentSet = new Set(permissionMap[resource]);
 
       if (checked) {
         currentSet.add(permission);
@@ -265,12 +258,12 @@ export default function RolesManagement({
                       {resource}
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
-                      {permissionMap[resource].length === 0 && (
+                      {permissionMap[resource]?.length === 0 && (
                         <Badge variant="secondary" className="text-[11px]">
                           -
                         </Badge>
                       )}
-                      {permissionMap[resource].map(permission => (
+                      {permissionMap[resource]?.map(permission => (
                         <Badge
                           key={`${role.id}-${resource}-${permission}`}
                           variant="secondary"
@@ -343,9 +336,10 @@ export default function RolesManagement({
                     </p>
 
                     <div className="mt-2 grid grid-cols-2 gap-2">
-                      {permissions.map(permission => {
-                        const checked =
-                          permissionMap[resource].includes(permission);
+                      {permissionMap[resource]?.map(permission => {
+                        const checked = permissionMap[resource]?.some(
+                          p => p === permission || p === "*",
+                        );
 
                         return (
                           <label
