@@ -14,6 +14,7 @@ import {
   History,
   Inbox,
   List,
+  LogOut,
   Phone,
   Settings,
   ShieldCheck,
@@ -35,6 +36,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { authApi } from "~/lib/auth-api";
 import { authClient } from "~/lib/auth-client";
 import { cn } from "~/lib/utils";
 import { workspacesApi } from "~/lib/workspaces-api";
@@ -155,11 +157,19 @@ const DashboardLayout = () => {
   );
   const hideSidebar = false;
   const { fetchRoles } = useRolesStore();
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const { data: workspaces, isPending: isWorkspacesPending } = useQuery({
     queryKey: ["workspaces"],
     queryFn: () => workspacesApi.listWorkspaces(),
     enabled: !!session,
+  });
+
+  const { refetch: signOutRequest } = useQuery({
+    queryKey: ["sign-out"],
+    queryFn: () => authApi.signOut(),
+    enabled: false,
+    retry: false,
   });
 
   useEffect(() => {
@@ -200,6 +210,64 @@ const DashboardLayout = () => {
     const nextWorkspaceId = matchingWorkspace?.id ?? workspaces[0].id;
     setSelectedWorkspaceId(nextWorkspaceId);
   }, [selectedWorkspaceId, workspaces, setSelectedWorkspaceId]);
+
+  const clearSelectedWorkspace = (): void => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    localStorage.removeItem(SELECTED_WORKSPACE_STORAGE_KEY);
+  };
+
+  const clearSessionTokenCookie = async (): Promise<void> => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if ("cookieStore" in window) {
+      const cookieStoreApi = window.cookieStore;
+      await Promise.all([
+        cookieStoreApi.delete({ name: "cleon.session_token", path: "/" }),
+        cookieStoreApi.delete({ name: "cleon.session_token", path: "/auth" }),
+      ]);
+      return;
+    }
+
+    // biome-ignore lint/suspicious/noDocumentCookie: CookieStore API olmayan tarayicilarda fallback temizleme
+    document.cookie =
+      "cleon.session_token=; Max-Age=0; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    // biome-ignore lint/suspicious/noDocumentCookie: CookieStore API olmayan tarayicilarda fallback temizleme
+    document.cookie =
+      "cleon.session_token=; Max-Age=0; path=/auth; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  };
+
+  const redirectToLogin = (): void => {
+    if (typeof window !== "undefined") {
+      window.location.href = "/auth/login";
+      return;
+    }
+
+    navigate("/auth/login", { replace: true });
+  };
+
+  const handleSignOut = async (): Promise<void> => {
+    if (isSigningOut) {
+      return;
+    }
+
+    setIsSigningOut(true);
+
+    try {
+      await signOutRequest();
+      clearSelectedWorkspace();
+      await clearSessionTokenCookie();
+      redirectToLogin();
+    } catch (error) {
+      console.error("Sign-out failed", error);
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   // localStorage işlemi store'a taşındı, bu effect gereksiz
 
@@ -446,7 +514,7 @@ const DashboardLayout = () => {
                 <ChevronDown className="text-muted-foreground h-3 w-3" />
               </button>
 
-              <div className="hover:bg-secondary flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 transition-colors">
+              <div className=" flex items-center justify-between rounded-lg px-3 py-2 transition-colors">
                 <div className="flex items-center gap-2 overflow-hidden">
                   <Avatar className="border-border h-7 w-7 border">
                     <AvatarImage src="" />
@@ -460,7 +528,6 @@ const DashboardLayout = () => {
                     </span>
                   </div>
                 </div>
-                <ChevronsUpDown className="text-muted-foreground h-3 w-3 shrink-0" />
               </div>
 
               <div className="border-muted flex items-center justify-around border-t pt-2">
@@ -477,6 +544,17 @@ const DashboardLayout = () => {
                 >
                   <Bell className="h-3 w-3" />
                   <span>Güncellemeler</span>
+                </button>
+                <button
+                  type="button"
+                  className="text-muted-foreground hover:text-foreground flex items-center gap-1 py-1.5 text-[10px] transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+                  onClick={() => {
+                    void handleSignOut();
+                  }}
+                  disabled={isSigningOut}
+                >
+                  <LogOut className="h-3 w-3" />
+                  <span>{isSigningOut ? "Çıkış..." : "Çıkış Yap"}</span>
                 </button>
               </div>
             </div>
