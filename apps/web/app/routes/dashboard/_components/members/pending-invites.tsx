@@ -43,6 +43,10 @@ export default function PendingInvites({
     },
   });
 
+  const visibleInvitations = invitations.filter(
+    invite => invite.status !== "accepted",
+  );
+
   return (
     <article className="border-border bg-background rounded-2xl border p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -50,18 +54,18 @@ export default function PendingInvites({
           Bekleyen Davetler
         </h2>
         <Badge variant="outline" className="text-xs">
-          {invitations.length}
+          {visibleInvitations.length}
         </Badge>
       </div>
 
-      {invitations.length === 0 && (
+      {visibleInvitations.length === 0 && (
         <p className="text-muted-foreground text-sm">
           Bekleyen davet bulunmuyor.
         </p>
       )}
 
       <div className="space-y-2">
-        {invitations.map(invite => (
+        {visibleInvitations.map(invite => (
           <div
             key={invite.id}
             className="border-border bg-secondary/30 flex items-center justify-between gap-3 rounded-xl border p-3"

@@ -1,10 +1,9 @@
 import type { Invitation } from "@cleon/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Inbox, XCircle } from "lucide-react";
+import { CalendarDays, Inbox, UserRound, XCircle } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { invitationsApi } from "~/lib/invitations-api";
-import { workspacesApi } from "~/lib/workspaces-api";
 import DashboardHeader from "./_components/dashboard-header";
 
 const statusVariantMap: Record<
@@ -27,18 +26,13 @@ const statusLabelMap: Record<Invitation["status"], string> = {
 export default function InvitationsPage() {
   const queryClient = useQueryClient();
 
-  const { data: workspaces = [] } = useQuery({
-    queryKey: ["workspaces"],
-    queryFn: () => workspacesApi.listWorkspaces(),
-  });
-
   const {
     data: invitations = [],
     isLoading,
     error,
   } = useQuery({
     queryKey: ["invitations", "personal"],
-    queryFn: () => invitationsApi.listInvitations("", "personal"),
+    queryFn: () => invitationsApi.listInvitations(undefined, "personal"),
   });
 
   const { mutate: acceptInvitation, isPending: isAccepting } = useMutation({
@@ -62,8 +56,6 @@ export default function InvitationsPage() {
     },
   });
 
-  const workspaceNameById = new Map(workspaces.map(w => [w.id, w.name]));
-
   return (
     <div className="animate-in fade-in flex h-full flex-col overflow-hidden duration-300">
       <DashboardHeader>
@@ -78,7 +70,7 @@ export default function InvitationsPage() {
       </DashboardHeader>
 
       <div className="flex flex-1 flex-col overflow-y-auto p-6">
-        <section className="border-border bg-background rounded-2xl border p-5">
+        <section className="border-border/70 bg-background/70 rounded-2xl border p-5 shadow-sm backdrop-blur-sm">
           {isLoading ? (
             <p className="text-muted-foreground text-sm">Yukleniyor...</p>
           ) : error ? (
@@ -86,40 +78,55 @@ export default function InvitationsPage() {
               {error instanceof Error ? error.message : "Bir hata olustu."}
             </p>
           ) : invitations.length === 0 ? (
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <div className="text-muted-foreground flex items-center gap-2 rounded-xl border border-dashed px-4 py-6 text-sm">
               <Inbox className="size-4" />
               Bekleyen davet bulunmuyor.
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {invitations.map(invitation => (
                 <article
                   key={invitation.id}
-                  className="border-border bg-secondary/30 flex flex-col gap-3 rounded-xl border p-4"
+                  className="border-border/80 bg-linear-to-br from-secondary/35 to-background flex flex-col gap-4 rounded-xl border p-4 shadow-sm transition-colors hover:from-secondary/45"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-foreground text-sm font-medium">
-                        {workspaceNameById.get(invitation.workspaceId) ??
-                          "Workspace"}
+                    <div className="space-y-3">
+                      <p className="text-foreground text-sm font-semibold tracking-tight">
+                        {invitation.workspaceName}
                       </p>
-                      <p className="text-muted-foreground mt-1 text-xs">
-                        Davet tarihi:{" "}
-                        {new Date(invitation.createdAt).toLocaleDateString(
-                          "tr-TR",
-                        )}
-                      </p>
+
+                      <div className="grid gap-2 text-xs sm:grid-cols-2">
+                        <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1">
+                          <UserRound className="size-3" />
+                          Davet eden: {invitation.invitedBy.name} (
+                          {invitation.invitedBy.email})
+                        </p>
+                        <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1">
+                          <CalendarDays className="size-3" />
+                          Davet:{" "}
+                          {new Date(invitation.createdAt).toLocaleDateString(
+                            "tr-TR",
+                          )}
+                        </p>
+                        <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1 sm:col-span-2">
+                          <CalendarDays className="size-3" />
+                          Son gecerlilik:{" "}
+                          {new Date(invitation.expiresAt).toLocaleDateString(
+                            "tr-TR",
+                          )}
+                        </p>
+                      </div>
                     </div>
                     <Badge
                       variant={statusVariantMap[invitation.status]}
-                      className="border-border border"
+                      className="border-border shrink-0 border"
                     >
                       {statusLabelMap[invitation.status]}
                     </Badge>
                   </div>
 
                   {invitation.status === "pending" ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-end gap-2 border-t pt-3">
                       <Button
                         type="button"
                         size="sm"

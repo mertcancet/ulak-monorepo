@@ -9,7 +9,6 @@ import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 import ActiveMembers from "./_components/members/active-members";
 import InviteForm from "./_components/members/invite-form";
-import MemberAssignments from "./_components/members/member-assignments";
 import PendingInvites from "./_components/members/pending-invites";
 import RolesManagement from "./_components/members/roles-management";
 import WorkspaceSelector from "./_components/members/workspace-selector";
@@ -120,7 +119,7 @@ export default function MembersPage() {
     Record<string, MemberItem[]>
   >(initialMembersByWorkspace);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState("");
+  const [inviteRoles, setInviteRoles] = useState<string[]>([]);
 
   const { data: workspaceRoles = [] } = useQuery({
     queryKey: ["roles", selectedWorkspaceId],
@@ -130,21 +129,22 @@ export default function MembersPage() {
 
   useEffect(() => {
     if (workspaceRoles.length === 0) {
-      setInviteRole("");
+      setInviteRoles([]);
       return;
     }
 
-    const roleIds = workspaceRoles.map(r => r.id);
-    if (inviteRole === "" || !roleIds.includes(inviteRole)) {
-      setInviteRole(workspaceRoles[0]?.id ?? "");
-    }
-  }, [inviteRole, workspaceRoles]);
+    const roleIds = new Set(workspaceRoles.map(r => r.id));
+    setInviteRoles(previousRoles => {
+      const nextRoles = previousRoles.filter(roleId => roleIds.has(roleId));
+      return nextRoles;
+    });
+  }, [workspaceRoles]);
 
   const members = selectedWorkspaceId
     ? (membersByWorkspace[selectedWorkspaceId] ?? initialMembers)
     : [];
 
-  const memberAssignments: MemberAssignmentItem[] = _workspaces.flatMap(
+  const _memberAssignments: MemberAssignmentItem[] = _workspaces.flatMap(
     workspace => {
       const workspaceMembers = membersByWorkspace[workspace.id] ?? [];
       return workspaceMembers.map(member => ({
@@ -166,7 +166,7 @@ export default function MembersPage() {
   );
 
   const canInvite =
-    isValidEmail(normalizedEmail) && !hasDuplicate && inviteRole !== "";
+    isValidEmail(normalizedEmail) && !hasDuplicate && inviteRoles.length > 0;
 
   const canCreateWorkspace = newWorkspaceName.trim().length >= 3;
 
@@ -235,7 +235,14 @@ export default function MembersPage() {
             <TabsTrigger value="roles">Roles</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="members" className="mt-6 space-y-6">
+          <TabsContent
+            value="members"
+            className="mt-6 space-y-6 data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-right-2 data-[state=active]:duration-300 motion-reduce:data-[state=active]:animate-none"
+          >
+            <section>
+              <ActiveMembers workspaceId={selectedWorkspaceId ?? ""} />
+            </section>
+
             <section className="border-border bg-background rounded-2xl border p-5">
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div>
@@ -251,24 +258,23 @@ export default function MembersPage() {
 
               <InviteForm
                 inviteEmail={inviteEmail}
-                inviteRole={inviteRole}
+                inviteRoles={inviteRoles}
                 roleOptions={workspaceRoles}
                 canInvite={canInvite}
                 selectedWorkspaceId={selectedWorkspaceId ?? ""}
                 setInviteEmail={setInviteEmail}
-                setInviteRole={setInviteRole}
+                setInviteRoles={setInviteRoles}
               />
             </section>
-
-            <section className="grid gap-6 lg:grid-cols-2">
-              <ActiveMembers members={members} />
+            <section>
               <PendingInvites workspaceId={selectedWorkspaceId ?? ""} />
             </section>
-
-            <MemberAssignments memberAssignments={memberAssignments} />
           </TabsContent>
 
-          <TabsContent value="roles" className="mt-6">
+          <TabsContent
+            value="roles"
+            className="mt-6 data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-right-2 data-[state=active]:duration-300 motion-reduce:data-[state=active]:animate-none"
+          >
             <RolesManagement
               selectedWorkspaceId={selectedWorkspaceId ?? ""}
               roles={workspaceRoles}
