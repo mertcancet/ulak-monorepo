@@ -57,7 +57,7 @@ export async function isWorkspaceOwner({
   workspaceId,
 }: IsWorkspaceOwnerParams) {
   const [workspace] = await db
-    .select()
+    .select({ ownerId: workspaces.ownerId })
     .from(workspaces)
     .where(eq(workspaces.id, workspaceId));
 

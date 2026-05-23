@@ -9,12 +9,12 @@ export const standardPermissions = [
 ] as const;
 
 const userPermissions = ["add-role", "remove-role", "*"] as const;
+const workspacePermissions = ["view", "update", "*"] as const;
 
-export type StandardPermissions = (typeof standardPermissions)[number];
 export type ResourceKind = keyof z.infer<typeof rolePermissionSchema>;
 
 export const rolePermissionSchema = z.object({
-  workspace: z.enum(standardPermissions).array().optional(),
+  workspace: z.enum(workspacePermissions).array().optional(),
   role: z.enum(standardPermissions).array().optional(),
   agent: z.enum(standardPermissions).array().optional(),
   tool: z.enum(standardPermissions).array().optional(),

@@ -3,6 +3,7 @@ import {
   workspaceInsertSchema,
   workspaceMembersSchema,
   workspaceSelectSchema,
+  workspaceUpdateSchema,
 } from "@cleon/shared";
 import { and, desc, eq, sql } from "drizzle-orm";
 import Elysia from "elysia";
@@ -105,7 +106,6 @@ const workspacesModule = () =>
       },
       {
         requireAuth: true,
-        headers: "headers.workspaceId",
         body: workspaceInsertSchema,
         response: {
           201: "created.response",
@@ -166,32 +166,55 @@ const workspacesModule = () =>
           403: z.any(),
         },
       },
+    )
+    .patch(
+      ":id",
+      async ({ params, body, session, problem }) => {
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "workspace",
+            workspaceId: params.id,
+          },
+          action: "update",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        await db
+          .update(workspaces)
+          .set(body)
+          .where(eq(workspaces.id, params.id));
+      },
+      {
+        requireAuth: true,
+        body: workspaceUpdateSchema,
+      },
+    )
+    .delete(
+      ":id",
+      async ({ session, params, problem }) => {
+        const [workspace] = await db
+          .select({ ownerId: workspaces.ownerId })
+          .from(workspaces)
+          .where(eq(workspaces.id, params.id));
+
+        if (!workspace) return problem({ title: "Not Found", status: 404 });
+
+        const isAllowed = workspace.ownerId === session.userId;
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        await db.delete(workspaces).where(eq(workspaces.id, params.id));
+      },
+      {
+        requireAuth: true,
+        detail: {
+          description: "Only workspace owners can delete a workspace.",
+        },
+      },
     );
-// .patch(
-//   ":id",
-//   async ({ params: { id }, body, session, headers, problem }) => {
-//     const workspaceId = headers["cleon-workspace-id"];
-
-//     const isAllowed = await checkPermissions({
-//       user: {
-//         id: session.userId,
-//       },
-//       resource: {
-//         kind: "wo",
-//         workspaceId,
-//       },
-//       action: "update",
-//     });
-
-//     if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
-
-//     await db.update(agents).set(body).where(eq(agents.id, id));
-//   },
-//   {
-//     requireAuth: true,
-//     headers: "headers.workspaceId",
-//     body: agentUpdateSchema,
-//   },
-// );
 
 export default workspacesModule;

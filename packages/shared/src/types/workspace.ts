@@ -12,6 +12,10 @@ export const workspaceInsertSchema = workspaceSelectSchema.omit({
   ownerId: true,
 });
 
+export const workspaceUpdateSchema = workspaceSelectSchema.pick({
+  name: true,
+});
+
 export const workspaceMembersSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -23,5 +27,6 @@ export const workspaceMembersSchema = z.object({
 
 export type Workspace = z.infer<typeof workspaceSelectSchema>;
 export type WorkspaceInsert = z.infer<typeof workspaceInsertSchema>;
+export type WorkspaceUpdate = z.infer<typeof workspaceUpdateSchema>;
 
 export type WorkspaceMember = z.infer<typeof workspaceMembersSchema>;
