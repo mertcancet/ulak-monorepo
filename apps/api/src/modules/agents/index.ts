@@ -4,7 +4,16 @@ import {
   agentUpdateSchema,
   toolsSelectSchema,
 } from "@cleon/shared";
-import { and, desc, eq, getColumns, ne, sql } from "drizzle-orm";
+import {
+  and,
+  desc,
+  eq,
+  getColumns,
+  inArray,
+  ne,
+  type SQL,
+  sql,
+} from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
@@ -221,25 +230,79 @@ const agentsModule = () =>
         body: z.object({ toolIds: z.uuidv7().array() }),
       },
     )
+    .delete(
+      ":id/tools",
+      async ({ params, body: payload, session, headers, problem }) => {
+        const workspaceId = headers["cleon-workspace-id"];
+        const agentId = params.id;
+
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "agent",
+            workspaceId,
+          },
+          action: "update",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        await db
+          .delete(agent_tools)
+          .where(
+            and(
+              inArray(agent_tools.toolId, payload.toolIds),
+              eq(agent_tools.agentId, agentId),
+            ),
+          );
+      },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+        body: z.object({ toolIds: z.uuidv7().array() }),
+      },
+    )
     .post(
       "bootstrap",
-      async ({ body, headers, problem }) => {
+      async ({ body: payload, headers, problem }) => {
         const agentSecret = headers["cleon-agent-secret"];
-        const { phoneNumber } = body;
 
         if (agentSecret !== env.CLEON_AGENT_SECRET)
           return problem({ title: "Forbidden", status: 403 });
 
+        let where: SQL = sql``;
+
+        if ("phoneNumber" in payload)
+          where = eq(agents.phoneNumber, payload.phoneNumber);
+
+        if ("agentId" in payload) where = eq(agents.id, payload.agentId);
+
+        const agentTools = db
+          .select({ tools: sql`JSON_AGG(${agent_tools.toolId})`.as("tools") })
+          .from(agent_tools)
+          .where(eq(agent_tools.agentId, agents.id))
+          .as("agent_toolset");
+
         const [startAgent] = await db
-          .select()
+          .select({
+            ...getColumns(agents),
+            tools: sql`COALESCE(${agentTools.tools}, '[]'::json)`.as("tools"),
+          })
           .from(agents)
-          .where(eq(agents.phoneNumber, phoneNumber));
+          .leftJoinLateral(agentTools, sql`true`)
+          .where(where);
 
         if (!startAgent) return problem({ title: "Not Found", status: 404 });
 
         const availableAgents = await db
-          .select()
+          .select({
+            ...getColumns(agents),
+            tools: sql`COALESCE(${agentTools.tools}, '[]'::json)`.as("tools"),
+          })
           .from(agents)
+          .leftJoinLateral(agentTools, sql`true`)
           .where(
             and(
               eq(agents.workspaceId, startAgent.workspaceId),
@@ -260,11 +323,20 @@ const agentsModule = () =>
       },
       {
         headers: "headers.cleonAgentSecret",
-        body: z.object({ phoneNumber: z.string() }),
+        body: z.xor([
+          z.object({ phoneNumber: z.string() }),
+          z.object({ agentId: z.string() }),
+        ]),
         response: {
           200: z.object({
-            startAgent: agentSelectSchema,
-            availableAgents: agentSelectSchema.array(),
+            startAgent: agentSelectSchema.extend({
+              tools: z.uuidv7().array(),
+            }),
+            availableAgents: agentSelectSchema
+              .extend({
+                tools: z.uuidv7().array(),
+              })
+              .array(),
             availableTools: toolsSelectSchema.array(),
           }),
           403: z.any(),
