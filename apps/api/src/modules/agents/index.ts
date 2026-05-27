@@ -135,7 +135,29 @@ const agentsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        const [agent] = await db.select().from(agents).where(eq(agents.id, id));
+        const agentTools = db
+          .select({
+            tools: sql`JSON_AGG(
+              JSON_BUILD_OBJECT(
+                'id', ${tools.id},
+                'name', ${tools.name},
+                'description', ${tools.description}
+              )
+            )`.as("tools"),
+          })
+          .from(agent_tools)
+          .innerJoin(tools, eq(tools.id, agent_tools.toolId))
+          .where(eq(agent_tools.agentId, agents.id))
+          .as("agent_toolset");
+
+        const [agent] = await db
+          .select({
+            ...getColumns(agents),
+            tools: sql`COALESCE(${agentTools.tools}, '[]'::json)`.as("tools"),
+          })
+          .from(agents)
+          .leftJoinLateral(agentTools, sql`true`)
+          .where(eq(agents.id, id));
 
         if (!agent) return problem({ title: "Not Found", status: 404 });
 
@@ -145,7 +167,15 @@ const agentsModule = () =>
         requireAuth: true,
         headers: "headers.workspaceId",
         response: {
-          200: agentSelectSchema,
+          200: agentSelectSchema.extend({
+            tools: toolsSelectSchema
+              .pick({
+                id: true,
+                name: true,
+                description: true,
+              })
+              .array(),
+          }),
           403: z.any(),
         },
       },
