@@ -34,9 +34,18 @@ const endCallTool = z.object({
   end_instructions: z.string().optional(),
 });
 
+const agentHandoffTool = z.object({
+  type: z.literal("AgentHandoff"),
+  destination_agent: z.uuidv7().meta({ description: "Destination agent Id" }),
+  context_strategy: z.literal(["all", "last_n", "none"]),
+  context_message_limit: z.int().positive(),
+  handoff_message: z.string().optional(),
+});
+
 export const toolSettingsSchema = z.discriminatedUnion("type", [
   httpTool,
   endCallTool,
+  agentHandoffTool,
 ]);
 
 export const toolsSelectSchema = z.object({
