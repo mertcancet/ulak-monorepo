@@ -2,11 +2,11 @@ import type { ToolSettings } from "@cleon/shared";
 import { sql } from "drizzle-orm";
 import {
   boolean,
-  index,
   jsonb,
   pgTable,
   primaryKey,
   text,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 import { agents } from "./agents";
@@ -24,7 +24,7 @@ export const tools = pgTable(
     disallowInterruptions: boolean().default(false),
     settings: jsonb().$type<ToolSettings>().notNull(),
   },
-  table => [index().on(table.workspaceId)],
+  table => [uniqueIndex().on(table.workspaceId, table.name)],
 );
 
 export const agent_tools = pgTable(

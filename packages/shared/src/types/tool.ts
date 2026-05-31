@@ -48,7 +48,8 @@ export const toolsSelectSchema = z.object({
     .regex(/^[a-z][a-z0-9_-]*$/, {
       message:
         "Tool name should only contain alphanumeric characters, underscores and hyphens.",
-    }),
+    })
+    .meta({ description: "Tool name should be unique across workspaces." }),
   description: z.string(),
   disallowInterruptions: z.boolean().default(false),
   settings: toolSettingsSchema,
