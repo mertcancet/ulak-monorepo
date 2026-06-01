@@ -1,12 +1,12 @@
-import { FormEvent, useState } from 'react';
 import { ArrowLeft, CheckCircle2, Clock3, Headphones, ShieldCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Footer } from '@/pages/landing/components/Footer';
-import { Navbar } from '@/pages/landing/components/Navbar';
+import { type FormEvent, useState } from 'react';
+import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useLocalizedPath, useTranslations } from '@/i18n';
+import { Footer } from '@/pages/landing/components/Footer';
+import { Navbar } from '@/pages/landing/components/Navbar';
 
 type DemoFormData = {
   fullName: string;

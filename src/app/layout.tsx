@@ -1,9 +1,9 @@
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Topbar } from '@/components/layout/Topbar';
 import { useTranslations } from '@/i18n';
 import { stripLocaleFromPathname } from '@/i18n/config';
-import { useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
 
 export function AppLayout() {
   const location = useLocation();

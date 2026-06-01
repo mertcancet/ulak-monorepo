@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
+import { Link } from 'react-router';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
+import { Button } from '@/components/ui/button';
 import { useLocalizedPath, useTranslations } from '@/i18n';
 import { usePathname } from '@/i18n/navigation';
-import { Link } from 'react-router-dom';
 
 export const Navbar = () => {
   const t = useTranslations();

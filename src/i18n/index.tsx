@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext } from 'react';
-import { Navigate, Outlet, ScrollRestoration, useLocation, useParams } from 'react-router-dom';
-import { defaultLocale, isLocale, localizePath, type Locale } from '@/i18n/config';
+import { Navigate, Outlet, ScrollRestoration, useLocation, useParams } from 'react-router';
+import { defaultLocale, isLocale, type Locale, localizePath } from '@/i18n/config';
 import { messages } from '@/i18n/messages';
 
 interface MessageTree {

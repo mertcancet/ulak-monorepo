@@ -1,7 +1,7 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { localizePath } from '@/i18n/config';
+import { useLocation, useNavigate } from 'react-router';
 import { useLocale } from '@/i18n';
 import type { Locale } from '@/i18n/config';
+import { localizePath } from '@/i18n/config';
 
 function stripLocale(pathname: string): string {
   const segments = pathname.split('/').filter(Boolean);

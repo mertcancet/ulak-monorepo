@@ -1,6 +1,6 @@
+import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { useLocalizedPath, useTranslations } from '@/i18n';
-import { Link } from 'react-router-dom';
 
 export const CTA = () => {
   const t = useTranslations();

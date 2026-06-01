@@ -1,8 +1,8 @@
+import { createBrowserRouter, Navigate } from 'react-router';
 import { LocaleLayout, useLocale } from '@/i18n';
 import { defaultLocale } from '@/i18n/config';
 import { DemoRequestPage } from '@/pages/demo/DemoRequestPage';
 import LandingPage from '@/pages/landing/LandingPage';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 function LocaleRedirect({ to }: { to: string }) {
   const locale = useLocale();
