@@ -1,0 +1,10 @@
+[Unit]
+Description=Cleon AI Postgres Pod
+
+[Pod]
+PublishPort=5432:5432
+Network=cleon.network
+NetworkAlias=postgres.svc.local
+
+[Install]
+WantedBy=default.target

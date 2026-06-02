@@ -1,0 +1,47 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/api/**'
+      - 'packages/shared/**'
+      - '.podman/**'
+      - '.docker/backend.Dockerfile'
+      - '.github/workflows/deploy.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          set -e
+
+          echo "⏳️ Deploy started.."
+
+          cd ~/backend
+
+          echo "📁 Pulling backend repo"
+          git pull origin main
+
+          echo "🪸 Configuring systemd services"
+
+          mkdir -p ~/.config/containers/systemd/
+          rm -f ~/.config/containers/systemd/*
+
+          cp .podman/* ~/.config/containers/systemd/
+
+          echo "🔄 Restarting systemd services"
+
+          systemctl --user daemon-reload
+          systemctl --user restart backend.service
+
+          echo "✅ Done."

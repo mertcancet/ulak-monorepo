@@ -1,0 +1,7 @@
+[Unit]
+Description=Cleon AI Backend Image
+
+[Build]
+ImageTag=localhost/cleon-backend
+SetWorkingDirectory=/home/cleon/backend
+File=/home/cleon/backend/.docker/backend.Dockerfile

@@ -1,0 +1,9 @@
+[Unit]
+Description=Backend
+After=postgres.container
+Wants=postgres.container
+
+[Container]
+Image=backend.build
+EnvironmentFile=/home/cleon/.env.backend
+Pod=backend.pod

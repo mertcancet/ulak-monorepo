@@ -1,0 +1,11 @@
+[Unit]
+Description=Postgres
+
+[Container]
+Image=docker.io/library/postgres:18-alpine
+EnvironmentFile=/home/cleon/.env.postgres
+Pod=postgres.pod
+Volume=postgres.volume:/var/lib/postgresql
+
+[Service]
+Restart=always

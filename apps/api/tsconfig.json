@@ -9,8 +9,7 @@
       "~/plugins/*": ["./src/plugins/*"],
       "~/modules/*": ["./src/modules/*"],
       "~/shared/*": ["./src/shared/*"],
-      "~/emails": ["./src/emails/index"],
-      "@cleon/shared": ["../../packages/shared/src"]
+      "~/emails": ["./src/emails/index"]
     },
     "jsx": "react-jsx",
     "lib": ["ESNext"],
