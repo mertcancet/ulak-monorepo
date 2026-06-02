@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from "react-router";
 import { agentsApi } from "~/lib/agents-api";
 import { useWorkspaceStore } from "~/store/workspace-store";
 import { AgentHeader } from "./_components/agent/agent-header";
-import { ConfigSidebar } from "./_components/agent/config-sidebar/index";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
 import { GreetingSection } from "./_components/agent/greeting-section";
 import { PromptEditor } from "./_components/agent/prompt-editor";
@@ -24,7 +23,14 @@ export default function AgentConfigPage() {
   const [publishError, setPublishError] = useState<string | null>(null);
   const [publishSuccess, setPublishSuccess] = useState<string | null>(null);
   const [agentName, setAgentName] = useState("Yeni Agent");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [model, setModel] = useState("");
   const [systemInstructions, setSystemInstructions] = useState("");
+  const [voice, setVoice] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [allowInterruptions, setAllowInterruptions] = useState(true);
+  const [greetPrompt, setGreetPrompt] = useState("");
+  const [goodbyePrompt, setGoodbyePrompt] = useState("");
   const { selectedWorkspaceId } = useWorkspaceStore();
   const agentId = searchParams.get("agentId") ?? "";
 
@@ -50,32 +56,46 @@ export default function AgentConfigPage() {
     if (!agentDetail) {
       if (isDraftMode) {
         setAgentName("Yeni Agent");
+        setPhoneNumber("");
+        setModel("");
         setSystemInstructions("");
+        setVoice("");
+        setApiKey("");
+        setAllowInterruptions(true);
+        setGreetPrompt("");
+        setGoodbyePrompt("");
       }
       return;
     }
 
     setAgentName(agentDetail.name || "Yeni Agent");
+    setPhoneNumber(agentDetail.phoneNumber ?? "");
+    setModel(agentDetail.llm?.model ?? "");
     setSystemInstructions(agentDetail.instructions ?? "");
+    setVoice(agentDetail.llm?.voice ?? "");
+    setApiKey(agentDetail.llm?.api_key ?? "");
+    setAllowInterruptions(agentDetail.allowInterruptions);
+    setGreetPrompt(agentDetail.greetPrompt ?? "");
+    setGoodbyePrompt(agentDetail.goodbyePrompt ?? "");
   }, [agentDetail, isDraftMode]);
 
   const { mutateAsync: createAgent, isPending: isSaving } = useMutation({
     mutationFn: () =>
       agentsApi.createAgent({
         name: agentName,
-        phoneNumber: "",
+        phoneNumber,
         llm: {
           provider: "google",
-          model: "gemini-2.0-flash",
+          model,
           instructions: systemInstructions,
           is_realtime: false,
-          voice: "",
-          api_key: "",
+          voice,
+          api_key: apiKey,
         },
         instructions: systemInstructions,
-        allowInterruptions: true,
-        greetPrompt: "",
-        goodbyePrompt: "",
+        allowInterruptions,
+        greetPrompt,
+        goodbyePrompt,
       }),
     onSuccess: async createdAgent => {
       await queryClient.invalidateQueries({
@@ -95,19 +115,19 @@ export default function AgentConfigPage() {
 
       return agentsApi.updateAgent(agentId, {
         name: agentName,
-        phoneNumber: agentDetail.phoneNumber ?? "",
+        phoneNumber,
         llm: {
           provider: "google",
-          model: agentDetail.llm?.model ?? "",
+          model,
           instructions: systemInstructions,
           is_realtime: agentDetail.llm?.is_realtime ?? false,
-          voice: agentDetail.llm?.voice ?? "",
-          api_key: agentDetail.llm?.api_key ?? "",
+          voice,
+          api_key: apiKey,
         },
         instructions: systemInstructions,
-        allowInterruptions: agentDetail.allowInterruptions,
-        greetPrompt: agentDetail.greetPrompt ?? "",
-        goodbyePrompt: agentDetail.goodbyePrompt ?? "",
+        allowInterruptions,
+        greetPrompt,
+        goodbyePrompt,
       });
     },
     onSuccess: async () => {
@@ -158,7 +178,7 @@ export default function AgentConfigPage() {
         title={isDraftMode ? `${agentName} (Taslak)` : agentName}
         onEditName={setAgentName}
         agentId={agentDetail?.id}
-        model={agentDetail?.llm?.model}
+        model={model}
         onPublish={handlePublish}
         isPublishing={isPublishing}
         canPublish={!isDraftMode && !isAgentLoading && Boolean(agentId)}
@@ -207,14 +227,32 @@ export default function AgentConfigPage() {
           <div className="flex min-w-100 flex-1 flex-col space-y-4">
             <QuickSelectToolbar />
             <PromptEditor
+              name={agentName}
+              onNameChange={setAgentName}
+              phoneNumber={phoneNumber}
+              onPhoneNumberChange={setPhoneNumber}
+              model={model}
+              onModelChange={setModel}
+              voice={voice}
+              onVoiceChange={setVoice}
+              apiKey={apiKey}
+              onApiKeyChange={setApiKey}
+              allowInterruptions={allowInterruptions}
+              onAllowInterruptionsChange={setAllowInterruptions}
+              greetPrompt={greetPrompt}
+              onGreetPromptChange={setGreetPrompt}
+              goodbyePrompt={goodbyePrompt}
+              onGoodbyePromptChange={setGoodbyePrompt}
               value={systemInstructions}
               onChange={setSystemInstructions}
             />
-            <GreetingSection greetPrompt={agentDetail?.greetPrompt} />
+            <GreetingSection greetPrompt={greetPrompt} />
           </div>
 
           {/* Middle Column: Configuration Panel */}
+          {/*
           <ConfigSidebar />
+         */}
 
           {/* Right Column: Testing Panel */}
           <TestingPanel />
