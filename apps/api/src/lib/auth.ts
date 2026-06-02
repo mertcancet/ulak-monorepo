@@ -29,6 +29,7 @@ const auth = betterAuth({
     schema,
   }),
   appName: "Cleon",
+  baseURL: env.BASE_URL,
   basePath: "/auth",
   trustedOrigins: env.CORS_ORIGINS,
   user: {
