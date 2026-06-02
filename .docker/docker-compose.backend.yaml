@@ -5,8 +5,28 @@ services:
     build:
       context: ../
       dockerfile: .docker/backend.Dockerfile 
+    environment:
+      PORT: ${PORT:-3000}
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL: ${DATABASE_URL}
+      BETTER_AUTH_SECRET: ${DBETTER_AUTH_SECRET}
+      BASE_URL: ${BASE_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      OPENAPI_SERVERS: ${OPENAPI_SERVERS}
+      CLEON_AGENT_SECRET: ${CLEON_AGENT_SECRET}
+
+      LIVEKIT_URL: ${LIVEKIT_URL}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
+
+      AWS_SES_REGION: ${AWS_SES_REGION}
+      AWS_SES_ACCESS_KEY: ${AWS_SES_ACCESS_KEY}
+      AWS_SES_SECRET_KEY: ${AWS_SES_SECRET_KEY}
+
+      EMAIL_FROM: ${EMAIL_FROM}
     ports:
-      - 3000:3000
+      - "${PORT:-3000}:${PORT:-3000}"
     networks:
       - cleon-net
     restart: always
