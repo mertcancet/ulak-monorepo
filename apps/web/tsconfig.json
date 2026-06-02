@@ -17,8 +17,7 @@
       "~/*": ["./app/*"],
       "@cleon/auth": ["../../apps/api/src/lib/auth"],
       "~/plugins/*": ["../../apps/api/src/plugins/*"],
-      "~/modules/*": ["../../apps/api/src/modules/*"],
-      "@cleon/shared": ["../../packages/shared/src"]
+      "~/modules/*": ["../../apps/api/src/modules/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
