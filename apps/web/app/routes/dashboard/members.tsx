@@ -1,10 +1,17 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Building2, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import {
+  canAddUserRole,
+  canRemoveUserRole,
+  canUpdateWorkspace,
+  canViewInvitation,
+} from "~/lib/permission-helpers";
 import { rolesApi } from "~/lib/roles-api";
 import { workspacesApi } from "~/lib/workspaces-api";
+import { useRoles } from "~/store/roles-store";
 import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 import ActiveMembers from "./_components/members/active-members";
@@ -25,84 +32,14 @@ interface WorkspaceItem {
   name: string;
 }
 
-interface MemberAssignmentItem extends MemberItem {
-  workspaceId: string;
-  workspaceName: string;
-}
-
-const initialWorkspaces: WorkspaceItem[] = [
-  {
-    id: "ws-1",
-    name: "Main Workspace",
-  },
-  {
-    id: "ws-2",
-    name: "Sales Ops",
-  },
-  {
-    id: "ws-3",
-    name: "Support",
-  },
-];
-
-const initialMembersByWorkspace: Record<string, MemberItem[]> = {
-  "ws-1": [
-    {
-      id: "m-1",
-      email: "owner@callingai.com",
-      role: "admin",
-      joinedAt: "2 Mayıs 2026",
-    },
-    {
-      id: "m-2",
-      email: "ops@callingai.com",
-      role: "member",
-      joinedAt: "28 Nisan 2026",
-    },
-  ],
-  "ws-2": [
-    {
-      id: "m-3",
-      email: "saleslead@callingai.com",
-      role: "admin",
-      joinedAt: "20 Nisan 2026",
-    },
-  ],
-  "ws-3": [
-    {
-      id: "m-4",
-      email: "support@northwind.com",
-      role: "member",
-      joinedAt: "30 Nisan 2026",
-    },
-  ],
-};
-
-const _workspaceFallbackMember: MemberItem = {
-  id: "m-default",
-  email: "owner@example.com",
-  role: "admin",
-  joinedAt: "Bugün",
-};
-
-const initialMembers: MemberItem[] = [
-  {
-    id: "m-1",
-    email: "owner@callingai.com",
-    role: "admin",
-    joinedAt: "2 Mayıs 2026",
-  },
-  {
-    id: "m-2",
-    email: "ops@callingai.com",
-    role: "member",
-    joinedAt: "28 Nisan 2026",
-  },
-];
-
 export default function MembersPage() {
-  const [_workspaces, _setWorkspaces] =
-    useState<WorkspaceItem[]>(initialWorkspaces);
+  const queryClient = useQueryClient();
+  const { permissions } = useRoles();
+  const canViewInvitations = canViewInvitation(permissions);
+  const canUpdateWorkspaceName = canUpdateWorkspace(permissions);
+  const canAddRole = canAddUserRole(permissions);
+  const canRemoveRole = canRemoveUserRole(permissions);
+  const [_workspaces, _setWorkspaces] = useState<WorkspaceItem[]>([]);
   const selectedWorkspaceId = useWorkspaceStore(
     state => state.selectedWorkspaceId,
   );
@@ -117,7 +54,7 @@ export default function MembersPage() {
 
   const [membersByWorkspace, _setMembersByWorkspace] = useState<
     Record<string, MemberItem[]>
-  >(initialMembersByWorkspace);
+  >({});
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRoles, setInviteRoles] = useState<string[]>([]);
 
@@ -141,19 +78,8 @@ export default function MembersPage() {
   }, [workspaceRoles]);
 
   const members = selectedWorkspaceId
-    ? (membersByWorkspace[selectedWorkspaceId] ?? initialMembers)
+    ? membersByWorkspace[selectedWorkspaceId] || []
     : [];
-
-  const _memberAssignments: MemberAssignmentItem[] = _workspaces.flatMap(
-    workspace => {
-      const workspaceMembers = membersByWorkspace[workspace.id] ?? [];
-      return workspaceMembers.map(member => ({
-        ...member,
-        workspaceId: workspace.id,
-        workspaceName: workspace.name,
-      }));
-    },
-  );
 
   const normalizedEmail = inviteEmail.trim().toLowerCase();
 
@@ -177,6 +103,14 @@ export default function MembersPage() {
         setSelectedWorkspaceId(data.id);
       });
       setNewWorkspaceName("");
+    },
+  });
+
+  const { mutate: updateWorkspace } = useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) =>
+      workspacesApi.updateWorkspace(id, { name }),
+    onSuccess: () => {
+      void refetch();
     },
   });
 
@@ -220,7 +154,9 @@ export default function MembersPage() {
             workspacesData={workspacesData || []}
             newWorkspaceName={newWorkspaceName}
             canCreateWorkspace={canCreateWorkspace}
+            canUpdateWorkspace={canUpdateWorkspaceName}
             handleCreateWorkspace={handleCreateWorkspace}
+            handleUpdateWorkspace={(id, name) => updateWorkspace({ id, name })}
             setSelectedWorkspaceId={setSelectedWorkspaceId}
             setNewWorkspaceName={setNewWorkspaceName}
           />
@@ -240,7 +176,12 @@ export default function MembersPage() {
             className="mt-6 space-y-6 data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-right-2 data-[state=active]:duration-300 motion-reduce:data-[state=active]:animate-none"
           >
             <section>
-              <ActiveMembers workspaceId={selectedWorkspaceId ?? ""} />
+              <ActiveMembers
+                workspaceId={selectedWorkspaceId ?? ""}
+                availableRoles={workspaceRoles}
+                canAddRole={canAddRole}
+                canRemoveRole={canRemoveRole}
+              />
             </section>
 
             <section className="border-border bg-background rounded-2xl border p-5">
@@ -264,11 +205,18 @@ export default function MembersPage() {
                 selectedWorkspaceId={selectedWorkspaceId ?? ""}
                 setInviteEmail={setInviteEmail}
                 setInviteRoles={setInviteRoles}
+                onSuccess={() => {
+                  void queryClient.invalidateQueries({
+                    queryKey: ["invitations", selectedWorkspaceId ?? ""],
+                  });
+                }}
               />
             </section>
-            <section>
-              <PendingInvites workspaceId={selectedWorkspaceId ?? ""} />
-            </section>
+            {canViewInvitations ? (
+              <section>
+                <PendingInvites workspaceId={selectedWorkspaceId ?? ""} />
+              </section>
+            ) : null}
           </TabsContent>
 
           <TabsContent

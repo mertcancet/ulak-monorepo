@@ -18,4 +18,10 @@ export const workspacesApi = {
       method: "POST",
       body,
     }),
+
+  updateWorkspace: (id: string, body: Pick<WorkspaceInsert, "name">) =>
+    request<{ id: string }>(`/workspaces/${id}`, {
+      method: "PATCH",
+      body,
+    }),
 };

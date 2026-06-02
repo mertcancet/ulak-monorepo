@@ -1,11 +1,24 @@
-import type { Role } from "@cleon/shared";
+import type { Role, RolePermissions } from "@cleon/shared";
 import { useCallback, useEffect } from "react";
 import { create } from "zustand";
 import { rolesApi } from "~/lib/roles-api";
 import { useWorkspaceStore } from "~/store/workspace-store";
 
+const SELECTED_USER_ID_STORAGE_KEY = "selected-user-id";
+const SELECTED_WORKSPACE_OWNER_STORAGE_KEY = "selected-workspace-owner-id";
+
+const getStorageValue = (key: string): string | null => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return localStorage.getItem(key);
+};
+
 interface RolesState {
   roles: Role | null;
+  permissions: RolePermissions | null;
+  isOwner: boolean;
   isLoading: boolean;
   error: string | null;
   clearRoles: () => void;
@@ -15,17 +28,32 @@ interface RolesState {
 
 export const useRolesStore = create<RolesState>((set, get) => ({
   roles: null,
+  permissions: null,
+  isOwner: false,
   isLoading: false,
   error: null,
   clearRoles: () => {
-    set({ roles: null, error: null, isLoading: false });
+    set({
+      roles: null,
+      permissions: null,
+      isOwner: false,
+      error: null,
+      isLoading: false,
+    });
   },
   fetchRoles: async (selectedWorkspaceId?: string | null) => {
     const nextWorkspaceId =
       selectedWorkspaceId ?? useWorkspaceStore.getState().selectedWorkspaceId;
+    const userId = getStorageValue(SELECTED_USER_ID_STORAGE_KEY);
 
-    if (!nextWorkspaceId) {
-      set({ roles: null, isLoading: false, error: null });
+    if (!nextWorkspaceId || !userId) {
+      set({
+        roles: null,
+        permissions: null,
+        isOwner: false,
+        isLoading: false,
+        error: null,
+      });
       return null;
     }
 
@@ -35,25 +63,33 @@ export const useRolesStore = create<RolesState>((set, get) => ({
     });
 
     try {
-      const filteredRoles = await rolesApi.listRoles(nextWorkspaceId);
-      const selectedRole =
-        filteredRoles.find(
-          role =>
-            role.permissions.workspace?.includes("*") &&
-            role.permissions.role?.includes("*") &&
-            role.permissions.agent?.includes("*") &&
-            role.permissions.tool?.includes("*"),
-        ) ??
-        filteredRoles[0] ??
-        null;
+      const { permissions } = await rolesApi.getUserPermissions(
+        nextWorkspaceId,
+        userId,
+      );
+      const workspaceOwnerId = getStorageValue(
+        SELECTED_WORKSPACE_OWNER_STORAGE_KEY,
+      );
+      const isOwner = !!workspaceOwnerId && workspaceOwnerId === userId;
 
-      set({ roles: selectedRole, isLoading: false });
+      set({
+        roles: null,
+        permissions,
+        isOwner,
+        isLoading: false,
+      });
 
-      return selectedRole;
+      return null;
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : "Roller yuklenemedi.";
-      set({ error: message, isLoading: false });
+      set({
+        roles: null,
+        error: message,
+        permissions: null,
+        isOwner: false,
+        isLoading: false,
+      });
       throw error;
     }
   },
@@ -65,6 +101,7 @@ export const useRolesStore = create<RolesState>((set, get) => ({
 export const useRoles = () => {
   const { selectedWorkspaceId } = useWorkspaceStore();
   const roles = useRolesStore(state => state.roles);
+  const permissions = useRolesStore(state => state.permissions);
   const isLoading = useRolesStore(state => state.isLoading);
   const error = useRolesStore(state => state.error);
   const clearRoles = useRolesStore(state => state.clearRoles);
@@ -87,7 +124,7 @@ export const useRoles = () => {
   return {
     roles,
     roleId: roles?.id ?? null,
-    permissions: roles?.permissions ?? null,
+    permissions,
     isLoading,
     error,
     refresh,

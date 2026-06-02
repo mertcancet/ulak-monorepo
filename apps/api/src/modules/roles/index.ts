@@ -1,5 +1,6 @@
 import {
   roleInsertSchema,
+  rolePermissionSchema,
   roleSelectSchema,
   roleUpdateSchema,
 } from "@cleon/shared";
@@ -9,7 +10,11 @@ import { z } from "zod";
 import db from "~/db";
 import { roles } from "~/db/schema";
 import models from "~/plugins/models";
-import { checkPermissions } from "~/shared/auth-helpers";
+import {
+  checkPermissions,
+  fetchUserRoles,
+  isWorkspaceOwner,
+} from "~/shared/auth-helpers";
 import authModule from "../auth";
 
 const rolesModule = () =>
@@ -50,6 +55,63 @@ const rolesModule = () =>
         response: {
           200: roleSelectSchema.array(),
           403: z.any(),
+        },
+      },
+    )
+    .get(
+      ":userId",
+      async ({ params: { userId }, headers }) => {
+        const workspaceId = headers["cleon-workspace-id"];
+
+        const isOwner = await isWorkspaceOwner({
+          userId,
+          workspaceId,
+        });
+
+        if (isOwner) {
+          return {
+            permissions: {
+              workspace: ["*"],
+              role: ["*"],
+              agent: ["*"],
+              tool: ["*"],
+              invitation: ["*"],
+              knowledge_base: ["*"],
+              user: ["*"],
+            },
+          };
+        }
+
+        const roleList = await fetchUserRoles({
+          userId,
+          workspaceId,
+        });
+
+        const mergedPermissions: Record<string, string[]> = {};
+
+        for (const role of roleList) {
+          for (const [resource, actions] of Object.entries(role.permissions)) {
+            if (!actions?.length) continue;
+
+            mergedPermissions[resource] = Array.from(
+              new Set([...(mergedPermissions[resource] ?? []), ...actions]),
+            );
+          }
+        }
+
+        const permissions = rolePermissionSchema.parse(mergedPermissions);
+
+        return {
+          permissions,
+        };
+      },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+        response: {
+          200: z.object({
+            permissions: rolePermissionSchema,
+          }),
         },
       },
     )

@@ -44,6 +44,8 @@ import { useRoles, useRolesStore } from "~/store/roles-store";
 import { useWorkspaceStore } from "~/store/workspace-store";
 
 const SELECTED_WORKSPACE_STORAGE_KEY = "selected-workspace-id";
+const SELECTED_WORKSPACE_OWNER_STORAGE_KEY = "selected-workspace-owner-id";
+const SELECTED_USER_ID_STORAGE_KEY = "selected-user-id";
 
 const SidebarItem = ({
   icon: Icon,
@@ -177,7 +179,9 @@ const DashboardLayout = () => {
       navigate("/auth/login", { replace: true });
     } else if (session) {
       // Fetch roles when session is available
-      void fetchRoles();
+      void (async () => {
+        await fetchRoles();
+      })();
     }
   }, [isSessionPending, navigate, session, fetchRoles]);
 
@@ -211,12 +215,52 @@ const DashboardLayout = () => {
     setSelectedWorkspaceId(nextWorkspaceId);
   }, [selectedWorkspaceId, workspaces, setSelectedWorkspaceId]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const userId = session?.user?.id;
+    if (userId) {
+      localStorage.setItem(SELECTED_USER_ID_STORAGE_KEY, userId);
+    } else {
+      localStorage.removeItem(SELECTED_USER_ID_STORAGE_KEY);
+    }
+  }, [session?.user?.id]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!workspaces?.length || !selectedWorkspaceId) {
+      localStorage.removeItem(SELECTED_WORKSPACE_OWNER_STORAGE_KEY);
+      return;
+    }
+
+    const selectedWorkspace = workspaces.find(
+      workspace => workspace.id === selectedWorkspaceId,
+    );
+
+    if (selectedWorkspace?.ownerId) {
+      localStorage.setItem(
+        SELECTED_WORKSPACE_OWNER_STORAGE_KEY,
+        selectedWorkspace.ownerId,
+      );
+      return;
+    }
+
+    localStorage.removeItem(SELECTED_WORKSPACE_OWNER_STORAGE_KEY);
+  }, [workspaces, selectedWorkspaceId]);
+
   const clearSelectedWorkspace = (): void => {
     if (typeof window === "undefined") {
       return;
     }
 
     localStorage.removeItem(SELECTED_WORKSPACE_STORAGE_KEY);
+    localStorage.removeItem(SELECTED_WORKSPACE_OWNER_STORAGE_KEY);
+    localStorage.removeItem(SELECTED_USER_ID_STORAGE_KEY);
   };
 
   const clearSessionTokenCookie = async (): Promise<void> => {

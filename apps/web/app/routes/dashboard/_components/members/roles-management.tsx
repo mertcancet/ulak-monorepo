@@ -1,4 +1,10 @@
-import type { ResourceKind, Role, RolePermissions } from "@cleon/shared";
+import type {
+  ResourceKind,
+  ResourcePermission,
+  Role,
+  RolePermissions,
+} from "@cleon/shared";
+import { standardPermissions } from "@cleon/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -12,7 +18,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "~/components/ui/sheet";
+import {
+  canCreateRole,
+  canUpdateRole,
+  canViewRole,
+} from "~/lib/permission-helpers";
 import { rolesApi } from "~/lib/roles-api";
+import { useRoles } from "~/store/roles-store";
 
 const resourceOrder: ResourceKind[] = [
   "workspace",
@@ -24,6 +36,18 @@ const resourceOrder: ResourceKind[] = [
   "user",
 ];
 
+const permissionOptions: {
+  [K in ResourceKind]: readonly ResourcePermission[K][];
+} = {
+  workspace: ["view", "update", "*"],
+  role: standardPermissions,
+  agent: standardPermissions,
+  tool: standardPermissions,
+  invitation: standardPermissions,
+  knowledge_base: standardPermissions,
+  user: ["add-role", "remove-role", "*"],
+};
+
 const createDefaultPermissions = (): RolePermissions => ({
   workspace: ["view"],
   role: ["view"],
@@ -31,6 +55,7 @@ const createDefaultPermissions = (): RolePermissions => ({
   tool: ["view"],
   invitation: ["view"],
   knowledge_base: ["view"],
+  user: [],
 });
 
 const createPermissionMap = (
@@ -53,6 +78,7 @@ export default function RolesManagement({
   roles: Role[];
 }) {
   const queryClient = useQueryClient();
+  const { permissions } = useRoles();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
   const [roleName, setRoleName] = useState("");
@@ -66,14 +92,10 @@ export default function RolesManagement({
       workspaceId: string;
       body: {
         name: string;
-        description: string;
+        description?: string;
         permissions: RolePermissions;
       };
-    }) =>
-      rolesApi.createRole(payload.workspaceId, {
-        ...payload.body,
-        description: payload.body.description || undefined,
-      }),
+    }) => rolesApi.createRole(payload.workspaceId, payload.body),
     onSuccess: (_data, payload) => {
       void queryClient.invalidateQueries({
         queryKey: ["roles", payload.workspaceId],
@@ -89,7 +111,7 @@ export default function RolesManagement({
       roleId: string;
       body: {
         name: string;
-        description: string;
+        description?: string;
         permissions: RolePermissions;
       };
     }) =>
@@ -106,6 +128,10 @@ export default function RolesManagement({
   const canSaveRole = roleName.trim().length >= 3 && selectedWorkspaceId !== "";
   const isEditingRole = editingRoleId !== null;
   const isSavePending = isCreateRolePending || isUpdateRolePending;
+  const canViewRoles = canViewRole(permissions);
+  const canCreateRoles = canCreateRole(permissions);
+  const canUpdateRoles = canUpdateRole(permissions);
+  const canSubmitRole = isEditingRole ? canUpdateRoles : canCreateRoles;
 
   const roleCountLabel = useMemo(() => {
     if (roles.length === 1) {
@@ -123,11 +149,19 @@ export default function RolesManagement({
   };
 
   const openCreateRoleSheet = () => {
+    if (!canCreateRoles) {
+      return;
+    }
+
     resetForm();
     setIsSheetOpen(true);
   };
 
   const openEditRoleSheet = (role: Role) => {
+    if (!canUpdateRoles) {
+      return;
+    }
+
     setEditingRoleId(role.id);
     setRoleName(role.name);
     setRoleDescription(role.description || "");
@@ -143,36 +177,50 @@ export default function RolesManagement({
     }
   };
 
-  const togglePermission = (
-    resource: ResourceKind,
-    permission: NonNullable<RolePermissions[ResourceKind]>[number],
+  const togglePermission = <K extends ResourceKind>(
+    resource: K,
+    permission: ResourcePermission[K],
     checked: boolean,
   ) => {
     setNextPermissions(current => {
       const permissionMap = createPermissionMap(current);
-      const currentSet = new Set(permissionMap[resource]);
+      const currentSet = new Set<ResourcePermission[K]>(
+        permissionMap[resource] as ResourcePermission[K][],
+      );
 
-      if (checked) {
-        currentSet.add(permission);
+      if (permission === "*") {
+        if (checked) {
+          currentSet.clear();
+          currentSet.add(permission);
+        } else {
+          currentSet.delete(permission);
+        }
       } else {
-        currentSet.delete(permission);
+        if (checked) {
+          currentSet.add(permission);
+          currentSet.delete("*" as ResourcePermission[K]);
+        } else {
+          currentSet.delete(permission);
+        }
       }
 
       return {
-        ...current,
+        ...permissionMap,
         [resource]: [...currentSet],
       };
     });
   };
 
   const saveRole = () => {
-    if (!canSaveRole) {
+    if (!canSaveRole || !canSubmitRole) {
       return;
     }
 
+    const normalizedDescription = roleDescription.trim();
     const body = {
       name: roleName.trim(),
-      description: roleDescription.trim(),
+      description:
+        normalizedDescription.length > 0 ? normalizedDescription : undefined,
       permissions: nextPermissions,
     };
 
@@ -191,6 +239,10 @@ export default function RolesManagement({
       body,
     });
   };
+
+  if (!canViewRoles) {
+    return null;
+  }
 
   return (
     <section className="border-border bg-background rounded-2xl border p-5">
@@ -212,7 +264,7 @@ export default function RolesManagement({
           <Button
             variant="outline"
             onClick={openCreateRoleSheet}
-            disabled={selectedWorkspaceId === ""}
+            disabled={selectedWorkspaceId === "" || !canCreateRoles}
           >
             <Plus className="size-4" />
             Add Role
@@ -234,8 +286,9 @@ export default function RolesManagement({
             <button
               type="button"
               key={role.id}
-              className="border-border bg-secondary/30 hover:bg-secondary/50 w-full cursor-pointer rounded-xl border p-4 text-left transition-colors"
+              className="border-border bg-secondary/30 hover:bg-secondary/50 w-full rounded-xl border p-4 text-left transition-colors disabled:cursor-default disabled:opacity-100"
               onClick={() => openEditRoleSheet(role)}
+              disabled={!canUpdateRoles}
             >
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
@@ -243,7 +296,7 @@ export default function RolesManagement({
                     {role.name}
                   </p>
                   <p className="text-muted-foreground mt-1 text-xs">
-                    {role.description}
+                    {role.description || "-"}
                   </p>
                 </div>
               </div>
@@ -303,6 +356,7 @@ export default function RolesManagement({
                 onChange={e => setRoleName(e.target.value)}
                 placeholder="or. Agent Manager"
                 className="border-border bg-background w-full rounded-lg border px-3 py-2 text-sm outline-none"
+                disabled={!canSubmitRole}
               />
             </div>
 
@@ -317,6 +371,7 @@ export default function RolesManagement({
                 placeholder="or. Agent, tool ve invitation yonetimi icin rol"
                 rows={3}
                 className="border-border bg-background w-full resize-y rounded-lg border px-3 py-2 text-sm outline-none"
+                disabled={!canSubmitRole}
               />
             </div>
 
@@ -325,6 +380,7 @@ export default function RolesManagement({
 
               {resourceOrder.map(resource => {
                 const permissionMap = createPermissionMap(nextPermissions);
+                const selectedPermissions = permissionMap[resource] ?? [];
 
                 return (
                   <div
@@ -336,8 +392,8 @@ export default function RolesManagement({
                     </p>
 
                     <div className="mt-2 grid grid-cols-2 gap-2">
-                      {permissionMap[resource]?.map(permission => {
-                        const checked = permissionMap[resource]?.some(
+                      {permissionOptions[resource].map(permission => {
+                        const checked = selectedPermissions.some(
                           p => p === permission || p === "*",
                         );
 
@@ -349,6 +405,7 @@ export default function RolesManagement({
                             <input
                               type="checkbox"
                               checked={checked}
+                              disabled={!canSubmitRole}
                               onChange={e =>
                                 togglePermission(
                                   resource,
@@ -375,7 +432,10 @@ export default function RolesManagement({
             >
               Vazgec
             </Button>
-            <Button onClick={saveRole} disabled={!canSaveRole || isSavePending}>
+            <Button
+              onClick={saveRole}
+              disabled={!canSaveRole || isSavePending || !canSubmitRole}
+            >
               {isEditingRole ? "Role Guncelle" : "Role Kaydet"}
             </Button>
           </SheetFooter>
