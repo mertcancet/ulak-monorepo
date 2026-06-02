@@ -7,12 +7,12 @@ on:
     paths:
       - 'apps/api/**'
       - 'packages/shared/**'
-      - '.podman/**'
       - '.docker/backend.Dockerfile'
-      - '.github/workflows/deploy.yaml'
+      - '.docker/docker-compose.backend.yaml'
+      - '.github/workflows/deploy-backend.yaml'
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,24 +24,17 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           set -e
-
           echo "⏳️ Deploy started.."
 
           cd ~/backend
 
-          echo "📁 Pulling backend repo"
+          echo "📁 Pulling repository"
           git pull origin main
 
-          echo "🪸 Configuring systemd services"
+          echo "📦 Building backend image"
+          docker compose -f .docker/docker-compose.backend.yaml build
 
-          mkdir -p ~/.config/containers/systemd/
-          rm -f ~/.config/containers/systemd/*
-
-          cp .podman/* ~/.config/containers/systemd/
-
-          echo "🔄 Restarting systemd services"
-
-          systemctl --user daemon-reload
-          systemctl --user restart backend.service
+          echo "🔄 Starting service"
+          docker compose -f .docker/docker-compose.backend.yaml up -d --remove-orphans
 
           echo "✅ Done."

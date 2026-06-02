@@ -1,0 +1,16 @@
+name: cleon-ai
+
+services:
+  backend:
+    build:
+      context: ../
+      dockerfile: .docker/backend.Dockerfile 
+    ports:
+      - 3000:3000
+    networks:
+      - cleon-net
+    restart: always
+
+networks:
+  cleon-net:
+    external: true
