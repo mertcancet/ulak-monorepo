@@ -125,7 +125,9 @@ export default function ToolsPage() {
                 to={
                   tool.settings.type === "HTTP"
                     ? `/dashboard/tools/http/${tool.id}/edit`
-                    : `/dashboard/tools/end-call/${tool.id}/edit`
+                    : tool.settings.type === "EndCall"
+                      ? `/dashboard/tools/end-call/${tool.id}/edit`
+                      : `/dashboard/tools/agent-handoff/${tool.id}/edit`
                 }
                 className="border-border bg-background hover:bg-secondary flex items-center gap-4 rounded-xl border p-4 transition-colors"
               >
@@ -141,7 +143,11 @@ export default function ToolsPage() {
                   </p>
                 </div>
                 <span className="text-muted-foreground border-border rounded-md border px-2 py-0.5 text-xs">
-                  {tool.settings.type}
+                  {tool.settings.type === "HTTP"
+                    ? "HTTP"
+                    : tool.settings.type === "EndCall"
+                      ? "Çağrıyı Sonlandır"
+                      : "Ajan Aktarımı"}
                 </span>
               </Link>
             ))}

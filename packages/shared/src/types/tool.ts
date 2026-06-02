@@ -83,6 +83,15 @@ const endCallToolFormSchema = toolsSelectSchema
     endInstructions: endCallTool.shape.end_instructions,
   });
 
+const agentHandoffToolFormSchema = toolsSelectSchema
+  .pick({ name: true, description: true, disallowInterruptions: true })
+  .extend({
+    destinationAgent: agentHandoffTool.shape.destination_agent,
+    contextStrategy: agentHandoffTool.shape.context_strategy,
+    contextMessageLimit: agentHandoffTool.shape.context_message_limit,
+    handoffMessage: agentHandoffTool.shape.handoff_message,
+  });
+
 export type ToolItem = z.infer<typeof toolsSelectSchema>;
 export type CreateToolInput = z.infer<typeof toolsInsertSchema>;
 export type UpdateToolInput = z.infer<typeof toolsUpdateSchema>;
@@ -90,6 +99,13 @@ export type ToolSettings = z.infer<typeof toolSettingsSchema>;
 
 export type EndCallToolSettings = Extract<ToolSettings, { type: "EndCall" }>;
 export type HttpToolSettings = Extract<ToolSettings, { type: "HTTP" }>;
+export type AgentHandoffToolSettings = Extract<
+  ToolSettings,
+  { type: "AgentHandoff" }
+>;
 
 export type HttpToolFormData = z.infer<typeof httpToolFormSchema>;
 export type EndCallToolFormData = z.infer<typeof endCallToolFormSchema>;
+export type AgentHandoffToolFormData = z.infer<
+  typeof agentHandoffToolFormSchema
+>;

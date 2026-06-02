@@ -1,4 +1,4 @@
-import { ArrowLeft, Globe, PhoneOff } from "lucide-react";
+import { ArrowLeft, Globe, PhoneOff, Split } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import DashboardHeader from "./_components/dashboard-header";
 
@@ -66,6 +66,24 @@ export default function ToolsNewPage() {
                 <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
                   Ajan bu aracı tetiklediğinde görüşmeyi güvenli şekilde
                   sonlandırın
+                </p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard/tools/agent-handoff/new")}
+              className="border-border hover:border-foreground/30 hover:bg-secondary flex flex-col items-start gap-4 rounded-xl border p-5 text-left transition-all duration-150"
+            >
+              <div className="bg-secondary rounded-lg p-2.5">
+                <Split className="text-foreground size-5" />
+              </div>
+              <div>
+                <p className="text-foreground text-sm font-semibold">
+                  Ajan Aktarımı
+                </p>
+                <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
+                  Aramayı başka bir ajana aktarmak için hedef ajanı bağlayın
                 </p>
               </div>
             </button>

@@ -78,6 +78,12 @@ export default function ToolsEditPage() {
     return <Navigate replace to={`/dashboard/tools/end-call/${id}/edit`} />;
   }
 
+  if (data.settings.type === "AgentHandoff") {
+    return (
+      <Navigate replace to={`/dashboard/tools/agent-handoff/${id}/edit`} />
+    );
+  }
+
   return (
     <div className="animate-in fade-in flex h-full flex-col overflow-hidden duration-300">
       <DashboardHeader>
