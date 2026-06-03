@@ -81,20 +81,20 @@ Workspace-scoped resources use a `cleon-workspace-id` header for multi-tenancy. 
 
 - [Bun](https://bun.sh) v1+
 - [Docker](https://www.docker.com) (for PostgreSQL)
-- [pnpm](https://pnpm.io) v10+ (monorepo package manager)
+- [bun](https://bun.com)
 
 ### 1. Install dependencies
 
 From the monorepo root:
 
 ```bash
-pnpm install
+bun install --frozen-lockfile
 ```
 
 ### 2. Start the database
 
 ```bash
-docker compose up -d postgres
+docker compose up -d
 ```
 
 ### 3. Configure environment
@@ -108,19 +108,19 @@ Fill in the required values (see [Environment Variables](#environment-variables)
 ### 4. Push the database schema
 
 ```bash
-pnpm dk push
+bun dk push
 ```
 
 ### 5. (Optional) Seed the database
 
 ```bash
-pnpm seed
+bun seed
 ```
 
 ### 6. Start the development server
 
 ```bash
-pnpm dev:api
+bun dev:api
 # or from apps/api/
 bun run dev
 ```
@@ -171,17 +171,17 @@ GOOGLE_CLIENT_SECRET=
 
 ## Scripts
 
-Run from `apps/api/` or via pnpm from the monorepo root.
+Run from `apps/api/` or via bun from the monorepo root.
 
 | Script        | Command                         | Description                                           |
 | ------------- | ------------------------------- | ----------------------------------------------------- |
 | `dev`         | `bun run --watch src/server.ts` | Start development server with hot reload              |
 | `build`       | `bun build --compile ...`       | Compile to a single native binary at `build/server`   |
 | `seed`        | `bun run src/db/seed.ts`        | Seed the database with initial data                   |
-| `dk generate` | `pnpm dk generate`              | Generate Drizzle migration files from schema          |
-| `dk push`     | `pnpm dk push`                  | Apply schema changes directly to the database         |
-| `format:api`  | `pnpm format:api`               | Run Biome formatter (auto-fix)                        |
-| `check:api`   | `pnpm check:api`                | Run Biome linter (check only)                         |
+| `dk generate` | `bun dk generate`              | Generate Drizzle migration files from schema          |
+| `dk push`     | `bun dk push`                  | Apply schema changes directly to the database         |
+| `format:api`  | `bun format:api`               | Run Biome formatter (auto-fix)                        |
+| `check:api`   | `bun check:api`                | Run Biome linter (check only)                         |
 
 ---
 
@@ -329,8 +329,7 @@ All errors follow [RFC 7807 Problem Details](https://datatracker.ietf.org/doc/ht
 
 ```bash
 # After editing src/db/schema/*.ts
-pnpm dk generate   # Creates SQL migration files in drizzle/
-pnpm dk push       # Applies migrations to the database
+bun dk push       # Applies migrations to the database
 ```
 
 ---
