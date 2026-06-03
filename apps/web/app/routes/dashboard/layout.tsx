@@ -8,6 +8,7 @@ import {
   List,
   LogOut,
   Phone,
+  Settings,
   Wrench,
 } from "lucide-react";
 import type React from "react";
@@ -534,6 +535,15 @@ const DashboardLayout = () => {
               />
             </SidebarSection>
 */}
+            <SidebarSection title="Sistem" collapsed={collapsed}>
+              <SidebarItem
+                icon={Settings}
+                label="Ayarlar"
+                href="/dashboard/settings"
+                active={location.pathname === "/dashboard/settings"}
+                collapsed={collapsed}
+              />
+            </SidebarSection>
           </nav>
 
           {!collapsed && (
