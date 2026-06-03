@@ -1,5 +1,6 @@
+import { Room } from "livekit-client";
 import { Bot, Code, Info, Mic, PhoneCall, Send, User } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 
 const MessagesSquare = ({ className }: { className?: string }) => (
@@ -29,8 +30,15 @@ type ChatMessage = {
 };
 
 export const TestingPanel = () => {
+  const [room, setRoom] = useState<Room | null>(null);
+  const [connected, setConnected] = useState<boolean>(false);
+  const [micOn, setMicOn] = useState<boolean>(false);
+  const [liveKitStatus, setLiveKitStatus] = useState<string>("");
+
   const [activeTest, setActiveTest] = useState<"voice" | "chat">("voice");
   const [input, setInput] = useState<string>("");
+  const remoteAudioContainerRef = useRef<HTMLDivElement | null>(null);
+  const attachedAudioElementsRef = useRef<HTMLMediaElement[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 1,
@@ -64,6 +72,102 @@ export const TestingPanel = () => {
     setMessages(prev => [...prev, userMessage, assistantReply]);
     setInput("");
   };
+
+  const detachRemoteAudios = useCallback((): void => {
+    attachedAudioElementsRef.current.forEach(element => {
+      element.remove();
+    });
+    attachedAudioElementsRef.current = [];
+  }, []);
+
+  const connectRoom = async (): Promise<void> => {
+    try {
+      setLiveKitStatus("LiveKit'e baglaniliyor...");
+
+      if (room) {
+        room.disconnect();
+        detachRemoteAudios();
+      }
+
+      const newRoom = new Room();
+      const tokenResponse = await fetch(
+        import.meta.env.VITE_LIVEKIT_TOKEN_ENDPOINT ??
+          "http://localhost:8000/get-token?room=test-room&identity=user1",
+      );
+
+      if (!tokenResponse.ok) {
+        throw new Error("Token alinamadi.");
+      }
+
+      const { token } = (await tokenResponse.json()) as { token?: string };
+
+      if (!token) {
+        throw new Error("Token response gecersiz.");
+      }
+
+      await newRoom.connect(
+        import.meta.env.VITE_LIVEKIT_WS_URL ?? "wss://your-livekit-url",
+        token,
+      );
+
+      newRoom.on("trackSubscribed", track => {
+        if (track.kind !== "audio") {
+          return;
+        }
+
+        const element = track.attach();
+        element.autoplay = true;
+        remoteAudioContainerRef.current?.appendChild(element);
+        attachedAudioElementsRef.current.push(element);
+      });
+
+      setRoom(newRoom);
+      setConnected(true);
+      setMicOn(false);
+      setLiveKitStatus("LiveKit baglantisi kuruldu.");
+    } catch {
+      setConnected(false);
+      setMicOn(false);
+      setLiveKitStatus("LiveKit baglantisi basarisiz oldu.");
+    }
+  };
+
+  const startTalking = async (): Promise<void> => {
+    if (!room) {
+      return;
+    }
+
+    try {
+      await room.localParticipant.setMicrophoneEnabled(true);
+      setMicOn(true);
+      setLiveKitStatus("Mikrofon acik.");
+    } catch {
+      setLiveKitStatus("Mikrofon acilamadi.");
+    }
+  };
+
+  const stopTalking = async (): Promise<void> => {
+    if (!room) {
+      return;
+    }
+
+    try {
+      await room.localParticipant.setMicrophoneEnabled(false);
+      setMicOn(false);
+      setLiveKitStatus("Mikrofon kapali.");
+    } catch {
+      setLiveKitStatus("Mikrofon kapatilamadi.");
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (room) {
+        room.disconnect();
+      }
+      detachRemoteAudios();
+    };
+  }, [detachRemoteAudios, room]);
 
   return (
     <div className="bg-card border-border relative flex w-1/3 flex-col overflow-hidden rounded-xl border shadow-lg">
@@ -127,10 +231,25 @@ export const TestingPanel = () => {
 
           <Button
             size="lg"
+            type="button"
+            onClick={
+              !connected ? connectRoom : !micOn ? startTalking : stopTalking
+            }
             className="bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-10 font-bold shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.98]"
           >
-            Testi Başlat
+            {!connected
+              ? "Canli Baglan"
+              : !micOn
+                ? "Konusmayi Baslat"
+                : "Konusmayi Durdur"}
           </Button>
+          {liveKitStatus ? (
+            <p className="text-muted-foreground mt-3 text-xs font-medium">
+              {liveKitStatus}
+            </p>
+          ) : null}
+
+          <div ref={remoteAudioContainerRef} className="hidden" />
         </div>
       ) : (
         <div className="relative z-10 flex flex-1 flex-col p-4">
