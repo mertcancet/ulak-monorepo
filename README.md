@@ -5,8 +5,7 @@ This repository manages the `apps/api` (Elysia + Bun + Drizzle) and `apps/web` (
 ## Requirements
 
 - Node.js 20+
-- pnpm `10.33.0`
-- Bun (for API development/build)
+- Bun as package manager and runtime
 - Docker (to quickly run PostgreSQL)
 
 ## Setup
@@ -14,22 +13,20 @@ This repository manages the `apps/api` (Elysia + Bun + Drizzle) and `apps/web` (
 1. Clone the repository:
 
 ```bash
-git clone <repo-url>
-cd callingai-monorepo
+git clone git@github.com:mertcancet/ulak-monorepo.git
+cd cd ulak-monorepo
 ```
 
-2. Enable pnpm (if needed) and install dependencies:
+2. Install dependencies:
 
 ```bash
-corepack enable
-corepack prepare pnpm@10.33.0 --activate
-pnpm install
+bun install --frozen-lockfile
 ```
 
 3. Start the PostgreSQL service:
 
 ```bash
-docker compose up -d postgres
+docker compose up -d
 ```
 
 4. Prepare API environment variables:
@@ -41,13 +38,13 @@ cp apps/api/.env.example apps/api/.env
 5. Push the database schema to your database:
 
 ```bash
-pnpm dk push
+bun dk push
 ```
 
 6. (Optional) Seed sample data:
 
 ```bash
-pnpm seed
+bun seed
 ```
 
 ## Development
@@ -55,19 +52,19 @@ pnpm seed
 Run all services at once:
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 Only API:
 
 ```bash
-pnpm dev:api
+bun dev:api
 ```
 
 Only Web:
 
 ```bash
-pnpm dev:web
+bun dev:web
 ```
 
 ## Build
@@ -75,13 +72,13 @@ pnpm dev:web
 API build:
 
 ```bash
-pnpm build:api
+bun build:api
 ```
 
 Web build:
 
 ```bash
-pnpm build:web
+bun build:web
 ```
 
 ## Code Quality
@@ -89,35 +86,35 @@ pnpm build:web
 API format:
 
 ```bash
-pnpm format:api
+bun format:api
 ```
 
 Web format:
 
 ```bash
-pnpm format:web
+bun format:web
 ```
 
 API check:
 
 ```bash
-pnpm check:api
+bun check:api
 ```
 
 Web check:
 
 ```bash
-pnpm check:web
+bun check:web
 ```
 
-## Important Note: `pnpm dk push`
+## Important Note: `bun dk push`
 
-When you make migration/schema changes under `apps/api/src/db/schema`, you must run `pnpm dk push` to keep your local database in sync.
+When you make migration/schema changes under `apps/api/src/db/schema`, you must run `bun dk push` to keep your local database in sync.
 
 In short:
 
-- Schema changed -> `pnpm dk push`
-- If needed -> `pnpm seed`
+- Schema changed -> `bun dk push`
+- If needed -> `bun seed`
 
 ## Git Workflow (example)
 
@@ -125,9 +122,9 @@ After your changes, you can follow this typical flow:
 
 ```bash
 git checkout -b feature/readme-update
-pnpm check:api && pnpm check:web
+bun check:api && bun check:web
 git add .
-git commit -m "docs: add root README with setup and pnpm dk push steps"
+git commit -m "docs: add root README with setup and bun dk push steps"
 git push origin feature/readme-update
 ```
 

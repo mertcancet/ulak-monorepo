@@ -1,0 +1,25 @@
+name: cleon-ai-fe
+
+services:
+  frontend:
+    build:
+      context: ../
+      dockerfile: .docker/frontend.Dockerfile 
+    environment:
+      PORT: ${PORT:-3001}
+      NODE_ENV: ${NODE_ENV}
+      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL}
+      VITE_API_URL: ${VITE_API_URL}
+
+      LIVEKIT_URL: ${LIVEKIT_URL}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
+    ports:
+      - "${PORT:-3001}:${PORT:-3001}"
+    networks:
+      - cleon-net
+    restart: always
+
+networks:
+  cleon-net:
+    external: true

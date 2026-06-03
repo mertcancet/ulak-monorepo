@@ -6,12 +6,6 @@ import db from "~/db";
 import * as schema from "~/db/schema";
 import env from "~/shared/env";
 
-const authUrlHost = new URL(env.BASE_URL).hostname;
-const isLocalAuthHost =
-  authUrlHost === "localhost" ||
-  authUrlHost === "127.0.0.1" ||
-  authUrlHost === "::1";
-
 const socialProviders =
   env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
     ? {
@@ -29,6 +23,7 @@ const auth = betterAuth({
     schema,
   }),
   appName: "Cleon",
+  baseURL: env.BASE_URL,
   basePath: "/auth",
   trustedOrigins: env.CORS_ORIGINS,
   user: {
@@ -42,11 +37,11 @@ const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "cleon",
+    crossSubDomainCookies: {
+      enabled: false,
+    },
     database: {
       generateId: false,
-    },
-    crossSubDomainCookies: {
-      enabled: !isLocalAuthHost,
     },
   },
   emailAndPassword: {

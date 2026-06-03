@@ -1,0 +1,40 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/api/**'
+      - 'packages/shared/**'
+      - '.docker/backend.Dockerfile'
+      - '.docker/docker-compose.backend.yaml'
+      - '.github/workflows/deploy-backend.yaml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          set -e
+          echo "⏳️ Deploy started.."
+
+          cd ~/backend
+
+          echo "📁 Pulling repository"
+          git pull origin main
+
+          echo "📦 Building backend image"
+          docker compose -f .docker/docker-compose.backend.yaml --env-file apps/api/.env build
+
+          echo "🔄 Starting service"
+          docker compose -f .docker/docker-compose.backend.yaml --env-file apps/api/.env up -d --remove-orphans
+
+          echo "✅ Done."

@@ -1,0 +1,40 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/web/**'
+      - 'packages/shared/**'
+      - '.docker/frontend.Dockerfile'
+      - '.docker/docker-compose.frontend.yaml'
+      - '.github/workflows/deploy-frontend.yaml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          set -e
+          echo "⏳️ Deploy started.."
+
+          cd ~/frontend
+
+          echo "📁 Pulling repository"
+          git pull origin main
+
+          echo "📦 Building backend image"
+          docker compose -f .docker/docker-compose.frontend.yaml --env-file apps/web/.env build
+
+          echo "🔄 Starting service"
+          docker compose -f .docker/docker-compose.frontend.yaml --env-file apps/web/.env up -d --remove-orphans
+
+          echo "✅ Done."
