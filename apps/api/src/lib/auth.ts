@@ -37,6 +37,9 @@ const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "cleon",
+    crossSubDomainCookies: {
+      enabled: false,
+    },
     database: {
       generateId: false,
     },
