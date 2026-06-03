@@ -2,23 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowLeftRight,
-  BarChart3,
-  Bell,
   BookOpen,
   Bot,
-  ChevronDown,
   ChevronsUpDown,
-  CreditCard,
-  Gift,
-  HelpCircle,
-  History,
-  Inbox,
   List,
   LogOut,
   Phone,
-  Settings,
-  ShieldCheck,
-  Users,
   Wrench,
 } from "lucide-react";
 import type React from "react";
@@ -488,6 +477,7 @@ const DashboardLayout = () => {
               />
             </SidebarSection>
 
+            {/* 
             <SidebarSection title="İzleme" collapsed={collapsed}>
               <SidebarItem
                 icon={History}
@@ -543,21 +533,11 @@ const DashboardLayout = () => {
                 collapsed={collapsed}
               />
             </SidebarSection>
+*/}
           </nav>
 
           {!collapsed && (
             <div className="border-border space-y-1 border-t p-3">
-              <button
-                type="button"
-                className="hover:bg-secondary text-secondary-foreground flex w-full items-center justify-between rounded-lg px-3 py-2 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <Gift className="h-4 w-4" />
-                  <span className="text-xs font-medium">Ücretsiz Deneme</span>
-                </div>
-                <ChevronDown className="text-muted-foreground h-3 w-3" />
-              </button>
-
               <div className=" flex items-center justify-between rounded-lg px-3 py-2 transition-colors">
                 <div className="flex items-center gap-2 overflow-hidden">
                   <Avatar className="border-border h-7 w-7 border">
@@ -575,20 +555,6 @@ const DashboardLayout = () => {
               </div>
 
               <div className="border-muted flex items-center justify-around border-t pt-2">
-                <button
-                  type="button"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-1 py-1.5 text-[10px] transition-colors"
-                >
-                  <HelpCircle className="h-3 w-3" />
-                  <span>Yardım</span>
-                </button>
-                <button
-                  type="button"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-1 py-1.5 text-[10px] transition-colors"
-                >
-                  <Bell className="h-3 w-3" />
-                  <span>Güncellemeler</span>
-                </button>
                 <button
                   type="button"
                   className="text-muted-foreground hover:text-foreground flex items-center gap-1 py-1.5 text-[10px] transition-colors disabled:cursor-not-allowed disabled:opacity-60"
