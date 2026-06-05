@@ -5,6 +5,8 @@ on:
     branches:
       - main
     paths:
+      - 'package.json'
+      - 'bun.lock'
       - 'apps/api/**'
       - 'packages/shared/**'
       - '.docker/backend.Dockerfile'
