@@ -119,9 +119,9 @@ export default function WorkspacesPage() {
         ) : null}
       </DashboardHeader>
 
-      <div className="flex-1 overflow-y-auto ">
+      <div className="flex-1 overflow-y-auto">
         {isPending ? null : workspacesData.length === 0 ? (
-          <div className="relative mx-auto flex min-h-full items-center justify-center overflow-hidden ">
+          <div className="relative mx-auto flex min-h-full items-center justify-center overflow-hidden">
             <div className="pointer-events-none absolute inset-0" aria-hidden>
               <div className="bg-brand/10 absolute -top-28 -left-24 h-96 w-96 rounded-full blur-[120px]" />
               <div className="bg-brand-light/15 absolute -right-24 -bottom-28 h-104 w-104 rounded-full blur-[130px]" />
@@ -136,7 +136,7 @@ export default function WorkspacesPage() {
             />
           </div>
         ) : (
-          <section className="border-border p-6 bg-background w-full rounded-2xl border p-5">
+          <section className="bg-background w-full p-5">
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-foreground flex items-center gap-2 text-sm font-semibold">
@@ -150,7 +150,7 @@ export default function WorkspacesPage() {
               </div>
             </div>
 
-            <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border">
+            <div className="bg-card mt-6 overflow-hidden rounded-xl border">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-secondary/60 border-border hover:bg-secondary/60">
