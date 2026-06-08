@@ -5,7 +5,6 @@ import { agentsApi } from "~/lib/agents-api";
 import { useWorkspaceStore } from "~/store/workspace-store";
 import { AgentHeader } from "./_components/agent/agent-header";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
-import { GreetingSection } from "./_components/agent/greeting-section";
 import { PromptEditor } from "./_components/agent/prompt-editor";
 import { TestingPanel } from "./_components/agent/testing-panel";
 
@@ -245,7 +244,6 @@ export default function AgentConfigPage() {
               value={systemInstructions}
               onChange={setSystemInstructions}
             />
-            <GreetingSection greetPrompt={greetPrompt} />
           </div>
 
           {/* Middle Column: Configuration Panel */}

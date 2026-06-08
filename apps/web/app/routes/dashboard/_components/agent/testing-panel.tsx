@@ -131,7 +131,7 @@ export const TestingPanel = () => {
   }, [detachRemoteAudios, room]);
 
   return (
-    <div className="bg-card border-border relative flex w-1/3 flex-col overflow-hidden rounded-xl border shadow-lg">
+    <div className="bg-card border-border relative flex w-full flex-col overflow-hidden rounded-xl border shadow-lg lg:min-h-0 lg:w-88 xl:w-1/3">
       {/* <div className="border-border bg-secondary/30 flex items-center justify-between rounded-t-xl border-b p-2 backdrop-blur-sm">
         <div className="bg-background/50 border-border flex flex-1 space-x-1 rounded-lg border p-1 shadow-inner">
           <button

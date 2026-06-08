@@ -1,9 +1,8 @@
-import { ChevronDown } from "lucide-react";
-import { useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Select } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { DEFAULT_PROMPT } from "./constants";
 import { AI_MODELS } from "./quick-select/toolbar.data";
@@ -49,43 +48,30 @@ export const PromptEditor = ({
   value,
   onChange,
 }: PromptEditorProps) => {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(true);
-  const [isInstructionsOpen, setIsInstructionsOpen] = useState(true);
-
   return (
-    <div className="bg-card border-border flex flex-1 flex-col overflow-hidden rounded-xl border shadow-sm">
+    <div className="bg-card border-border flex flex-1 min-h-0 flex-col rounded-xl border shadow-sm">
       <div className="border-border bg-secondary/20 flex items-center justify-between border-b p-4">
         <div className="flex items-center space-x-2">
           <div className="bg-primary h-4 w-1.5 rounded-full" />
           <h2 className="text-sm font-bold tracking-tight">
-            Sistem Talimatları
+            Temsilci Ayarları
           </h2>
         </div>
-        <span className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
-          Markdown desteklenir
-        </span>
       </div>
-      <div className="border-border border-b">
-        <button
-          type="button"
-          className="flex w-full items-center justify-between px-4 py-3 text-left"
-          onClick={() => setIsSettingsOpen(current => !current)}
-        >
-          <div>
-            <p className="text-sm font-semibold">Agent Ayarları</p>
-            <p className="text-muted-foreground text-xs">
-              POST /agents body alanlarını buradan doldurun
-            </p>
-          </div>
-          <ChevronDown
-            className={`size-4 transition-transform ${
-              isSettingsOpen ? "rotate-180" : "rotate-0"
-            }`}
-          />
-        </button>
+      <Tabs defaultValue="settings" className="flex min-h-0 flex-1 flex-col">
+        <div className="border-border border-b px-4 py-3">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="settings">Agent Ayarları</TabsTrigger>
+            <TabsTrigger value="instructions">Sistem Talimatları</TabsTrigger>
+          </TabsList>
+          <p className="text-muted-foreground mt-2 text-xs">
+            Sol sekmede temel ayarları, sağ sekmede agent davranış talimatlarını
+            düzenleyebilirsiniz.
+          </p>
+        </div>
 
-        {isSettingsOpen && (
-          <div className="grid gap-4 border-t border-border p-4 md:grid-cols-2">
+        <TabsContent value="settings" className="min-h-0 overflow-y-auto p-4">
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="agent-name">Agent adı</Label>
               <Input
@@ -180,38 +166,27 @@ export const PromptEditor = ({
               />
             </div>
           </div>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col">
-        <button
-          type="button"
-          className="border-border flex w-full items-center justify-between border-b px-4 py-3 text-left"
-          onClick={() => setIsInstructionsOpen(current => !current)}
+        </TabsContent>
+
+        <TabsContent
+          value="instructions"
+          className="flex min-h-0 flex-1 flex-col overflow-hidden p-4 pt-3"
         >
-          <div>
+          <div className="mb-2">
             <p className="text-sm font-semibold">Sistem Talimatları</p>
             <p className="text-muted-foreground text-xs">
-              Agent instructions alanı
+              Agent'in konuşma stili, davranışı ve kısıtlarını burada
+              tanımlayın.
             </p>
           </div>
-          <ChevronDown
-            className={`size-4 transition-transform ${
-              isInstructionsOpen ? "rotate-180" : "rotate-0"
-            }`}
+          <Textarea
+            className="text-foreground/80 scrollbar-thin min-h-0 w-full flex-1 resize-none border-border bg-transparent p-4 text-sm leading-relaxed font-medium"
+            placeholder="Agent talimatlarını buraya girin..."
+            value={value ?? DEFAULT_PROMPT}
+            onChange={event => onChange?.(event.target.value)}
           />
-        </button>
-
-        {isInstructionsOpen && (
-          <div className="flex flex-1 flex-col p-0">
-            <Textarea
-              className="text-foreground/80 scrollbar-thin flex-1 resize-none border-none bg-transparent p-6 text-sm leading-relaxed font-medium focus-visible:ring-0"
-              placeholder="Agent talimatlarını buraya girin..."
-              value={value ?? DEFAULT_PROMPT}
-              onChange={event => onChange?.(event.target.value)}
-            />
-          </div>
-        )}
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
