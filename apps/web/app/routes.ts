@@ -37,6 +37,7 @@ export default [
       "routes/dashboard/tools-agent-handoff-edit.tsx",
     ),
     route("tools/:id", "routes/dashboard/tools-edit.tsx"),
+    route("onboarding", "routes/dashboard/onboarding.tsx"),
   ]),
 
   route("auth", "routes/auth/layout.tsx", [
