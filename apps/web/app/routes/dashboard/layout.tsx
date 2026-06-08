@@ -4,11 +4,14 @@ import {
   ArrowLeftRight,
   BookOpen,
   Bot,
+  Building2,
   ChevronsUpDown,
+  Inbox,
   List,
   LogOut,
   Phone,
   Settings,
+  Users,
   Wrench,
 } from "lucide-react";
 import type React from "react";
@@ -537,10 +540,34 @@ const DashboardLayout = () => {
 */}
             <SidebarSection title="Sistem" collapsed={collapsed}>
               <SidebarItem
+                icon={Building2}
+                label="Workspaces"
+                href="/dashboard/workspaces"
+                active={location.pathname.startsWith("/dashboard/workspaces")}
+                collapsed={collapsed}
+              />
+              <SidebarItem
                 icon={Settings}
                 label="Ayarlar"
                 href="/dashboard/settings"
                 active={location.pathname === "/dashboard/settings"}
+                collapsed={collapsed}
+              />
+            </SidebarSection>
+
+            <SidebarSection title="Ekip" collapsed={collapsed}>
+              <SidebarItem
+                icon={Users}
+                label="Üyeler"
+                href="/dashboard/members"
+                active={location.pathname === "/dashboard/members"}
+                collapsed={collapsed}
+              />
+              <SidebarItem
+                icon={Inbox}
+                label="Davetler"
+                href="/dashboard/invitations"
+                active={location.pathname === "/dashboard/invitations"}
                 collapsed={collapsed}
               />
             </SidebarSection>

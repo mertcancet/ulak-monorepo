@@ -1,24 +1,35 @@
+import { useQuery } from "@tanstack/react-query";
 import { type FormEvent, useEffect, useState } from "react";
 import { Form, Link, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { authClient } from "~/lib/auth-client";
+import { workspacesApi } from "~/lib/workspaces-api";
 
 export default function SignIn() {
   const navigate = useNavigate();
   const { data: session, isPending: isSessionPending } =
     authClient.useSession();
+  const { data: workspaces = [], isPending: isWorkspacesPending } = useQuery({
+    queryKey: ["workspaces"],
+    queryFn: () => workspacesApi.listWorkspaces(),
+    enabled: !!session,
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
-    if (session) {
-      navigate("/dashboard", { replace: true });
+    if (!session || isWorkspacesPending) {
+      return;
     }
-  }, [navigate, session]);
+
+    navigate(workspaces.length > 0 ? "/dashboard" : "/dashboard/onboarding", {
+      replace: true,
+    });
+  }, [isWorkspacesPending, navigate, session, workspaces.length]);
 
   const signIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,9 +46,6 @@ export default function SignIn() {
         email,
         password,
         fetchOptions: {
-          onSuccess: () => {
-            navigate("/dashboard", { replace: true });
-          },
           onError: ({ error }) => {
             const fallbackMessage = "Giris basarisiz. Bilgilerini kontrol et.";
             setErrorMessage(error.message || fallbackMessage);
@@ -45,11 +53,8 @@ export default function SignIn() {
         },
       });
 
-      // Fallback: if callback does not run in some client states, redirect on token response.
-      const token = (response as { token?: unknown })?.token;
-      if (typeof token === "string" && token.length > 0) {
-        navigate("/dashboard", { replace: true });
-      }
+      // Fallback: if callbacks are skipped in some client states, session/query effects still drive navigation.
+      void response;
     } catch (_error) {
       setErrorMessage("Sunucuya baglanirken bir hata olustu.");
     } finally {

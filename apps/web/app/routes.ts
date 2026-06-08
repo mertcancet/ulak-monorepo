@@ -18,6 +18,7 @@ export default [
     route("billing", "routes/dashboard/billing.tsx"),
     route("members", "routes/dashboard/members.tsx"),
     route("invitations", "routes/dashboard/invitations.tsx"),
+    route("workspaces", "routes/dashboard/workspaces.tsx"),
     route("settings", "routes/dashboard/settings.tsx"),
     route("tools", "routes/dashboard/tools.tsx"),
     route("tools/new", "routes/dashboard/tools-new.tsx"),
