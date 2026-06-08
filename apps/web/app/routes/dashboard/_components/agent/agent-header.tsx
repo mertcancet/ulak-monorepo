@@ -1,11 +1,4 @@
-import {
-  Edit3,
-  History as HistoryIcon,
-  Home,
-  MoreHorizontal,
-  Rocket,
-  Save,
-} from "lucide-react";
+import { Edit3, Home, Rocket, Save } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { useRoles } from "~/store/roles-store";
 import DashboardHeader from "../dashboard-header";
@@ -81,21 +74,6 @@ export const AgentHeader = ({
         <AgentMeta agentId={agentId} model={model} />
       </div>
       <div className="flex items-center space-x-3">
-        <nav className="mr-2 flex items-center gap-1">
-          <a
-            className="text-foreground rounded-full bg-[rgba(0,0,0,0.05)] px-3 py-1.5 text-sm font-medium transition-colors"
-            href="#configure"
-          >
-            Yapılandır
-          </a>
-          <a
-            className="text-muted-foreground hover:text-foreground rounded-full px-3 py-1.5 text-sm font-medium transition-colors hover:bg-[rgba(0,0,0,0.05)]"
-            href="#simulation"
-          >
-            Simülasyon
-          </a>
-        </nav>
-
         <div className="flex items-center space-x-2">
           {isDraft && (
             <Button size="sm" onClick={onSave} disabled={isSaving}>
@@ -103,20 +81,7 @@ export const AgentHeader = ({
               <span>{isSaving ? "Kaydediliyor..." : "Kaydet"}</span>
             </Button>
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground h-8 w-8"
-          >
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground h-8 w-8"
-          >
-            <HistoryIcon className="h-4 w-4" />
-          </Button>
+
           {permissions?.agent?.includes("*") ||
           permissions?.agent?.includes("update") ? (
             <Button

@@ -7,7 +7,6 @@ import { AgentHeader } from "./_components/agent/agent-header";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
 import { GreetingSection } from "./_components/agent/greeting-section";
 import { PromptEditor } from "./_components/agent/prompt-editor";
-import { QuickSelectToolbar } from "./_components/agent/quick-select";
 import { TestingPanel } from "./_components/agent/testing-panel";
 
 /**
@@ -225,7 +224,7 @@ export default function AgentConfigPage() {
         <div className="border-border bg-card/30 flex flex-1 gap-4 overflow-hidden rounded-xl border p-3">
           {/* Left Column: Configuration Canvas */}
           <div className="flex min-w-100 flex-1 flex-col space-y-4">
-            <QuickSelectToolbar />
+            {/* <QuickSelectToolbar /> */}
             <PromptEditor
               name={agentName}
               onNameChange={setAgentName}

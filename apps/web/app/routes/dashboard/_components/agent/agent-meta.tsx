@@ -15,8 +15,6 @@ export const AgentMeta = ({ agentId, model }: AgentMetaProps) => {
       <span className="font-medium">
         Model: {model ?? AGENT_MOCK_DATA.model}
       </span>
-      <span className="text-muted-foreground/30">•</span>
-      <span className="font-medium">Gecikme: {AGENT_MOCK_DATA.latency}</span>
     </div>
   );
 };
