@@ -28,7 +28,6 @@ export default function AgentConfigPage() {
   const [apiKey, setApiKey] = useState("");
   const [allowInterruptions, setAllowInterruptions] = useState(true);
   const [greetPrompt, setGreetPrompt] = useState("");
-  const [goodbyePrompt, setGoodbyePrompt] = useState("");
   const { selectedWorkspaceId } = useWorkspaceStore();
   const agentId = searchParams.get("agentId") ?? "";
 
@@ -61,7 +60,6 @@ export default function AgentConfigPage() {
         setApiKey("");
         setAllowInterruptions(true);
         setGreetPrompt("");
-        setGoodbyePrompt("");
       }
       return;
     }
@@ -74,7 +72,6 @@ export default function AgentConfigPage() {
     setApiKey(agentDetail.llm?.api_key ?? "");
     setAllowInterruptions(agentDetail.allowInterruptions);
     setGreetPrompt(agentDetail.greetPrompt ?? "");
-    setGoodbyePrompt(agentDetail.goodbyePrompt ?? "");
   }, [agentDetail, isDraftMode]);
 
   const { mutateAsync: createAgent, isPending: isSaving } = useMutation({
@@ -93,7 +90,6 @@ export default function AgentConfigPage() {
         instructions: systemInstructions,
         allowInterruptions,
         greetPrompt,
-        goodbyePrompt,
       }),
     onSuccess: async createdAgent => {
       await queryClient.invalidateQueries({
@@ -125,7 +121,6 @@ export default function AgentConfigPage() {
         instructions: systemInstructions,
         allowInterruptions,
         greetPrompt,
-        goodbyePrompt,
       });
     },
     onSuccess: async () => {
@@ -239,8 +234,6 @@ export default function AgentConfigPage() {
               onAllowInterruptionsChange={setAllowInterruptions}
               greetPrompt={greetPrompt}
               onGreetPromptChange={setGreetPrompt}
-              goodbyePrompt={goodbyePrompt}
-              onGoodbyePromptChange={setGoodbyePrompt}
               value={systemInstructions}
               onChange={setSystemInstructions}
             />

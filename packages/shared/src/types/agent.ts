@@ -18,7 +18,6 @@ export const agentSelectSchema = z.object({
   instructions: z.string(),
   allowInterruptions: z.boolean().default(true),
   greetPrompt: z.string().nullable().optional(),
-  goodbyePrompt: z.string().nullable().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
