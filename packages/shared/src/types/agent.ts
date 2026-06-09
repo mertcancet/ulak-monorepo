@@ -1,11 +1,48 @@
 import { z } from "zod";
 
+const voices = [
+  "Achernar",
+  "Achird",
+  "Algenib",
+  "Algieba",
+  "Alnilam",
+  "Aoede",
+  "Autonoe",
+  "Callirrhoe",
+  "Charon",
+  "Despina",
+  "Enceladus",
+  "Erinome",
+  "Fenrir",
+  "Gacrux",
+  "Iapetus",
+  "Kore",
+  "Laomedeia",
+  "Leda",
+  "Orus",
+  "Pulcherrima",
+  "Puck",
+  "Rasalgethi",
+  "Sadachbia",
+  "Sadaltager",
+  "Schedar",
+  "Sulafat",
+  "Umbriel",
+  "Vindemiatrix",
+  "Zephyr",
+  "Zubenelgenubi",
+] as const;
+
 export const llmSettingsSchema = z.object({
   provider: z.literal(["google"]),
-  model: z.string(),
+  model: z.literal([
+    "gemini-2.5-flash-native-audio-preview-12-2025",
+    "gemini-live-2.5-flash-native-audio",
+    "gemini-3.1-flash-live-preview",
+  ]),
   instructions: z.string().optional(),
-  is_realtime: z.boolean().default(false).optional(),
-  voice: z.string().optional(),
+  is_realtime: z.literal(true).default(true).optional(),
+  voice: z.literal(voices).optional(),
   api_key: z.string(),
 });
 
@@ -22,12 +59,16 @@ export const agentSelectSchema = z.object({
   updatedAt: z.date(),
 });
 
-export const agentInsertSchema = agentSelectSchema.omit({
-  id: true,
-  workspaceId: true,
-  createdAt: true,
-  updatedAt: true,
-});
+export const agentInsertSchema = agentSelectSchema
+  .omit({
+    id: true,
+    workspaceId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    toolIds: z.uuidv7().array().optional(),
+  });
 
 export const agentUpdateSchema = agentInsertSchema.partial();
 

@@ -4,16 +4,7 @@ import {
   agentUpdateSchema,
   toolsSelectSchema,
 } from "@cleon/shared";
-import {
-  and,
-  desc,
-  eq,
-  getColumns,
-  inArray,
-  ne,
-  type SQL,
-  sql,
-} from "drizzle-orm";
+import { and, desc, eq, getColumns, ne, type SQL, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
@@ -89,6 +80,7 @@ const agentsModule = () =>
       "",
       async ({ body, session, headers, problem }) => {
         const workspaceId = headers["cleon-workspace-id"];
+        const { toolIds, ...payload } = body;
 
         const isAllowed = await checkPermissions({
           user: {
@@ -103,10 +95,23 @@ const agentsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        const [data] = await db
-          .insert(agents)
-          .values({ ...body, workspaceId })
-          .returning({ id: agents.id });
+        const data = await db.transaction(async tx => {
+          const [data] = await tx
+            .insert(agents)
+            .values({ ...payload, workspaceId })
+            .returning({ id: agents.id });
+
+          if (!data)
+            throw problem({ title: "Internal Server Error", status: 500 });
+
+          if (!toolIds) return data;
+
+          const tools = toolIds.map(toolId => ({ agentId: data.id, toolId }));
+
+          await tx.insert(agent_tools).values(tools);
+
+          return data;
+        });
 
         return data;
       },
@@ -182,8 +187,9 @@ const agentsModule = () =>
     )
     .patch(
       ":id",
-      async ({ params: { id }, body, session, headers, problem }) => {
+      async ({ params, body, session, headers, problem }) => {
         const workspaceId = headers["cleon-workspace-id"];
+        const { toolIds, ...payload } = body;
 
         const isAllowed = await checkPermissions({
           user: {
@@ -198,7 +204,21 @@ const agentsModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
-        await db.update(agents).set(body).where(eq(agents.id, id));
+        await db.transaction(async tx => {
+          await tx.update(agents).set(payload).where(eq(agents.id, params.id));
+
+          if (!toolIds) return;
+
+          await tx
+            .delete(agent_tools)
+            .where(eq(agent_tools.agentId, params.id));
+
+          if (toolIds.length === 0) return;
+
+          const tools = toolIds.map(toolId => ({ agentId: params.id, toolId }));
+
+          await tx.insert(agent_tools).values(tools);
+        });
       },
       {
         requireAuth: true,
@@ -229,69 +249,6 @@ const agentsModule = () =>
       {
         requireAuth: true,
         headers: "headers.workspaceId",
-      },
-    )
-    .post(
-      ":id/tools",
-      async ({ params: { id }, body, session, headers, problem }) => {
-        const workspaceId = headers["cleon-workspace-id"];
-        const toolIds = body.toolIds;
-
-        const isAllowed = await checkPermissions({
-          user: {
-            id: session.userId,
-          },
-          resource: {
-            kind: "agent",
-            workspaceId,
-          },
-          action: "update",
-        });
-
-        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
-
-        const values = toolIds.map(toolId => ({ agentId: id, toolId }));
-
-        await db.insert(agent_tools).values(values);
-      },
-      {
-        requireAuth: true,
-        headers: "headers.workspaceId",
-        body: z.object({ toolIds: z.uuidv7().array() }),
-      },
-    )
-    .delete(
-      ":id/tools",
-      async ({ params, body: payload, session, headers, problem }) => {
-        const workspaceId = headers["cleon-workspace-id"];
-        const agentId = params.id;
-
-        const isAllowed = await checkPermissions({
-          user: {
-            id: session.userId,
-          },
-          resource: {
-            kind: "agent",
-            workspaceId,
-          },
-          action: "update",
-        });
-
-        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
-
-        await db
-          .delete(agent_tools)
-          .where(
-            and(
-              inArray(agent_tools.toolId, payload.toolIds),
-              eq(agent_tools.agentId, agentId),
-            ),
-          );
-      },
-      {
-        requireAuth: true,
-        headers: "headers.workspaceId",
-        body: z.object({ toolIds: z.uuidv7().array() }),
       },
     )
     .post(
