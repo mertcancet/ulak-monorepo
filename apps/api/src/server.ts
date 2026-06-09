@@ -9,6 +9,7 @@ import errorHandler from "~/plugins/error-handler";
 import env from "~/shared/env";
 import { BetterAuthOpenAPI } from "./lib/auth";
 import invitationsModule from "./modules/invitations";
+import livekitModule from "./modules/livekit";
 import rolesModule from "./modules/roles";
 import toolsModule from "./modules/tools";
 import usersModule from "./modules/users";
@@ -84,6 +85,7 @@ const app = new Elysia()
   .use(workspacesModule())
   .use(invitationsModule())
   .use(rolesModule())
+  .use(livekitModule())
   .use(knowledgeBaseModule())
   .listen(env.PORT);
 
