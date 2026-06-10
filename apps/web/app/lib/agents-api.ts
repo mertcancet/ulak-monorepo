@@ -1,5 +1,15 @@
-import type { Agent, AgentInsert, AgentUpdate, Paginated } from "@cleon/shared";
+import type {
+  Agent,
+  AgentInsert,
+  AgentUpdate,
+  Paginated,
+  ToolItem,
+} from "@cleon/shared";
 import { request } from "./fetcher";
+
+type AgentDetail = Agent & {
+  tools: Pick<ToolItem, "id" | "name" | "description">[];
+};
 
 export const agentsApi = {
   listAgents: (page = 1, pageSize = 20) =>
@@ -7,7 +17,7 @@ export const agentsApi = {
       query: { page, pageSize },
     }),
 
-  getAgent: (agentId: string) => request<Agent>(`/agents/${agentId}`),
+  getAgent: (agentId: string) => request<AgentDetail>(`/agents/${agentId}`),
 
   createAgent: (body: AgentInsert) =>
     request<Pick<Agent, "id">>("/agents", {

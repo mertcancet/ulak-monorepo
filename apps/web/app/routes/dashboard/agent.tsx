@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { agentsApi } from "~/lib/agents-api";
+import { toolsApi } from "~/lib/tools-api";
 import { useWorkspaceStore } from "~/store/workspace-store";
 import { AgentHeader } from "./_components/agent/agent-header";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
@@ -28,6 +29,7 @@ export default function AgentConfigPage() {
   const [apiKey, setApiKey] = useState("");
   const [allowInterruptions, setAllowInterruptions] = useState(true);
   const [greetPrompt, setGreetPrompt] = useState("");
+  const [selectedToolIds, setSelectedToolIds] = useState<string[]>([]);
   const { selectedWorkspaceId } = useWorkspaceStore();
   const agentId = searchParams.get("agentId") ?? "";
 
@@ -49,6 +51,20 @@ export default function AgentConfigPage() {
   const queryErrorMessage =
     agentQueryError instanceof Error ? agentQueryError.message : null;
 
+  const {
+    data: toolsResponse,
+    isLoading: isToolsLoading,
+    error: toolsQueryError,
+  } = useQuery({
+    queryKey: ["tools", selectedWorkspaceId, 1, 100],
+    queryFn: () => toolsApi.listTools(1, 20),
+  });
+
+  const toolsErrorMessage =
+    toolsQueryError instanceof Error ? toolsQueryError.message : null;
+
+  const availableTools = toolsResponse?.data ?? [];
+
   useEffect(() => {
     if (!agentDetail) {
       if (isDraftMode) {
@@ -60,6 +76,7 @@ export default function AgentConfigPage() {
         setApiKey("");
         setAllowInterruptions(true);
         setGreetPrompt("");
+        setSelectedToolIds([]);
       }
       return;
     }
@@ -72,6 +89,7 @@ export default function AgentConfigPage() {
     setApiKey(agentDetail.llm?.api_key ?? "");
     setAllowInterruptions(agentDetail.allowInterruptions);
     setGreetPrompt(agentDetail.greetPrompt ?? "");
+    setSelectedToolIds(agentDetail.tools?.map(tool => tool.id) ?? []);
   }, [agentDetail, isDraftMode]);
 
   const { mutateAsync: createAgent, isPending: isSaving } = useMutation({
@@ -90,6 +108,7 @@ export default function AgentConfigPage() {
         instructions: systemInstructions,
         allowInterruptions,
         greetPrompt,
+        toolIds: selectedToolIds,
       }),
     onSuccess: async createdAgent => {
       await queryClient.invalidateQueries({
@@ -121,6 +140,7 @@ export default function AgentConfigPage() {
         instructions: systemInstructions,
         allowInterruptions,
         greetPrompt,
+        toolIds: selectedToolIds,
       });
     },
     onSuccess: async () => {
@@ -234,6 +254,11 @@ export default function AgentConfigPage() {
               onAllowInterruptionsChange={setAllowInterruptions}
               greetPrompt={greetPrompt}
               onGreetPromptChange={setGreetPrompt}
+              tools={availableTools}
+              selectedToolIds={selectedToolIds}
+              onSelectedToolIdsChange={setSelectedToolIds}
+              isToolsLoading={isToolsLoading}
+              toolsErrorMessage={toolsErrorMessage}
               value={systemInstructions}
               onChange={setSystemInstructions}
             />

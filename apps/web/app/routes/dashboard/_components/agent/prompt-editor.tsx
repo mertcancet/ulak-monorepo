@@ -1,3 +1,5 @@
+import type { ToolItem } from "@cleon/shared";
+import { Badge } from "~/components/ui/badge";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Select } from "~/components/ui/select";
@@ -22,6 +24,11 @@ interface PromptEditorProps {
   onAllowInterruptionsChange?: (value: boolean) => void;
   greetPrompt?: string;
   onGreetPromptChange?: (value: string) => void;
+  tools?: ToolItem[];
+  selectedToolIds?: string[];
+  onSelectedToolIdsChange?: (toolIds: string[]) => void;
+  isToolsLoading?: boolean;
+  toolsErrorMessage?: string | null;
   value?: string;
   onChange?: (value: string) => void;
 }
@@ -41,11 +48,35 @@ export const PromptEditor = ({
   onAllowInterruptionsChange,
   greetPrompt,
   onGreetPromptChange,
+  tools,
+  selectedToolIds,
+  onSelectedToolIdsChange,
+  isToolsLoading,
+  toolsErrorMessage,
   value,
   onChange,
 }: PromptEditorProps) => {
+  const selectedToolIdSet = new Set(selectedToolIds ?? []);
+
+  const handleToolSelectionChange = (toolId: string, checked: boolean) => {
+    if (!onSelectedToolIdsChange) {
+      return;
+    }
+
+    if (checked) {
+      onSelectedToolIdsChange(
+        Array.from(new Set([...(selectedToolIds ?? []), toolId])),
+      );
+      return;
+    }
+
+    onSelectedToolIdsChange(
+      (selectedToolIds ?? []).filter(id => id !== toolId),
+    );
+  };
+
   return (
-    <div className="bg-card border-border flex flex-1 min-h-0 flex-col rounded-xl border shadow-sm">
+    <div className="bg-card border-border flex min-h-0 flex-1 flex-col rounded-xl border shadow-sm">
       <div className="border-border bg-secondary/20 flex items-center justify-between border-b p-4">
         <div className="flex items-center space-x-2">
           <div className="bg-primary h-4 w-1.5 rounded-full" />
@@ -125,7 +156,7 @@ export const PromptEditor = ({
               />
             </div>
 
-            <div className="md:col-span-2 flex items-start justify-between gap-4 rounded-lg border border-border bg-secondary/10 p-3">
+            <div className="border-border bg-secondary/10 flex items-start justify-between gap-4 rounded-lg border p-3 md:col-span-2">
               <div className="space-y-0.5">
                 <p className="text-sm font-medium">Kesintilere izin ver</p>
                 <p className="text-muted-foreground text-xs">
@@ -151,13 +182,66 @@ export const PromptEditor = ({
               />
             </div>
 
-            <div className="space-y-1.5 md:col-span-2">
-              <Label htmlFor="agent-goodbye-prompt">Kapanış mesajı</Label>
-              <Textarea
-                id="agent-goodbye-prompt"
-                rows={3}
-                placeholder="Görüşme sonundaki mesaj"
-              />
+            <div className="space-y-2 md:col-span-2">
+              <div className="flex items-center justify-between">
+                <Label>Araçlar</Label>
+                <Badge variant="secondary">
+                  {selectedToolIds?.length ?? 0} seçili
+                </Badge>
+              </div>
+
+              <p className="text-muted-foreground text-xs">
+                Bu agent'in konuşma sırasında kullanabileceği araçları seçin.
+              </p>
+
+              <div className="border-border bg-secondary/10 space-y-2 rounded-lg border p-3">
+                {isToolsLoading ? (
+                  <p className="text-muted-foreground text-xs">
+                    Araçlar yükleniyor...
+                  </p>
+                ) : toolsErrorMessage ? (
+                  <p className="text-destructive text-xs">
+                    {toolsErrorMessage}
+                  </p>
+                ) : !tools?.length ? (
+                  <p className="text-muted-foreground text-xs">
+                    Bu workspace için kullanılabilir araç bulunamadı.
+                  </p>
+                ) : (
+                  tools.map(tool => {
+                    const isChecked = selectedToolIdSet.has(tool.id);
+
+                    return (
+                      <label
+                        key={tool.id}
+                        className="border-border bg-background/70 hover:bg-background flex cursor-pointer items-start justify-between gap-3 rounded-md border p-2 transition-colors"
+                      >
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={isChecked}
+                          onChange={event =>
+                            handleToolSelectionChange(
+                              tool.id,
+                              event.target.checked,
+                            )
+                          }
+                        />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium">{tool.name}</p>
+                          <p className="text-muted-foreground text-xs">
+                            {tool.description}
+                          </p>
+                        </div>
+                        <Switch
+                          checked={isChecked}
+                          className="pointer-events-none"
+                        />
+                      </label>
+                    );
+                  })
+                )}
+              </div>
             </div>
           </div>
         </TabsContent>
@@ -174,7 +258,7 @@ export const PromptEditor = ({
             </p>
           </div>
           <Textarea
-            className="text-foreground/80 scrollbar-thin min-h-0 w-full flex-1 resize-none border-border bg-transparent p-4 text-sm leading-relaxed font-medium"
+            className="text-foreground/80 border-border min-h-0 w-full flex-1 resize-none scrollbar-thin bg-transparent p-4 text-sm leading-relaxed font-medium"
             placeholder="Agent talimatlarını buraya girin..."
             value={value ?? DEFAULT_PROMPT}
             onChange={event => onChange?.(event.target.value)}
