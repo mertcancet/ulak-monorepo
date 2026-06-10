@@ -40,20 +40,18 @@ export const TestingPanel = ({ agentId }: TestingPanelProps) => {
         return;
       }
 
-      // AgentID HARDCODELI YAPILDI BUNU DEĞİŞTİRECEĞİZ
-      const tokenResponse = await fetch(
-        import.meta.env.VITE_LIVEKIT_TOKEN_ENDPOINT,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            agentId,
-          }),
-          credentials: "include",
+      const tokenURL = new URL("/livekit/token", import.meta.env.VITE_API_URL);
+
+      const tokenResponse = await fetch(tokenURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          agentId,
+        }),
+        credentials: "include",
+      });
 
       if (!tokenResponse.ok) {
         throw new Error("Token alinamadi.");
@@ -65,10 +63,7 @@ export const TestingPanel = ({ agentId }: TestingPanelProps) => {
         throw new Error("Token response gecersiz.");
       }
 
-      await newRoom.connect(
-        import.meta.env.VITE_LIVEKIT_WS_URL ?? "wss://your-livekit-url",
-        token,
-      );
+      await newRoom.connect(import.meta.env.VITE_LIVEKIT_WS_URL, token);
 
       newRoom.on("trackSubscribed", track => {
         if (track.kind !== "audio") {
@@ -85,7 +80,8 @@ export const TestingPanel = ({ agentId }: TestingPanelProps) => {
       setConnected(true);
       setMicOn(false);
       setLiveKitStatus("LiveKit baglantisi kuruldu.");
-    } catch {
+    } catch (e) {
+      console.error(e);
       setConnected(false);
       setMicOn(false);
       setLiveKitStatus("LiveKit baglantisi basarisiz oldu.");
