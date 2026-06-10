@@ -387,7 +387,7 @@ const DashboardLayout = () => {
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className="bg-secondary rounded-xl hover:bg-muted flex h-10 w-full items-center justify-between border-0 px-3 transition-colors"
+                    className="bg-secondary hover:bg-muted flex h-10 w-full items-center justify-between rounded-xl border-0 px-3 transition-colors"
                   >
                     <div className="flex items-center gap-2 overflow-hidden">
                       <div className="bg-brand/15 text-brand flex h-5 w-5 items-center justify-center rounded text-[9px] font-bold">
@@ -538,22 +538,6 @@ const DashboardLayout = () => {
               />
             </SidebarSection>
 */}
-            <SidebarSection title="Sistem" collapsed={collapsed}>
-              <SidebarItem
-                icon={Building2}
-                label="Workspaces"
-                href="/dashboard/workspaces"
-                active={location.pathname.startsWith("/dashboard/workspaces")}
-                collapsed={collapsed}
-              />
-              <SidebarItem
-                icon={Settings}
-                label="Ayarlar"
-                href="/dashboard/settings"
-                active={location.pathname === "/dashboard/settings"}
-                collapsed={collapsed}
-              />
-            </SidebarSection>
 
             <SidebarSection title="Ekip" collapsed={collapsed}>
               <SidebarItem
@@ -571,11 +555,27 @@ const DashboardLayout = () => {
                 collapsed={collapsed}
               />
             </SidebarSection>
+            <SidebarSection title="Sistem" collapsed={collapsed}>
+              <SidebarItem
+                icon={Building2}
+                label="Workspaces"
+                href="/dashboard/workspaces"
+                active={location.pathname.startsWith("/dashboard/workspaces")}
+                collapsed={collapsed}
+              />
+              <SidebarItem
+                icon={Settings}
+                label="Ayarlar"
+                href="/dashboard/settings"
+                active={location.pathname === "/dashboard/settings"}
+                collapsed={collapsed}
+              />
+            </SidebarSection>
           </nav>
 
           {!collapsed && (
             <div className="border-border space-y-1 border-t p-3">
-              <div className=" flex items-center justify-between rounded-lg px-3 py-2 transition-colors">
+              <div className="flex items-center justify-between rounded-lg px-3 py-2 transition-colors">
                 <div className="flex items-center gap-2 overflow-hidden">
                   <Avatar className="border-border h-7 w-7 border">
                     <AvatarImage src="" />
