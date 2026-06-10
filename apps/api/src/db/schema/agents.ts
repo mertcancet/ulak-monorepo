@@ -24,7 +24,6 @@ export const agents = pgTable(
     instructions: text().notNull(),
     allowInterruptions: boolean().default(true).notNull(),
     greetPrompt: text(),
-    goodbyePrompt: text(),
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp({ withTimezone: true })
       .defaultNow()

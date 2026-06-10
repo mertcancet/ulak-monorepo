@@ -225,8 +225,7 @@ curl -X POST http://localhost:3000/agents \
     "workspaceId": "<workspace-uuid>",
     "instructions": "You are a helpful support assistant.",
     "allowInterruptions": true,
-    "greetPrompt": "Hello! How can I help you today?",
-    "goodbyePrompt": "Thank you for calling. Goodbye!"
+    "greetPrompt": "Hello! How can I help you today?"
   }'
 ```
 

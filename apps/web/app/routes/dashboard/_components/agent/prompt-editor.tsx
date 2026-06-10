@@ -22,8 +22,6 @@ interface PromptEditorProps {
   onAllowInterruptionsChange?: (value: boolean) => void;
   greetPrompt?: string;
   onGreetPromptChange?: (value: string) => void;
-  goodbyePrompt?: string;
-  onGoodbyePromptChange?: (value: string) => void;
   value?: string;
   onChange?: (value: string) => void;
 }
@@ -43,8 +41,6 @@ export const PromptEditor = ({
   onAllowInterruptionsChange,
   greetPrompt,
   onGreetPromptChange,
-  goodbyePrompt,
-  onGoodbyePromptChange,
   value,
   onChange,
 }: PromptEditorProps) => {
@@ -160,8 +156,6 @@ export const PromptEditor = ({
               <Textarea
                 id="agent-goodbye-prompt"
                 rows={3}
-                value={goodbyePrompt ?? ""}
-                onChange={event => onGoodbyePromptChange?.(event.target.value)}
                 placeholder="Görüşme sonundaki mesaj"
               />
             </div>
