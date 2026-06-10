@@ -27,8 +27,10 @@ const livekitModule = () =>
           },
         );
 
+        const defaultRoom = `room-${Date.now()}`;
+
         at.addGrant({
-          room: payload.room || `room-${Date.now()}`,
+          room: payload.room || defaultRoom,
           roomJoin: true,
           canPublish: true,
           canSubscribe: true,
@@ -36,7 +38,7 @@ const livekitModule = () =>
         });
 
         at.roomConfig = new RoomConfiguration({
-          name: payload.room,
+          name: payload.room || defaultRoom,
           agents: [
             {
               agentName: "cleon",
