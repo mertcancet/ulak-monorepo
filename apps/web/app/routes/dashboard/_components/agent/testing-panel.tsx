@@ -4,27 +4,11 @@ import { Info, Mic } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 
-const _MessagesSquaree = ({ className }: { className?: string }) => (
-  // biome-ignore lint/a11y/noSvgWithoutTitle: <>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    <path d="M13 8H7" />
-    <path d="M13 12H7" />
-  </svg>
-);
+interface TestingPanelProps {
+  agentId?: string;
+}
 
-export const TestingPanel = () => {
+export const TestingPanel = ({ agentId }: TestingPanelProps) => {
   const [room, setRoom] = useState<Room | null>(null);
   const [connected, setConnected] = useState<boolean>(false);
   const [micOn, setMicOn] = useState<boolean>(false);
@@ -51,9 +35,24 @@ export const TestingPanel = () => {
       }
 
       const newRoom = new Room();
+      if (!agentId) {
+        setLiveKitStatus("Once temsilciyi kaydedin.");
+        return;
+      }
+
+      // AgentID HARDCODELI YAPILDI BUNU DEĞİŞTİRECEĞİZ
       const tokenResponse = await fetch(
-        import.meta.env.VITE_LIVEKIT_TOKEN_ENDPOINT ??
-          "http://localhost:8000/get-token?room=test-room&identity=user1",
+        import.meta.env.VITE_LIVEKIT_TOKEN_ENDPOINT,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            agentId,
+          }),
+          credentials: "include",
+        },
       );
 
       if (!tokenResponse.ok) {

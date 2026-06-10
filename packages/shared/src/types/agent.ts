@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const voices = [
+export const voices = [
   "Achernar",
   "Achird",
   "Algenib",

@@ -81,10 +81,10 @@ export default function AgentConfigPage() {
         phoneNumber,
         llm: {
           provider: "google",
-          model,
+          model: "gemini-2.5-flash-native-audio-preview-12-2025",
           instructions: systemInstructions,
-          is_realtime: false,
-          voice,
+          is_realtime: true,
+          voice: "Achernar",
           api_key: apiKey,
         },
         instructions: systemInstructions,
@@ -112,10 +112,10 @@ export default function AgentConfigPage() {
         phoneNumber,
         llm: {
           provider: "google",
-          model,
+          model: "gemini-2.5-flash-native-audio-preview-12-2025",
           instructions: systemInstructions,
-          is_realtime: agentDetail.llm?.is_realtime ?? false,
-          voice,
+          is_realtime: true,
+          voice: "Achernar",
           api_key: apiKey,
         },
         instructions: systemInstructions,
@@ -245,7 +245,7 @@ export default function AgentConfigPage() {
          */}
 
           {/* Right Column: Testing Panel */}
-          <TestingPanel />
+          <TestingPanel agentId={agentId} />
         </div>
       </main>
 
