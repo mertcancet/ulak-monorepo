@@ -352,12 +352,6 @@ const invitationsModule = () =>
         if (!invitation || invitation.status !== "pending")
           return problem({ title: "Bad Request" });
 
-        if (invitation.expiresAt.getTime() < Date.now())
-          return problem({
-            title: "Bad Request",
-            code: "invitations.expired",
-          });
-
         await db
           .update(invitations)
           .set({ status: "declined" })
