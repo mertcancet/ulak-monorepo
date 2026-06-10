@@ -1,14 +1,13 @@
+import path from 'node:path';
 import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig } from 'vite';
 
-export default defineConfig((config) => ({
+export default defineConfig(() => ({
   plugins: [reactRouter()],
-  resolve:
-    config.command === 'build'
-      ? {
-          alias: {
-            'react-dom/server': 'react-dom/server.node',
-          },
-        }
-      : undefined,
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      'react-dom/server': 'react-dom/server.node',
+    },
+  },
 }));
