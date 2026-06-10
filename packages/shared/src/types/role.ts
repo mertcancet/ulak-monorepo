@@ -9,7 +9,7 @@ export const standardPermissions = [
 ] as const;
 
 const userPermissions = ["add-role", "remove-role", "*"] as const;
-const workspacePermissions = ["view", "update", "*"] as const;
+const workspacePermissions = ["view", "update", "remove-member", "*"] as const;
 
 export type ResourceKind = keyof z.infer<typeof rolePermissionSchema>;
 

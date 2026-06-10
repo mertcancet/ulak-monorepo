@@ -5,7 +5,7 @@ import {
   workspaceSelectSchema,
   workspaceUpdateSchema,
 } from "@cleon/shared";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
@@ -165,6 +165,38 @@ const workspacesModule = () =>
           200: workspaceMembersSchema.array(),
           403: z.any(),
         },
+      },
+    )
+    .delete(
+      ":id/members",
+      async ({ params, session, body: payload, problem }) => {
+        const workspaceId = params.id;
+
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "workspace",
+            workspaceId,
+          },
+          action: "remove-member",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        await db
+          .delete(workspace_members)
+          .where(
+            and(
+              inArray(workspace_members.userId, payload.memberIds),
+              eq(workspace_members.workspaceId, workspaceId),
+            ),
+          );
+      },
+      {
+        requireAuth: true,
+        body: z.object({ memberIds: z.uuidv7().array() }),
       },
     )
     .patch(
