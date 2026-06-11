@@ -1,12 +1,24 @@
-import { ArrowLeft, CheckCircle2, Clock3, Headphones, ShieldCheck } from 'lucide-react';
-import { type FormEvent, useState } from 'react';
-import { Link } from 'react-router';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useLocalizedPath, useTranslations } from '@/i18n';
-import { Footer } from '@/pages/landing/components/Footer';
-import { Navbar } from '@/pages/landing/components/Navbar';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Clock3,
+  Headphones,
+  ShieldCheck,
+} from "lucide-react";
+import { type FormEvent, useState } from "react";
+import { Link } from "react-router";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useLocalizedPath, useTranslations } from "@/i18n";
+import { Footer } from "@/pages/landing/components/Footer";
+import { Navbar } from "@/pages/landing/components/Navbar";
 
 type DemoFormData = {
   fullName: string;
@@ -18,52 +30,105 @@ type DemoFormData = {
 };
 
 const initialFormData: DemoFormData = {
-  fullName: '',
-  company: '',
-  email: '',
-  phone: '',
-  callVolume: '',
-  useCase: '',
+  fullName: "",
+  company: "",
+  email: "",
+  phone: "",
+  callVolume: "",
+  useCase: "",
 };
+
+const DEMO_RECIPIENT_EMAIL = "hello@usecleon.com";
+
+type EmailCopy = {
+  subjectPrefix: string;
+  intro: string;
+  labels: {
+    fullName: string;
+    company: string;
+    email: string;
+    phone: string;
+    callVolume: string;
+    useCase: string;
+  };
+};
+
+function buildGmailComposeUrl(formData: DemoFormData, copy: EmailCopy): string {
+  const subject = `${copy.subjectPrefix} - ${formData.fullName}`;
+  const body = [
+    copy.intro,
+    "",
+    `${copy.labels.fullName}: ${formData.fullName}`,
+    `${copy.labels.company}: ${formData.company}`,
+    `${copy.labels.email}: ${formData.email}`,
+    `${copy.labels.phone}: ${formData.phone || "-"}`,
+    `${copy.labels.callVolume}: ${formData.callVolume}`,
+    "",
+    `${copy.labels.useCase}:`,
+    formData.useCase,
+  ].join("\n");
+
+  const searchParams = new URLSearchParams({
+    fs: "1",
+    view: "cm",
+    to: DEMO_RECIPIENT_EMAIL,
+    su: subject,
+    body,
+  });
+
+  return `https://mail.google.com/mail/?${searchParams.toString()}`;
+}
 
 export function DemoRequestPage() {
   const t = useTranslations();
-  const homePath = useLocalizedPath('/');
+  const homePath = useLocalizedPath("/");
   const [formData, setFormData] = useState<DemoFormData>(initialFormData);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [hasOpenedMailClient, setHasOpenedMailClient] = useState(false);
+
+  const emailCopy: EmailCopy = {
+    subjectPrefix: t("demoPage.email.subjectPrefix"),
+    intro: t("demoPage.email.intro"),
+    labels: {
+      fullName: t("demoPage.email.labels.fullName"),
+      company: t("demoPage.email.labels.company"),
+      email: t("demoPage.email.labels.email"),
+      phone: t("demoPage.email.labels.phone"),
+      callVolume: t("demoPage.email.labels.callVolume"),
+      useCase: t("demoPage.email.labels.useCase"),
+    },
+  };
 
   const highlights = [
     {
       icon: Clock3,
-      title: t('demoPage.highlights.setup.title'),
-      description: t('demoPage.highlights.setup.description'),
+      title: t("demoPage.highlights.setup.title"),
+      description: t("demoPage.highlights.setup.description"),
     },
     {
       icon: Headphones,
-      title: t('demoPage.highlights.voice.title'),
-      description: t('demoPage.highlights.voice.description'),
+      title: t("demoPage.highlights.voice.title"),
+      description: t("demoPage.highlights.voice.description"),
     },
     {
       icon: ShieldCheck,
-      title: t('demoPage.highlights.security.title'),
-      description: t('demoPage.highlights.security.description'),
+      title: t("demoPage.highlights.security.title"),
+      description: t("demoPage.highlights.security.description"),
     },
   ];
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsSubmitting(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 900));
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    setFormData(initialFormData);
+  function updateField<K extends keyof DemoFormData>(
+    field: K,
+    value: DemoFormData[K],
+  ) {
+    setFormData(current => ({ ...current, [field]: value }));
   }
 
-  function updateField<K extends keyof DemoFormData>(field: K, value: DemoFormData[K]) {
-    setFormData((current) => ({ ...current, [field]: value }));
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    const composeUrl = buildGmailComposeUrl(formData, emailCopy);
+
+    setHasOpenedMailClient(true);
+    window.open(composeUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -79,30 +144,37 @@ export function DemoRequestPage() {
               className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition-colors hover:border-primary/40 hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" />
-              {t('demoPage.backToHome')}
+              {t("demoPage.backToHome")}
             </Link>
 
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary">
               <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_14px_rgba(92,141,255,0.8)]" />
-              {t('demoPage.badge')}
+              {t("demoPage.badge")}
             </div>
 
             <h1 className="mt-6 max-w-xl text-4xl font-semibold leading-tight text-white md:text-6xl">
-              {t('demoPage.title')}
+              {t("demoPage.title")}
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl">
-              {t('demoPage.description')}
+              {t("demoPage.description")}
             </p>
 
             <div className="mt-10 grid gap-4">
               {highlights.map(({ icon: Icon, title, description }) => (
-                <div key={title} className="glass flex items-start gap-4 rounded-2xl p-5 text-left">
+                <div
+                  key={title}
+                  className="glass flex items-start gap-4 rounded-2xl p-5 text-left"
+                >
                   <div className="rounded-2xl border border-primary/15 bg-primary/10 p-3 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-base font-semibold text-white">{title}</h2>
-                    <p className="mt-1 text-sm leading-6 text-slate-400">{description}</p>
+                    <h2 className="text-base font-semibold text-white">
+                      {title}
+                    </h2>
+                    <p className="mt-1 text-sm leading-6 text-slate-400">
+                      {description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -110,18 +182,28 @@ export function DemoRequestPage() {
 
             <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <div className="text-3xl font-semibold text-white">15 dk</div>
-                <div className="mt-2 text-sm text-slate-400">{t('demoPage.metrics.discovery')}</div>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <div className="text-3xl font-semibold text-white">24/7</div>
+                <div className="text-3xl font-semibold text-white">
+                  {t("demoPage.metrics.discoveryValue")}
+                </div>
                 <div className="mt-2 text-sm text-slate-400">
-                  {t('demoPage.metrics.availability')}
+                  {t("demoPage.metrics.discovery")}
                 </div>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <div className="text-3xl font-semibold text-white">500+</div>
-                <div className="mt-2 text-sm text-slate-400">{t('demoPage.metrics.teams')}</div>
+                <div className="text-3xl font-semibold text-white">
+                  {t("demoPage.metrics.availabilityValue")}
+                </div>
+                <div className="mt-2 text-sm text-slate-400">
+                  {t("demoPage.metrics.availability")}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div className="text-3xl font-semibold text-white">
+                  {t("demoPage.metrics.teamsValue")}
+                </div>
+                <div className="mt-2 text-sm text-slate-400">
+                  {t("demoPage.metrics.teams")}
+                </div>
               </div>
             </div>
           </section>
@@ -129,125 +211,168 @@ export function DemoRequestPage() {
           <section className="w-full lg:max-w-2xl lg:flex-1">
             <Card className="border-white/10 bg-white/5 shadow-2xl shadow-black/20 backdrop-blur-xl">
               <CardHeader className="space-y-3 border-b border-white/10 pb-6">
-                <CardTitle className="text-2xl text-white">{t('demoPage.form.title')}</CardTitle>
+                <CardTitle className="text-2xl text-white">
+                  {t("demoPage.form.title")}
+                </CardTitle>
                 <CardDescription className="text-base leading-7 text-slate-400">
-                  {t('demoPage.form.description')}
+                  {t("demoPage.form.description")}
                 </CardDescription>
               </CardHeader>
 
               <CardContent className="pt-6">
-                {isSubmitted ? (
+                {hasOpenedMailClient ? (
                   <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-6 text-left">
                     <div className="flex items-start gap-4">
                       <CheckCircle2 className="mt-0.5 h-6 w-6 text-emerald-300" />
                       <div>
                         <h3 className="text-lg font-semibold text-white">
-                          {t('demoPage.success.title')}
+                          {t("demoPage.compose.title")}
                         </h3>
                         <p className="mt-2 text-sm leading-6 text-emerald-50/80">
-                          {t('demoPage.success.description')}
+                          {t("demoPage.compose.description")}
                         </p>
                       </div>
                     </div>
-                    <Button type="button" className="mt-6" onClick={() => setIsSubmitted(false)}>
-                      {t('demoPage.success.reset')}
+                    <Button
+                      type="button"
+                      className="mt-6"
+                      onClick={() => {
+                        setFormData(initialFormData);
+                        setHasOpenedMailClient(false);
+                      }}
+                    >
+                      {t("demoPage.compose.reset")}
                     </Button>
                   </div>
                 ) : (
-                  <form className="grid gap-5" onSubmit={handleSubmit}>
+                  <form onSubmit={handleSubmit} className="grid gap-5">
                     <div className="grid gap-5 md:grid-cols-2">
                       <span className="grid gap-2 text-sm font-medium text-slate-200">
-                        <span>{t('demoPage.form.fields.fullName')}</span>
+                        <span>{t("demoPage.form.fields.fullName")}</span>
                         <Input
+                          name="fullName"
                           required
                           value={formData.fullName}
-                          onChange={(event) => updateField('fullName', event.target.value)}
-                          placeholder={t('demoPage.form.placeholders.fullName')}
+                          onChange={event =>
+                            updateField("fullName", event.target.value)
+                          }
+                          placeholder={t("demoPage.form.placeholders.fullName")}
                           className="h-12 border-white/10 bg-slate-950/40 text-white placeholder:text-slate-500"
                         />
                       </span>
 
                       <span className="grid gap-2 text-sm font-medium text-slate-200">
-                        <span>{t('demoPage.form.fields.company')}</span>
+                        <span>{t("demoPage.form.fields.company")}</span>
                         <Input
+                          name="company"
                           required
                           value={formData.company}
-                          onChange={(event) => updateField('company', event.target.value)}
-                          placeholder={t('demoPage.form.placeholders.company')}
+                          onChange={event =>
+                            updateField("company", event.target.value)
+                          }
+                          placeholder={t("demoPage.form.placeholders.company")}
                           className="h-12 border-white/10 bg-slate-950/40 text-white placeholder:text-slate-500"
                         />
                       </span>
 
                       <span className="grid gap-2 text-sm font-medium text-slate-200">
-                        <span>{t('demoPage.form.fields.email')}</span>
+                        <span>{t("demoPage.form.fields.email")}</span>
                         <Input
+                          name="email"
                           required
                           type="email"
                           value={formData.email}
-                          onChange={(event) => updateField('email', event.target.value)}
-                          placeholder={t('demoPage.form.placeholders.email')}
+                          onChange={event =>
+                            updateField("email", event.target.value)
+                          }
+                          placeholder={t("demoPage.form.placeholders.email")}
                           className="h-12 border-white/10 bg-slate-950/40 text-white placeholder:text-slate-500"
                         />
                       </span>
 
                       <span className="grid gap-2 text-sm font-medium text-slate-200">
-                        <span>{t('demoPage.form.fields.phone')}</span>
+                        <span>{t("demoPage.form.fields.phone")}</span>
                         <Input
+                          name="phone"
                           type="tel"
                           value={formData.phone}
-                          onChange={(event) => updateField('phone', event.target.value)}
-                          placeholder={t('demoPage.form.placeholders.phone')}
+                          onChange={event =>
+                            updateField("phone", event.target.value)
+                          }
+                          placeholder={t("demoPage.form.placeholders.phone")}
                           className="h-12 border-white/10 bg-slate-950/40 text-white placeholder:text-slate-500"
                         />
                       </span>
                     </div>
 
                     <span className="grid gap-2 text-sm font-medium text-slate-200">
-                      <span>{t('demoPage.form.fields.callVolume')}</span>
+                      <span>{t("demoPage.form.fields.callVolume")}</span>
                       <select
+                        name="callVolume"
                         required
                         value={formData.callVolume}
-                        onChange={(event) => updateField('callVolume', event.target.value)}
+                        onChange={event =>
+                          updateField("callVolume", event.target.value)
+                        }
                         className="flex h-12 w-full rounded-lg border border-white/10 bg-slate-950/40 px-3 py-2 text-sm text-white outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
                       >
-                        <option value="" disabled className="bg-slate-950 text-slate-400">
-                          {t('demoPage.form.placeholders.callVolume')}
+                        <option
+                          value=""
+                          disabled
+                          className="bg-slate-950 text-slate-400"
+                        >
+                          {t("demoPage.form.placeholders.callVolume")}
                         </option>
-                        <option value="0-500" className="bg-slate-950 text-white">
-                          {t('demoPage.form.options.callVolume.low')}
+                        <option
+                          value="0-500"
+                          className="bg-slate-950 text-white"
+                        >
+                          {t("demoPage.form.options.callVolume.low")}
                         </option>
-                        <option value="500-5000" className="bg-slate-950 text-white">
-                          {t('demoPage.form.options.callVolume.mid')}
+                        <option
+                          value="500-5000"
+                          className="bg-slate-950 text-white"
+                        >
+                          {t("demoPage.form.options.callVolume.mid")}
                         </option>
-                        <option value="5000+" className="bg-slate-950 text-white">
-                          {t('demoPage.form.options.callVolume.high')}
+                        <option
+                          value="5000+"
+                          className="bg-slate-950 text-white"
+                        >
+                          {t("demoPage.form.options.callVolume.high")}
                         </option>
                       </select>
                     </span>
 
                     <span className="grid gap-2 text-sm font-medium text-slate-200">
-                      <span>{t('demoPage.form.fields.useCase')}</span>
+                      <span>{t("demoPage.form.fields.useCase")}</span>
                       <textarea
+                        name="useCase"
                         required
                         rows={5}
                         value={formData.useCase}
-                        onChange={(event) => updateField('useCase', event.target.value)}
-                        placeholder={t('demoPage.form.placeholders.useCase')}
+                        onChange={event =>
+                          updateField("useCase", event.target.value)
+                        }
+                        placeholder={t("demoPage.form.placeholders.useCase")}
                         className="w-full rounded-lg border border-white/10 bg-slate-950/40 px-3 py-3 text-sm text-white shadow-sm outline-none transition placeholder:text-slate-500 focus:border-primary focus:ring-2 focus:ring-primary/40"
                       />
                     </span>
 
+                    <p className="rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
+                      {t("demoPage.compose.notice")}
+                    </p>
+
                     <div className="flex flex-col gap-4 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
                       <p className="max-w-md text-sm leading-6 text-slate-400">
-                        {t('demoPage.form.disclaimer')}
+                        {t("demoPage.form.disclaimer")}
                       </p>
                       <Button
                         type="submit"
                         size="lg"
-                        disabled={isSubmitting}
                         className="min-w-44 bg-primary text-white shadow-lg shadow-primary/20"
                       >
-                        {isSubmitting ? t('demoPage.form.submitting') : t('demoPage.form.submit')}
+                        {t("demoPage.compose.submit")}
                       </Button>
                     </div>
                   </form>
