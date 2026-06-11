@@ -15,9 +15,7 @@
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/*": ["./app/*"],
-      "@cleon/auth": ["../../apps/api/src/lib/auth"],
-      "~/plugins/*": ["../../apps/api/src/plugins/*"],
-      "~/modules/*": ["../../apps/api/src/modules/*"]
+      "@cleon/auth": ["../../apps/api/src/lib/auth.ts"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
