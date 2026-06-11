@@ -6,7 +6,7 @@ import { Select } from "~/components/ui/select";
 import { Slider } from "~/components/ui/slider";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
-import { workspacesApi } from "~/lib/workspaces-api";
+import { agentsApi } from "~/lib/agents-api";
 
 export type { AgentHandoffToolFormData };
 
@@ -19,9 +19,12 @@ export function AgentHandoffToolForm({
   data,
   onChange,
 }: AgentHandoffToolFormProps) {
-  const { data: workspaces = [], isLoading: isWorkspacesLoading } = useQuery({
-    queryKey: ["workspaces", "agent-handoff"],
-    queryFn: () => workspacesApi.listWorkspaces(),
+  const { data: agents = [], isLoading: isAgentsLoading } = useQuery({
+    queryKey: ["agents", "agent-handoff"],
+    queryFn: async () => {
+      const response = await agentsApi.listAgents();
+      return response.data;
+    },
   });
 
   const update = (partial: Partial<AgentHandoffToolFormData>) => {
@@ -53,7 +56,7 @@ export function AgentHandoffToolForm({
           <Label htmlFor="agent-handoff-desc">Açıklama</Label>
           <Textarea
             id="agent-handoff-desc"
-            placeholder="or. Gorusmeyi uygun oldugunda destek ajanina aktar."
+            placeholder="or. Görüşmeyi uygun olduğunda destek temsilcisine aktar."
             value={data.description}
             onChange={e => update({ description: e.target.value })}
           />
@@ -81,30 +84,28 @@ export function AgentHandoffToolForm({
             Aktarım ayarları
           </h3>
           <p className="text-muted-foreground mt-0.5 text-xs">
-            Görüşme hangi ajana ve hangi bağlamla aktarılacak
+            Görüşme hangi temsilciye ve hangi bağlamla aktarılacak
           </p>
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="agent-handoff-destination">Hedef workspace</Label>
+          <Label htmlFor="agent-handoff-destination">Hedef Temsilci</Label>
           <Select
             id="agent-handoff-destination"
             value={data.destinationAgent}
             onChange={e => update({ destinationAgent: e.target.value })}
           >
             <option value="" disabled>
-              {isWorkspacesLoading
-                ? "Workspace'ler yukleniyor..."
-                : "Workspace secin"}
+              {isAgentsLoading ? "Temsilciler yükleniyor..." : "Temsilci seçin"}
             </option>
-            {workspaces.map(workspace => (
-              <option key={workspace.id} value={workspace.id}>
-                {workspace.name}
+            {agents.map(agent => (
+              <option key={agent.id} value={agent.id}>
+                {agent.name}
               </option>
             ))}
           </Select>
           <p className="text-muted-foreground text-xs">
-            Secilen workspace kimligi destination_agent alanina gonderilir
+            Seçilen Temsilci kimliği destination_agent alanına gönderilir
           </p>
         </div>
 
@@ -143,7 +144,7 @@ export function AgentHandoffToolForm({
               onValueChange={([v]) => update({ contextMessageLimit: v ?? 1 })}
             />
             <p className="text-muted-foreground text-xs">
-              Son N mesaji aktariminda kullanilir
+              Son N mesajı aktarımında kullanılır
             </p>
           </div>
         )}
@@ -152,7 +153,7 @@ export function AgentHandoffToolForm({
           <Label htmlFor="agent-handoff-message">Aktarım mesajı</Label>
           <Textarea
             id="agent-handoff-message"
-            placeholder="or. Musteriyi faturalama destek ajanina aktariyorum."
+            placeholder="Müşteriyi faturalama destek temsilcisine aktarıyorum."
             value={data.handoffMessage ?? ""}
             onChange={e => update({ handoffMessage: e.target.value })}
             rows={3}
