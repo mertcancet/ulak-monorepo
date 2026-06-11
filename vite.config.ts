@@ -1,13 +1,16 @@
-import path from 'node:path';
-import { reactRouter } from '@react-router/dev/vite';
-import { defineConfig } from 'vite';
+import { reactRouter } from "@react-router/dev/vite";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig(() => ({
-  plugins: [reactRouter()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      'react-dom/server': 'react-dom/server.node',
-    },
-  },
+export default defineConfig(config => ({
+  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+  resolve:
+    config.command === "build"
+      ? {
+          alias: {
+            "react-dom/server": "react-dom/server.node",
+          },
+        }
+      : undefined,
 }));
