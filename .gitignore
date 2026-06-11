@@ -15,3 +15,10 @@ coverage
 *.swo
 *.zip
 *.tar.gz    
+
+.env
+.env.*
+
+# React Router
+/.react-router/
+/build/
