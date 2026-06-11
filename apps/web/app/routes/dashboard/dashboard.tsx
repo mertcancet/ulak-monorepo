@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -31,7 +30,7 @@ import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 
 const DEFAULT_VOICE_NAME = "Autonoe";
-const DEFAULT_VOICE_IMAGE =
+const _DEFAULT_VOICE_IMAGE =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDFE04qOA0LzD1UUmktDRXDrl-UvuwAudLMxFGmnVqVdBZ7AeN9gf8LnFm_8gm39d6ACuczz67VSE-kiF9AI_Ax8clL_F03_gZeC77QphBQfMOh3rpENrHLnEQS8chh18ss_rUF-f53uqawef7bYC0Twexri6KFpWgF6hjN-C6xynZtie99MQmzGy-P4moWodPMU0xg-L8WLPE4h700MImRJyeM7AKMocGaW4hJBkEe_ai97yh2It8vddTIoyIShRSJy0LtzcjlF_A";
 
 const _formatDate = (iso: string) =>
@@ -151,9 +150,7 @@ export default function Dashboard() {
                 <TableHead className="text-muted-foreground h-11 pl-6 text-[11px] font-semibold tracking-wider uppercase">
                   Temsilci Adı
                 </TableHead>
-                <TableHead className="text-muted-foreground h-11 text-[11px] font-semibold tracking-wider uppercase">
-                  Tür
-                </TableHead>
+
                 <TableHead className="text-muted-foreground h-11 text-[11px] font-semibold tracking-wider uppercase">
                   Ses
                 </TableHead>
@@ -211,26 +208,16 @@ export default function Dashboard() {
                         </button>
                       </div>
                     </TableCell>
+
                     <TableCell className="py-4">
-                      <span className="bg-secondary text-secondary-foreground inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium">
-                        Boş
-                      </span>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="ring-border h-6 w-6 ring-1">
-                          <AvatarImage src={DEFAULT_VOICE_IMAGE} />
-                          <AvatarFallback className="text-[10px]">
-                            V
-                          </AvatarFallback>
-                        </Avatar>
+                      <div className="flex items-center">
                         <span className="text-secondary-foreground text-sm font-medium">
                           {DEFAULT_VOICE_NAME}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground py-4 text-sm">
-                      -
+                      {agent.phoneNumber || "-"}
                     </TableCell>
                     <TableCell className="text-muted-foreground py-4 text-sm">
                       {agent.updatedAt.toLocaleString("tr-TR", {
