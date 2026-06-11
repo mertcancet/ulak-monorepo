@@ -25,6 +25,7 @@ const statusLabelMap: Record<Invitation["status"], string> = {
 
 export default function InvitationsPage() {
   const queryClient = useQueryClient();
+  const now = Date.now();
 
   const {
     data: invitations = [],
@@ -56,6 +57,13 @@ export default function InvitationsPage() {
     },
   });
 
+  const activeInvitations = invitations.filter(
+    invitation => new Date(invitation.expiresAt).getTime() >= now,
+  );
+  const expiredInvitations = invitations.filter(
+    invitation => new Date(invitation.expiresAt).getTime() < now,
+  );
+
   return (
     <div className="animate-in fade-in flex h-full flex-col overflow-hidden duration-300">
       <DashboardHeader>
@@ -77,79 +85,163 @@ export default function InvitationsPage() {
             <p className="text-destructive text-sm">
               {error instanceof Error ? error.message : "Bir hata olustu."}
             </p>
-          ) : invitations.length === 0 ? (
+          ) : activeInvitations.length === 0 &&
+            expiredInvitations.length === 0 ? (
             <div className="text-muted-foreground flex items-center gap-2 rounded-xl border border-dashed px-4 py-6 text-sm">
               <Inbox className="size-4" />
               Bekleyen davet bulunmuyor.
             </div>
           ) : (
-            <div className="space-y-4">
-              {invitations.map(invitation => (
-                <article
-                  key={invitation.id}
-                  className="border-border/80 bg-linear-to-br from-secondary/35 to-background flex flex-col gap-4 rounded-xl border p-4 shadow-sm transition-colors hover:from-secondary/45"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-3">
-                      <p className="text-foreground text-sm font-semibold tracking-tight">
-                        {invitation.workspaceName}
-                      </p>
-
-                      <div className="grid gap-2 text-xs sm:grid-cols-2">
-                        <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1">
-                          <UserRound className="size-3" />
-                          Davet eden: {invitation.invitedBy.name} (
-                          {invitation.invitedBy.email})
-                        </p>
-                        <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1">
-                          <CalendarDays className="size-3" />
-                          Davet:{" "}
-                          {new Date(invitation.createdAt).toLocaleDateString(
-                            "tr-TR",
-                          )}
-                        </p>
-                        <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1 sm:col-span-2">
-                          <CalendarDays className="size-3" />
-                          Son gecerlilik:{" "}
-                          {new Date(invitation.expiresAt).toLocaleDateString(
-                            "tr-TR",
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    <Badge
-                      variant={statusVariantMap[invitation.status]}
-                      className="border-border shrink-0 border"
-                    >
-                      {statusLabelMap[invitation.status]}
+            <div className="space-y-6">
+              {activeInvitations.length > 0 ? (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-foreground text-sm font-semibold tracking-tight">
+                      Bekleyen davetler
+                    </h2>
+                    <Badge variant="secondary" className="text-xs">
+                      {activeInvitations.length}
                     </Badge>
                   </div>
 
-                  {invitation.status === "pending" ? (
-                    <div className="flex items-center justify-end gap-2 border-t pt-3">
-                      <Button
-                        type="button"
-                        size="sm"
-                        onClick={() => acceptInvitation(invitation.id)}
-                        disabled={isAccepting || isDeclining}
-                      >
-                        Kabul Et
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={() => declineInvitation(invitation.id)}
-                        disabled={isAccepting || isDeclining}
-                        className="gap-1"
-                      >
-                        <XCircle className="size-4" />
-                        Reddet
-                      </Button>
-                    </div>
-                  ) : null}
-                </article>
-              ))}
+                  {activeInvitations.map(invitation => (
+                    <article
+                      key={invitation.id}
+                      className="border-border/80 from-secondary/35 to-background hover:from-secondary/45 flex flex-col gap-4 rounded-xl border bg-linear-to-br p-4 shadow-sm transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-3">
+                          <p className="text-foreground text-sm font-semibold tracking-tight">
+                            {invitation.workspaceName}
+                          </p>
+
+                          <div className="grid gap-2 text-xs sm:grid-cols-2">
+                            <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1">
+                              <UserRound className="size-3" />
+                              Davet eden: {invitation.invitedBy.name} (
+                              {invitation.invitedBy.email})
+                            </p>
+                            <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1">
+                              <CalendarDays className="size-3" />
+                              Davet:{" "}
+                              {new Date(
+                                invitation.createdAt,
+                              ).toLocaleDateString("tr-TR")}
+                            </p>
+                            <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1 sm:col-span-2">
+                              <CalendarDays className="size-3" />
+                              Son gecerlilik:{" "}
+                              {new Date(
+                                invitation.expiresAt,
+                              ).toLocaleDateString("tr-TR")}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge
+                          variant={statusVariantMap[invitation.status]}
+                          className="border-border shrink-0 border"
+                        >
+                          {statusLabelMap[invitation.status]}
+                        </Badge>
+                      </div>
+
+                      {invitation.status === "pending" ? (
+                        <div className="flex items-center justify-end gap-2 border-t pt-3">
+                          <Button
+                            type="button"
+                            size="sm"
+                            onClick={() => acceptInvitation(invitation.id)}
+                            disabled={isAccepting || isDeclining}
+                          >
+                            Kabul Et
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => declineInvitation(invitation.id)}
+                            disabled={isAccepting || isDeclining}
+                            className="gap-1"
+                          >
+                            <XCircle className="size-4" />
+                            Reddet
+                          </Button>
+                        </div>
+                      ) : null}
+                    </article>
+                  ))}
+                </div>
+              ) : null}
+
+              {expiredInvitations.length > 0 ? (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-foreground text-sm font-semibold tracking-tight">
+                      Davet süresi geçen davetiyeler
+                    </h2>
+                    <Badge variant="outline" className="text-xs">
+                      {expiredInvitations.length}
+                    </Badge>
+                  </div>
+
+                  {expiredInvitations.map(invitation => (
+                    <article
+                      key={invitation.id}
+                      className="border-border/80 from-secondary/20 to-background flex flex-col gap-4 rounded-xl border bg-linear-to-br p-4 shadow-sm"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-3">
+                          <p className="text-foreground text-sm font-semibold tracking-tight">
+                            {invitation.workspaceName}
+                          </p>
+
+                          <div className="grid gap-2 text-xs sm:grid-cols-2">
+                            <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1">
+                              <UserRound className="size-3" />
+                              Davet eden: {invitation.invitedBy.name} (
+                              {invitation.invitedBy.email})
+                            </p>
+                            <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1">
+                              <CalendarDays className="size-3" />
+                              Davet:{" "}
+                              {new Date(
+                                invitation.createdAt,
+                              ).toLocaleDateString("tr-TR")}
+                            </p>
+                            <p className="text-muted-foreground bg-background/80 inline-flex items-center gap-1 rounded-md px-2 py-1 sm:col-span-2">
+                              <CalendarDays className="size-3" />
+                              Son gecerlilik:{" "}
+                              {new Date(
+                                invitation.expiresAt,
+                              ).toLocaleDateString("tr-TR")}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge
+                          variant="destructive"
+                          className="border-border shrink-0 border"
+                        >
+                          Süresi doldu
+                        </Badge>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-2 border-t pt-3">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => declineInvitation(invitation.id)}
+                          disabled={isAccepting || isDeclining}
+                          className="gap-1"
+                        >
+                          <XCircle className="size-4" />
+                          Reddet
+                        </Button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : null}
             </div>
           )}
         </section>

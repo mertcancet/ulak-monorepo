@@ -301,7 +301,7 @@ const invitationsModule = () =>
             ),
           );
 
-        if (!invitation || invitation.status !== "pending")
+        if (invitation?.status !== "pending")
           return problem({ title: "Bad Request" });
 
         if (invitation.expiresAt.getTime() < Date.now())
@@ -349,7 +349,7 @@ const invitationsModule = () =>
             ),
           );
 
-        if (!invitation || invitation.status !== "pending")
+        if (invitation?.status !== "pending")
           return problem({ title: "Bad Request" });
 
         await db
