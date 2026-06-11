@@ -104,7 +104,7 @@ const agentsModule = () =>
           if (!data)
             throw problem({ title: "Internal Server Error", status: 500 });
 
-          if (!toolIds) return data;
+          if (!toolIds || toolIds.length === 0) return data;
 
           const tools = toolIds.map(toolId => ({ agentId: data.id, toolId }));
 
