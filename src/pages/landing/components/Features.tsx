@@ -1,5 +1,5 @@
+import { BookText, Bot, ChartColumnIncreasing } from "lucide-react";
 import { useTranslations } from "@/i18n";
-import { BookText, Bot, ChartColumnIncreasing, Workflow } from "lucide-react";
 
 export const Features = () => {
   const t = useTranslations();
@@ -9,11 +9,7 @@ export const Features = () => {
       title: t("landing.features.items.voiceAgent.title"),
       description: t("landing.features.items.voiceAgent.description"),
     },
-    {
-      icon: <Workflow className="text-primary" />,
-      title: t("landing.features.items.transcription.title"),
-      description: t("landing.features.items.transcription.description"),
-    },
+
     {
       icon: <BookText className="text-primary" />,
       title: t("landing.features.items.sentiment.title"),
@@ -33,11 +29,8 @@ export const Features = () => {
           <h2 className="mb-6 font-display text-4xl font-bold md:text-5xl">
             {t("landing.features.sectionTitle")}
           </h2>
-          <p className="max-w-xl text-lg text-slate-400">
-            {t("landing.features.sectionDescription")}
-          </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {features.map(feature => (
             <div
               key={feature.title}
