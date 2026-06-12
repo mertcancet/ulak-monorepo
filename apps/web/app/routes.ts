@@ -39,6 +39,7 @@ export default [
     ),
     route("tools/:id", "routes/dashboard/tools-edit.tsx"),
     route("onboarding", "routes/dashboard/onboarding.tsx"),
+    route("sip-settings", "routes/dashboard/sip-settings.tsx"),
   ]),
 
   route("auth", "routes/auth/layout.tsx", [

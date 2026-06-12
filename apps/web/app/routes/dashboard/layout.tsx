@@ -430,7 +430,7 @@ const DashboardLayout = () => {
 
           <nav
             className={cn(
-              "scrollbar-thin flex-1 overflow-y-auto py-2",
+              "flex-1 scrollbar-thin overflow-y-auto py-2",
               collapsed ? "px-1" : "px-3",
             )}
           >
@@ -561,6 +561,13 @@ const DashboardLayout = () => {
                 label="Workspaces"
                 href="/dashboard/workspaces"
                 active={location.pathname.startsWith("/dashboard/workspaces")}
+                collapsed={collapsed}
+              />
+              <SidebarItem
+                icon={Phone}
+                label="Sip Ayarları"
+                href="/dashboard/sip-settings"
+                active={location.pathname === "/dashboard/sip-settings"}
                 collapsed={collapsed}
               />
               <SidebarItem
