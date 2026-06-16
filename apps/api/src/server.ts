@@ -11,6 +11,7 @@ import { BetterAuthOpenAPI } from "./lib/auth";
 import invitationsModule from "./modules/invitations";
 import livekitModule from "./modules/livekit";
 import rolesModule from "./modules/roles";
+import sipModule from "./modules/sip";
 import toolsModule from "./modules/tools";
 import usersModule from "./modules/users";
 import workspacesModule from "./modules/workspaces";
@@ -86,6 +87,7 @@ const app = new Elysia()
   .use(invitationsModule())
   .use(rolesModule())
   .use(livekitModule())
+  .use(sipModule())
   .use(knowledgeBaseModule())
   .listen(env.PORT);
 

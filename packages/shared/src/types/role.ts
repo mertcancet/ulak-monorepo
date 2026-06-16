@@ -21,6 +21,7 @@ export const rolePermissionSchema = z.object({
   invitation: z.enum(standardPermissions).array().optional(),
   knowledge_base: z.enum(standardPermissions).array().optional(),
   user: z.enum(userPermissions).array().optional(),
+  sip_trunk: z.enum(standardPermissions).array().optional(),
 });
 
 export const roleSelectSchema = z.object({
