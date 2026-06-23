@@ -6,7 +6,7 @@ import {
   pgTable,
   primaryKey,
   text,
-  uniqueIndex,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 import { agents } from "./agents";
@@ -24,7 +24,7 @@ export const tools = pgTable(
     disallowInterruptions: boolean().default(false),
     settings: jsonb().$type<ToolSettings>().notNull(),
   },
-  table => [uniqueIndex().on(table.workspaceId, table.name)],
+  table => [unique().on(table.workspaceId, table.name)],
 );
 
 export const agent_tools = pgTable(

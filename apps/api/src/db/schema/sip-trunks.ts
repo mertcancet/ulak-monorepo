@@ -27,7 +27,6 @@ export const sip_trunks = pgTable(
     name: text().notNull(),
     lkTrunkId: text().notNull(),
     type: sipTrunkType().notNull(),
-    phoneNumbers: text().array().notNull(),
     username: text(),
     password: text(),
     settings: jsonb().$type<SipInboundSettings | SipOutboundSettings>(),

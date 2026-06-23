@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { phoneNumberSchema } from "./phone-number";
 
 export const sipTrunkTypes = ["inbound", "outbound"] as const;
 
@@ -15,7 +16,7 @@ const baseSchema = z.object({
 
 const inboundSchema = baseSchema.extend({
   type: z.literal("inbound"),
-  phoneNumbers: z.e164().array().min(1).meta({
+  phoneNumbers: phoneNumberSchema.array().meta({
     description: "Array of provider phone numbers associated with the trunk.",
   }),
   settings: z
@@ -30,7 +31,7 @@ const inboundSchema = baseSchema.extend({
 
 const outboundSchema = baseSchema.extend({
   type: z.literal("outbound"),
-  phoneNumbers: z.e164().array().min(1).meta({
+  phoneNumbers: phoneNumberSchema.array().meta({
     description:
       "List of provider phone numbers associated with the trunk that can be used as a caller id.",
   }),
@@ -92,19 +93,32 @@ const inboundUpdateSecurityCheck = z.superRefine<
     });
 });
 
-const inboundCreateSchema = inboundSchema.omit({
-  id: true,
-  lkTrunkId: true,
-  createdAt: true,
-  workspaceId: true,
-});
+const inboundCreateSchema = inboundSchema
+  .omit({
+    id: true,
+    lkTrunkId: true,
+    createdAt: true,
+    workspaceId: true,
+  })
+  .extend({
+    phoneNumbers: z.e164().array().meta({
+      description: "Array of provider phone numbers associated with the trunk.",
+    }),
+  });
 
-const outboundCreateSchema = outboundSchema.omit({
-  id: true,
-  lkTrunkId: true,
-  createdAt: true,
-  workspaceId: true,
-});
+const outboundCreateSchema = outboundSchema
+  .omit({
+    id: true,
+    lkTrunkId: true,
+    createdAt: true,
+    workspaceId: true,
+  })
+  .extend({
+    phoneNumbers: z.e164().array().meta({
+      description:
+        "List of provider phone numbers associated with the trunk that can be used as a caller id.",
+    }),
+  });
 
 export const sipTrunkSelectSchema = z.discriminatedUnion("type", [
   inboundSchema,

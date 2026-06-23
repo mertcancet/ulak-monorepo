@@ -13,7 +13,7 @@ import {
 } from "livekit-server-sdk";
 import { z } from "zod";
 import db from "~/db";
-import { sip_trunks } from "~/db/schema";
+import { phone_numbers, sip_trunks } from "~/db/schema";
 import models from "~/plugins/models";
 import problemDetails from "~/plugins/problem-details";
 import { checkPermissions } from "~/shared/auth-helpers";
@@ -53,12 +53,31 @@ const sipModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
+        const phoneNumbersSubQuery = db
+          .select({
+            phoneNumbers: sql`COALESCE(
+                JSON_AGG(
+                    JSON_BUILD_OBJECT(
+                        'id', ${phone_numbers.id},
+                        'sipTrunkId', ${phone_numbers.sipTrunkId},
+                        'number', ${phone_numbers.number}
+                    )
+                ),
+                '[]'::json
+            )`.as("phoneNumbers"),
+          })
+          .from(phone_numbers)
+          .where(eq(phone_numbers.sipTrunkId, sip_trunks.id))
+          .as("phone_numbers_sq");
+
         return await db
           .select({
             ...getColumns(sip_trunks),
             password: sql`${sql.param("*".repeat(12))}`,
+            phoneNumbers: phoneNumbersSubQuery.phoneNumbers,
           })
           .from(sip_trunks)
+          .leftJoinLateral(phoneNumbersSubQuery, sql`true`)
           .where(eq(sip_trunks.workspaceId, workspaceId));
       },
       {
@@ -119,16 +138,34 @@ const sipModule = () =>
           lkTrunkId = trunk.sipTrunkId;
         }
 
-        const [data] = await db
-          .insert(sip_trunks)
-          .values({
-            ...payload,
-            workspaceId,
-            lkTrunkId,
-          })
-          .returning({ id: sip_trunks.id });
+        try {
+          const id = await db.transaction(async tx => {
+            const [trunk] = await tx
+              .insert(sip_trunks)
+              .values({
+                ...payload,
+                workspaceId,
+                lkTrunkId,
+              })
+              .returning({ id: sip_trunks.id });
 
-        return status("Created", data!);
+            if (!trunk) throw problem({ title: "Internal Server Error" });
+
+            await tx.insert(phone_numbers).values(
+              payload.phoneNumbers.map(phoneNumber => ({
+                sipTrunkId: trunk.id,
+                number: phoneNumber,
+              })),
+            );
+
+            return trunk.id;
+          });
+          return status("Created", { id });
+        } catch {
+          await sipClient.deleteSipTrunk(lkTrunkId);
+
+          return problem({ title: "Internal Server Error" });
+        }
       },
       {
         requireAuth: true,
@@ -158,9 +195,25 @@ const sipModule = () =>
 
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
+        const phoneNumbersSubQuery = db
+          .select({
+            phoneNumbers: sql<
+              string[]
+            >`COALESCE(ARRAY_AGG(${phone_numbers.number}), '{}')`.as(
+              "phoneNumbers",
+            ),
+          })
+          .from(phone_numbers)
+          .where(eq(phone_numbers.sipTrunkId, sip_trunks.id))
+          .as("phone_numbers_sq");
+
         const [trunk] = await db
-          .select()
+          .select({
+            ...getColumns(sip_trunks),
+            phoneNumbers: phoneNumbersSubQuery.phoneNumbers,
+          })
           .from(sip_trunks)
+          .leftJoinLateral(phoneNumbersSubQuery, sql`true`)
           .where(eq(sip_trunks.id, params.id));
 
         if (!trunk) return problem({ title: "Not Found", status: 404 });
@@ -168,7 +221,7 @@ const sipModule = () =>
         if (payload.type !== trunk.type)
           return problem({
             title: "Bad Request",
-            detail: "Trunk type mismatch.",
+            detail: "Trunk does not match.",
           });
 
         if (payload.type === "inbound") {
@@ -176,7 +229,7 @@ const sipModule = () =>
             trunk.lkTrunkId,
             new SIPInboundTrunkInfo({
               name: payload.name,
-              numbers: payload.phoneNumbers,
+              numbers: payload.phoneNumbers || trunk.phoneNumbers,
               metadata: JSON.stringify({ workspaceId }),
               authUsername: payload.username || trunk.username || undefined,
               authPassword: payload.password || trunk.password || undefined,
@@ -186,22 +239,19 @@ const sipModule = () =>
                 undefined,
             }),
           );
-
-          await db.update(sip_trunks).set(payload);
-          return;
+        } else {
+          await sipClient.updateSipOutboundTrunk(
+            trunk.lkTrunkId,
+            new SIPOutboundTrunkInfo({
+              name: payload.name,
+              metadata: JSON.stringify({ workspaceId }),
+              numbers: payload.phoneNumbers || trunk.phoneNumbers,
+              authUsername: payload.username || trunk.username || undefined,
+              authPassword: payload.password || trunk.password || undefined,
+              address: payload.settings?.address,
+            }),
+          );
         }
-
-        await sipClient.updateSipOutboundTrunk(
-          trunk.lkTrunkId,
-          new SIPOutboundTrunkInfo({
-            name: payload.name,
-            metadata: JSON.stringify({ workspaceId }),
-            numbers: payload.phoneNumbers || trunk.phoneNumbers,
-            authUsername: payload.username || trunk.username || undefined,
-            authPassword: payload.password || trunk.password || undefined,
-            address: payload.settings?.address,
-          }),
-        );
 
         await db.update(sip_trunks).set(payload);
       },

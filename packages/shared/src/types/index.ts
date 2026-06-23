@@ -2,6 +2,7 @@ export * from "./agent";
 export * from "./invitations";
 export * from "./knowledge-base";
 export * from "./paginated";
+export * from "./phone-number";
 export * from "./role";
 export * from "./sip-trunk";
 export * from "./tool";
