@@ -11,6 +11,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { TooltipProvider } from "./components/ui/tooltip";
+import "@livekit/components-styles";
 
 const queryClient = new QueryClient();
 

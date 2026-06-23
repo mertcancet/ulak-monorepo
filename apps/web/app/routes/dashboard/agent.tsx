@@ -1,13 +1,16 @@
+import { useSession } from "@livekit/components-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { TokenSource } from "livekit-client";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+import { AgentSessionProvider } from "~/components/agents-ui/agent-session-provider";
 import { agentsApi } from "~/lib/agents-api";
 import { toolsApi } from "~/lib/tools-api";
 import { useWorkspaceStore } from "~/store/workspace-store";
 import { AgentHeader } from "./_components/agent/agent-header";
 import { FooterStatusBar } from "./_components/agent/footer-status-bar";
+import { LivekitTestingPanel } from "./_components/agent/livekit-testing-panel";
 import { PromptEditor } from "./_components/agent/prompt-editor";
-import { TestingPanel } from "./_components/agent/testing-panel";
 
 /**
  * AgentConfigPage
@@ -181,100 +184,122 @@ export default function AgentConfigPage() {
       );
     }
   };
+  const _tokenSource = useMemo(() => {
+    return TokenSource.custom(async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/livekit/token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ agentId }),
+      });
 
+      const { token } = await res.json();
+      return {
+        serverUrl: import.meta.env.VITE_LIVEKIT_WS_URL,
+        participantToken: token,
+      };
+    });
+  }, [agentId]);
+
+  const session = useSession(_tokenSource, {
+    agentName: agentId || "preview-agent",
+  });
   return (
-    <div className="bg-background animate-in fade-in relative flex h-screen flex-col overflow-hidden duration-500">
-      <AgentHeader
-        onSave={handleSave}
-        isSaving={isSaving}
-        isDraft={isDraftMode}
-        title={isDraftMode ? `${agentName} (Taslak)` : agentName}
-        onEditName={setAgentName}
-        agentId={agentDetail?.id}
-        model={model}
-        onPublish={handlePublish}
-        isPublishing={isPublishing}
-        canPublish={!isDraftMode && !isAgentLoading && Boolean(agentId)}
-      />
+    <AgentSessionProvider session={session}>
+      <div className="bg-background animate-in fade-in relative flex h-screen flex-col overflow-hidden duration-500">
+        <AgentHeader
+          onSave={handleSave}
+          isSaving={isSaving}
+          isDraft={isDraftMode}
+          title={isDraftMode ? `${agentName} (Taslak)` : agentName}
+          onEditName={setAgentName}
+          agentId={agentDetail?.id}
+          model={model}
+          onPublish={handlePublish}
+          isPublishing={isPublishing}
+          canPublish={!isDraftMode && !isAgentLoading && Boolean(agentId)}
+        />
 
-      {isDraftMode && (
-        <div className="border-border bg-secondary/40 text-foreground mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
-          Bu ekran taslak modunda. Temsilci, sadece <strong>Kaydet</strong>{" "}
-          butonuna bastığınızda oluşturulur.
-        </div>
-      )}
-
-      {saveError && (
-        <div className="border-destructive/30 bg-destructive/10 text-destructive mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
-          {saveError}
-        </div>
-      )}
-
-      {publishError && (
-        <div className="border-destructive/30 bg-destructive/10 text-destructive mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
-          {publishError}
-        </div>
-      )}
-
-      {publishSuccess && (
-        <div className="border-success/30 bg-success/10 text-success mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
-          {publishSuccess}
-        </div>
-      )}
-
-      {queryErrorMessage && (
-        <div className="border-destructive/30 bg-destructive/10 text-destructive mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
-          {queryErrorMessage}
-        </div>
-      )}
-
-      {!isDraftMode && isAgentLoading && (
-        <div className="border-border bg-secondary/40 text-muted-foreground mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
-          Temsilci detayları yükleniyor...
-        </div>
-      )}
-
-      <main className="flex flex-1 overflow-hidden p-4">
-        <div className="border-border bg-card/30 flex flex-1 gap-4 overflow-hidden rounded-xl border p-3">
-          {/* Left Column: Configuration Canvas */}
-          <div className="flex min-w-100 flex-1 flex-col space-y-4">
-            {/* <QuickSelectToolbar /> */}
-            <PromptEditor
-              name={agentName}
-              onNameChange={setAgentName}
-              phoneNumber={phoneNumber}
-              onPhoneNumberChange={setPhoneNumber}
-              model={model}
-              onModelChange={setModel}
-              voice={voice}
-              onVoiceChange={setVoice}
-              apiKey={apiKey}
-              onApiKeyChange={setApiKey}
-              allowInterruptions={allowInterruptions}
-              onAllowInterruptionsChange={setAllowInterruptions}
-              greetPrompt={greetPrompt}
-              onGreetPromptChange={setGreetPrompt}
-              tools={availableTools}
-              selectedToolIds={selectedToolIds}
-              onSelectedToolIdsChange={setSelectedToolIds}
-              isToolsLoading={isToolsLoading}
-              toolsErrorMessage={toolsErrorMessage}
-              value={systemInstructions}
-              onChange={setSystemInstructions}
-            />
+        {isDraftMode && (
+          <div className="border-border bg-secondary/40 text-foreground mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
+            Bu ekran taslak modunda. Temsilci, sadece <strong>Kaydet</strong>{" "}
+            butonuna bastığınızda oluşturulur.
           </div>
+        )}
 
-          {/* Middle Column: Configuration Panel */}
-          {/*
+        {saveError && (
+          <div className="border-destructive/30 bg-destructive/10 text-destructive mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
+            {saveError}
+          </div>
+        )}
+
+        {publishError && (
+          <div className="border-destructive/30 bg-destructive/10 text-destructive mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
+            {publishError}
+          </div>
+        )}
+
+        {publishSuccess && (
+          <div className="border-success/30 bg-success/10 text-success mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
+            {publishSuccess}
+          </div>
+        )}
+
+        {queryErrorMessage && (
+          <div className="border-destructive/30 bg-destructive/10 text-destructive mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
+            {queryErrorMessage}
+          </div>
+        )}
+
+        {!isDraftMode && isAgentLoading && (
+          <div className="border-border bg-secondary/40 text-muted-foreground mx-4 mt-3 rounded-xl border px-4 py-3 text-sm">
+            Temsilci detayları yükleniyor...
+          </div>
+        )}
+
+        <main className="flex flex-1 overflow-hidden p-4">
+          <div className="border-border bg-card/30 flex flex-1 gap-4 overflow-hidden rounded-xl border p-3">
+            {/* Left Column: Configuration Canvas */}
+            <div className="flex min-w-100 flex-1 flex-col space-y-4">
+              {/* <QuickSelectToolbar /> */}
+              <PromptEditor
+                name={agentName}
+                onNameChange={setAgentName}
+                phoneNumber={phoneNumber}
+                onPhoneNumberChange={setPhoneNumber}
+                model={model}
+                onModelChange={setModel}
+                voice={voice}
+                onVoiceChange={setVoice}
+                apiKey={apiKey}
+                onApiKeyChange={setApiKey}
+                allowInterruptions={allowInterruptions}
+                onAllowInterruptionsChange={setAllowInterruptions}
+                greetPrompt={greetPrompt}
+                onGreetPromptChange={setGreetPrompt}
+                tools={availableTools}
+                selectedToolIds={selectedToolIds}
+                onSelectedToolIdsChange={setSelectedToolIds}
+                isToolsLoading={isToolsLoading}
+                toolsErrorMessage={toolsErrorMessage}
+                value={systemInstructions}
+                onChange={setSystemInstructions}
+              />
+            </div>
+
+            {/* Middle Column: Configuration Panel */}
+            {/*
           <ConfigSidebar />
          */}
 
-          {/* Right Column: Testing Panel */}
-          <TestingPanel agentId={agentId} />
-        </div>
-      </main>
+            {/* Right Column: Testing Panel */}
+            {/* <TestingPanel agentId={agentId} /> */}
+            <LivekitTestingPanel agentId={agentId} />
+          </div>
+        </main>
 
-      <FooterStatusBar />
-    </div>
+        <FooterStatusBar />
+      </div>
+    </AgentSessionProvider>
   );
 }
