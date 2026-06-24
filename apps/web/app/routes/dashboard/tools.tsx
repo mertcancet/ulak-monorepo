@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Wrench } from "lucide-react";
+import { Search, Wrench } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { toolsApi } from "~/lib/tools-api";
@@ -35,57 +35,12 @@ export default function ToolsPage() {
       <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-6">
         <div className="flex items-center justify-between gap-3">
           <div className="border-border bg-background flex h-9 items-center gap-2 rounded-lg border px-3">
-            <svg
-              aria-hidden="true"
-              className="text-muted-foreground size-4 shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-              />
-            </svg>
+            <Search className="text-muted-foreground size-3.5 shrink-0" />
             <input
               type="text"
               placeholder="Ara"
               className="text-foreground placeholder:text-muted-foreground w-40 bg-transparent text-sm outline-none"
             />
-          </div>
-
-          <div className="border-border bg-background flex h-9 items-center gap-1.5 rounded-lg border px-3">
-            <svg
-              aria-hidden="true"
-              className="text-muted-foreground size-3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
-              />
-            </svg>
-            <span className="text-foreground text-sm">Sırala: İsim</span>
-            <svg
-              aria-hidden="true"
-              className="text-muted-foreground size-3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-              />
-            </svg>
           </div>
         </div>
 

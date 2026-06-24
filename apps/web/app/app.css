@@ -8,17 +8,17 @@
 @plugin "tailwindcss-animate";
 
 @theme {
-  /* Mistral-inspired warm typography */
+  /* Modern Blue typography */
   --font-sans: Arial, ui-sans-serif, system-ui, sans-serif;
   --font-display: Arial, ui-sans-serif, system-ui, sans-serif;
   --font-heading: Arial, ui-sans-serif, system-ui, sans-serif;
   --font-data: Arial, ui-sans-serif, system-ui, sans-serif;
 
-  /* Mistral warm brand colors */
-  --color-brand: #fa520f;
-  --color-brand-light: #fb6424;
-  --color-brand-pink: #ff8a00;
-  --color-brand-deep: #c53f0b;
+  /* Blue brand colors based on #0091ff */
+  --color-brand: #0091ff;
+  --color-brand-light: #4db0ff;
+  --color-brand-pink: #0062cc; /* Derinlik için koyu bir ton */
+  --color-brand-deep: #004b99;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -66,81 +66,80 @@
 
 @layer base {
   :root {
-    /* Mistral warm daylight palette */
-    --background: 48 100% 96%; /* #fffaeb */
-    --foreground: 0 0% 12%; /* #1f1f1f */
+    /* Blue daylight palette (Hue 206) */
+    --background: 206 20% 98%;
+    --foreground: 206 20% 12%;
 
-    --card: 44 100% 88%; /* #fff0c2 */
-    --card-foreground: 0 0% 12%;
+    --card: 206 20% 96%;
+    --card-foreground: 206 20% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 12%;
+    --popover-foreground: 206 20% 12%;
 
-    /* Mistral orange */
-    --primary: 17 96% 52%; /* #fa520f */
+    /* Brand Blue: #0091ff -> HSL: 206 100% 50% */
+    --primary: 206 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 44 100% 88%; /* #fff0c2 */
-    --secondary-foreground: 0 0% 12%;
+    --secondary: 206 20% 92%;
+    --secondary-foreground: 206 20% 12%;
 
-    --muted: 43 100% 92%; /* #ffe295 */
-    --muted-foreground: 0 0% 24%;
+    --muted: 206 20% 90%;
+    --muted-foreground: 206 10% 40%;
 
-    --accent: 36 100% 53%; /* #ffa110 */
-    --accent-foreground: 0 0% 12%;
+    --accent: 206 80% 60%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
-    --ring: 17 96% 52%;
+    --border: 206 20% 86%;
+    --input: 206 20% 86%;
+    --ring: 206 100% 50%;
 
-    /* Mistral prefers sharp corners */
     --radius: 0.125rem;
 
     --success: 142 60% 40%;
     --success-foreground: 0 0% 100%;
     --warning: 36 100% 53%;
     --warning-foreground: 0 0% 12%;
-    --info: 17 96% 52%;
+    --info: 206 100% 50%;
     --info-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 0 0% 12%;
-    --foreground: 48 100% 96%;
+    --background: 206 30% 8%;
+    --foreground: 206 20% 96%;
 
-    --card: 0 0% 16%;
-    --card-foreground: 48 100% 96%;
+    --card: 206 25% 12%;
+    --card-foreground: 206 20% 96%;
 
-    --popover: 0 0% 16%;
-    --popover-foreground: 48 100% 96%;
+    --popover: 206 25% 12%;
+    --popover-foreground: 206 20% 96%;
 
-    --primary: 17 96% 52%;
+    --primary: 206 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 20%;
-    --secondary-foreground: 48 100% 92%;
+    --secondary: 206 25% 18%;
+    --secondary-foreground: 206 20% 96%;
 
-    --muted: 0 0% 24%;
-    --muted-foreground: 43 80% 82%;
+    --muted: 206 25% 20%;
+    --muted-foreground: 206 20% 70%;
 
-    --accent: 36 100% 53%;
-    --accent-foreground: 0 0% 12%;
+    --accent: 206 80% 60%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 28%;
-    --input: 0 0% 28%;
-    --ring: 17 96% 52%;
+    --border: 206 25% 22%;
+    --input: 206 25% 22%;
+    --ring: 206 100% 50%;
 
     --success: 142 60% 45%;
     --success-foreground: 0 0% 100%;
     --warning: 36 100% 58%;
     --warning-foreground: 0 0% 12%;
-    --info: 17 96% 58%;
+    --info: 206 100% 58%;
     --info-foreground: 0 0% 100%;
   }
   * {
@@ -191,36 +190,36 @@
     border-radius: 2px;
   }
 
-  /* Warm Mistral glow shadow */
+  /* Vibrant Blue glow shadows based on #0091ff (RGB: 0, 145, 255) */
   .shadow-brand {
-    box-shadow: rgba(127, 99, 21, 0.16) 0px 0px 18px;
+    box-shadow: rgba(0, 145, 255, 0.16) 0px 0px 18px;
   }
 
   .shadow-brand-offset {
-    box-shadow: rgba(127, 99, 21, 0.12) 6px 4px 22px;
+    box-shadow: rgba(0, 145, 255, 0.12) 6px 4px 22px;
   }
 
   .shadow-card {
     box-shadow:
-      rgba(127, 99, 21, 0.12) -8px 16px 39px,
-      rgba(127, 99, 21, 0.1) -33px 64px 72px,
-      rgba(127, 99, 21, 0.06) -73px 144px 97px;
+      rgba(0, 145, 255, 0.12) -8px 16px 39px,
+      rgba(0, 145, 255, 0.1) -33px 64px 72px,
+      rgba(0, 145, 255, 0.06) -73px 144px 97px;
   }
 
-  /* Mistral warm block gradient */
+  /* Deep Blue block gradient */
   .gradient-primary {
-    background: linear-gradient(135deg, #ffd900, #ffa110, #ff8105, #fa520f);
+    background: linear-gradient(135deg, #8cd2ff, #4db0ff, #0091ff, #0062cc);
   }
 
-  /* Mistral gradient text */
+  /* Blue gradient text */
   .gradient-text {
-    background: linear-gradient(to right, #ffa110, #fa520f);
+    background: linear-gradient(to right, #4db0ff, #0091ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* MiniMax font-display utility */
+  /* Font-display utilities */
   .font-display {
     font-family: var(--font-display);
   }
@@ -235,10 +234,10 @@
 
   .bg-mesh {
     background-image:
-      radial-gradient(at 0% 0%, hsla(221, 100%, 68%, 0.1) 0, transparent 50%),
+      radial-gradient(at 0% 0%, hsla(206, 100%, 60%, 0.1) 0, transparent 50%),
       radial-gradient(
         at 100% 100%,
-        hsla(146, 100%, 74%, 0.05) 0,
+        hsla(220, 100%, 65%, 0.05) 0,
         transparent 50%
       );
   }
@@ -249,7 +248,7 @@
     height: 600px;
     background: radial-gradient(
       circle,
-      rgba(92, 141, 255, 0.15) 0%,
+      rgba(0, 145, 255, 0.15) 0%,
       transparent 70%
     );
     z-index: -1;
@@ -269,7 +268,7 @@
     left: -6%;
     width: 20rem;
     height: 20rem;
-    background: rgba(56, 189, 248, 0.35);
+    background: rgba(0, 145, 255, 0.35); /* #0091ff */
     animation: orbFloatOne 20s ease-in-out infinite;
   }
 
@@ -278,7 +277,7 @@
     right: -8%;
     width: 18rem;
     height: 18rem;
-    background: rgba(99, 102, 241, 0.3);
+    background: rgba(77, 176, 255, 0.3); /* #4db0ff */
     animation: orbFloatTwo 24s ease-in-out infinite;
   }
 
@@ -287,7 +286,7 @@
     left: 10%;
     width: 22rem;
     height: 22rem;
-    background: rgba(45, 212, 191, 0.28);
+    background: rgba(0, 102, 204, 0.28); /* Koyu vurgu */
     animation: orbFloatThree 26s ease-in-out infinite;
   }
 
@@ -296,7 +295,7 @@
     right: 6%;
     width: 17rem;
     height: 17rem;
-    background: rgba(251, 146, 60, 0.26);
+    background: rgba(0, 51, 153, 0.26); /* Derin mavi */
     animation: orbFloatOne 22s ease-in-out infinite reverse;
   }
 }
@@ -343,6 +342,7 @@ button {
   }
 }
 
+/* Shadcn-ui OKLCH section */
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: "Geist Variable", sans-serif;

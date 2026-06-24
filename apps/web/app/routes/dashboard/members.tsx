@@ -58,14 +58,14 @@ export default function MembersPage() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRoles, setInviteRoles] = useState<string[]>([]);
 
-  const { data: workspaceRoles = [] } = useQuery({
+  const { data: workspaceRoles } = useQuery({
     queryKey: ["roles", selectedWorkspaceId],
     queryFn: () => rolesApi.listRoles(selectedWorkspaceId ?? ""),
     enabled: (selectedWorkspaceId ?? "") !== "",
   });
 
   useEffect(() => {
-    if (workspaceRoles.length === 0) {
+    if (!workspaceRoles || workspaceRoles.length === 0) {
       setInviteRoles([]);
       return;
     }
@@ -173,12 +173,12 @@ export default function MembersPage() {
 
           <TabsContent
             value="members"
-            className="mt-6 space-y-6 data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-right-2 data-[state=active]:duration-300 motion-reduce:data-[state=active]:animate-none"
+            className="data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-right-2 mt-6 space-y-6 data-[state=active]:duration-300 motion-reduce:data-[state=active]:animate-none"
           >
             <section>
               <ActiveMembers
                 workspaceId={selectedWorkspaceId ?? ""}
-                availableRoles={workspaceRoles}
+                availableRoles={workspaceRoles || []}
                 canAddRole={canAddRole}
                 canRemoveRole={canRemoveRole}
               />
@@ -200,7 +200,7 @@ export default function MembersPage() {
               <InviteForm
                 inviteEmail={inviteEmail}
                 inviteRoles={inviteRoles}
-                roleOptions={workspaceRoles}
+                roleOptions={workspaceRoles || []}
                 canInvite={canInvite}
                 selectedWorkspaceId={selectedWorkspaceId ?? ""}
                 setInviteEmail={setInviteEmail}
@@ -221,11 +221,11 @@ export default function MembersPage() {
 
           <TabsContent
             value="roles"
-            className="mt-6 data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-right-2 data-[state=active]:duration-300 motion-reduce:data-[state=active]:animate-none"
+            className="data-[state=active]:animate-in data-[state=active]:fade-in data-[state=active]:slide-in-from-right-2 mt-6 data-[state=active]:duration-300 motion-reduce:data-[state=active]:animate-none"
           >
             <RolesManagement
               selectedWorkspaceId={selectedWorkspaceId ?? ""}
-              roles={workspaceRoles}
+              roles={workspaceRoles || []}
             />
           </TabsContent>
         </Tabs>
