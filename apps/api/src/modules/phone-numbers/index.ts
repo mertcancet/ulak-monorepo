@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
+import { eq, getColumns } from "drizzle-orm";
 import Elysia from "elysia";
 import db from "~/db";
-import { phone_numbers } from "~/db/schema";
+import { phone_numbers, sip_trunks } from "~/db/schema";
 import models from "~/plugins/models";
 import problemDetails from "~/plugins/problem-details";
 import authModule from "../auth";
@@ -21,9 +21,10 @@ const phoneNumberModule = () =>
         const workspaceId = headers["cleon-workspace-id"];
 
         return await db
-          .select()
+          .select({ ...getColumns(phone_numbers) })
           .from(phone_numbers)
-          .where(eq(phone_numbers.workspaceId, workspaceId));
+          .innerJoin(sip_trunks, eq(sip_trunks.id, phone_numbers.sipTrunkId))
+          .where(eq(sip_trunks.workspaceId, workspaceId));
       },
       { requireAuth: true, headers: "headers.workspaceId" },
     );

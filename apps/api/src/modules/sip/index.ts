@@ -59,7 +59,6 @@ const sipModule = () =>
                 JSON_AGG(
                     JSON_BUILD_OBJECT(
                         'id', ${phone_numbers.id},
-                        'workspaceId', ${phone_numbers.workspaceId},
                         'sipTrunkId', ${phone_numbers.sipTrunkId},
                         'number', ${phone_numbers.number}
                     )
@@ -265,7 +264,6 @@ const sipModule = () =>
 
             await tx.insert(phone_numbers).values(
               payload.phoneNumbers.map(phoneNumber => ({
-                workspaceId,
                 sipTrunkId: trunk.id,
                 number: phoneNumber,
               })),
