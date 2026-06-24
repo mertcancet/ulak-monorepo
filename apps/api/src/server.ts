@@ -10,6 +10,7 @@ import env from "~/shared/env";
 import { BetterAuthOpenAPI } from "./lib/auth";
 import invitationsModule from "./modules/invitations";
 import livekitModule from "./modules/livekit";
+import phoneNumberModule from "./modules/phone-numbers";
 import rolesModule from "./modules/roles";
 import sipModule from "./modules/sip";
 import toolsModule from "./modules/tools";
@@ -88,6 +89,7 @@ const app = new Elysia()
   .use(rolesModule())
   .use(livekitModule())
   .use(sipModule())
+  .use(phoneNumberModule())
   .use(knowledgeBaseModule())
   .listen(env.PORT);
 

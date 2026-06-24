@@ -59,6 +59,7 @@ const sipModule = () =>
                 JSON_AGG(
                     JSON_BUILD_OBJECT(
                         'id', ${phone_numbers.id},
+                        'workspaceId', ${phone_numbers.workspaceId},
                         'sipTrunkId', ${phone_numbers.sipTrunkId},
                         'number', ${phone_numbers.number}
                     )
@@ -153,6 +154,7 @@ const sipModule = () =>
 
             await tx.insert(phone_numbers).values(
               payload.phoneNumbers.map(phoneNumber => ({
+                workspaceId,
                 sipTrunkId: trunk.id,
                 number: phoneNumber,
               })),
@@ -253,7 +255,23 @@ const sipModule = () =>
           );
         }
 
-        await db.update(sip_trunks).set(payload);
+        await db.transaction(async tx => {
+          await tx.update(sip_trunks).set(payload);
+
+          if (payload.phoneNumbers) {
+            await tx
+              .delete(phone_numbers)
+              .where(eq(phone_numbers.sipTrunkId, trunk.id));
+
+            await tx.insert(phone_numbers).values(
+              payload.phoneNumbers.map(phoneNumber => ({
+                workspaceId,
+                sipTrunkId: trunk.id,
+                number: phoneNumber,
+              })),
+            );
+          }
+        });
       },
       {
         requireAuth: true,

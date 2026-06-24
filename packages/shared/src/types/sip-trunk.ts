@@ -101,7 +101,7 @@ const inboundCreateSchema = inboundSchema
     workspaceId: true,
   })
   .extend({
-    phoneNumbers: z.e164().array().meta({
+    phoneNumbers: z.e164().array().min(1).meta({
       description: "Array of provider phone numbers associated with the trunk.",
     }),
   });
@@ -114,7 +114,7 @@ const outboundCreateSchema = outboundSchema
     workspaceId: true,
   })
   .extend({
-    phoneNumbers: z.e164().array().meta({
+    phoneNumbers: z.e164().array().min(1).meta({
       description:
         "List of provider phone numbers associated with the trunk that can be used as a caller id.",
     }),
