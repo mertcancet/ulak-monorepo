@@ -1,21 +1,16 @@
-"use client";
+'use client';
 
-import {
-  useAgent,
-  useSessionContext,
-  useSessionMessages,
-} from "@livekit/components-react";
-import { AnimatePresence, type MotionProps, motion } from "motion/react";
-import type React from "react";
-import { useEffect, useRef, useState } from "react";
-import { AgentChatTranscript } from "~/components/agents-ui/agent-chat-transcript";
+import React, { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, type MotionProps, motion } from 'motion/react';
+import { useAgent, useSessionContext, useSessionMessages } from '@livekit/components-react';
+import { AgentChatTranscript } from '~/components/agents-ui/agent-chat-transcript';
 import {
   AgentControlBar,
   type AgentControlBarControls,
-} from "~/components/agents-ui/agent-control-bar";
-import { Shimmer } from "~/components/ai-elements/shimmer";
-import { cn } from "~/lib/utils";
-import { TileLayout } from "./tile-view";
+} from '~/components/agents-ui/agent-control-bar';
+import { Shimmer } from '~/components/ai-elements/shimmer';
+import { cn } from '~/lib/utils';
+import { TileLayout } from './tile-view';
 
 const MotionMessage = motion.create(Shimmer);
 
@@ -23,20 +18,20 @@ const BOTTOM_VIEW_MOTION_PROPS: MotionProps = {
   variants: {
     visible: {
       opacity: 1,
-      translateY: "0%",
+      translateY: '0%',
     },
     hidden: {
       opacity: 0,
-      translateY: "100%",
+      translateY: '100%',
     },
   },
-  initial: "hidden",
-  animate: "visible",
-  exit: "hidden",
+  initial: 'hidden',
+  animate: 'visible',
+  exit: 'hidden',
   transition: {
     duration: 0.3,
     delay: 0.5,
-    ease: "easeOut",
+    ease: 'easeOut',
   },
 };
 
@@ -45,7 +40,7 @@ const CHAT_MOTION_PROPS: MotionProps = {
     hidden: {
       opacity: 0,
       transition: {
-        ease: "easeOut",
+        ease: 'easeOut',
         duration: 0.3,
       },
     },
@@ -53,14 +48,14 @@ const CHAT_MOTION_PROPS: MotionProps = {
       opacity: 1,
       transition: {
         delay: 0.2,
-        ease: "easeOut",
+        ease: 'easeOut',
         duration: 0.3,
       },
     },
   },
-  initial: "hidden",
-  animate: "visible",
-  exit: "hidden",
+  initial: 'hidden',
+  animate: 'visible',
+  exit: 'hidden',
 };
 
 const SHIMMER_MOTION_PROPS: MotionProps = {
@@ -68,7 +63,7 @@ const SHIMMER_MOTION_PROPS: MotionProps = {
     visible: {
       opacity: 1,
       transition: {
-        ease: "easeIn",
+        ease: 'easeIn',
         duration: 0.5,
         delay: 0.8,
       },
@@ -76,15 +71,15 @@ const SHIMMER_MOTION_PROPS: MotionProps = {
     hidden: {
       opacity: 0,
       transition: {
-        ease: "easeIn",
+        ease: 'easeIn',
         duration: 0.5,
         delay: 0,
       },
     },
   },
-  initial: "hidden",
-  animate: "visible",
-  exit: "hidden",
+  initial: 'hidden',
+  animate: 'visible',
+  exit: 'hidden',
 };
 
 interface FadeProps {
@@ -97,9 +92,9 @@ export function Fade({ top = false, bottom = false, className }: FadeProps) {
   return (
     <div
       className={cn(
-        "from-background pointer-events-none h-4 bg-linear-to-b to-transparent",
-        top && "bg-linear-to-b",
-        bottom && "bg-linear-to-t",
+        'from-background pointer-events-none h-4 bg-linear-to-b to-transparent',
+        top && 'bg-linear-to-b',
+        bottom && 'bg-linear-to-t',
         className,
       )}
     />
@@ -112,7 +107,7 @@ export interface AgentSessionView_01Props {
    * the shader's blend mode adapts to the theme mode.
    * Ignored by other visualizer types.
    */
-  themeMode?: "dark" | "light";
+  themeMode?: 'dark' | 'light';
   /**
    * Message shown above the controls before the first chat message is sent.
    *
@@ -145,7 +140,7 @@ export interface AgentSessionView_01Props {
   isPreConnectBufferEnabled?: boolean;
 
   /** Selects the visualizer style rendered in the main tile area. */
-  audioVisualizerType?: "bar" | "wave" | "grid" | "radial" | "aura";
+  audioVisualizerType?: 'bar' | 'wave' | 'grid' | 'radial' | 'aura';
   /** Primary hex color used by supported audio visualizer variants. */
   audioVisualizerColor?: `#${string}`;
   /** Hue shift intensity used by certain visualizers. */
@@ -167,7 +162,7 @@ export interface AgentSessionView_01Props {
 }
 
 export function AgentSessionView_01({
-  preConnectMessage = "Agent is listening, ask it a question",
+  preConnectMessage = 'Agent is listening, ask it a question',
   supportsChatInput = true,
   supportsVideoInput = true,
   supportsScreenShare = true,
@@ -185,7 +180,7 @@ export function AgentSessionView_01({
   ref,
   className,
   ...props
-}: React.ComponentProps<"section"> & AgentSessionView_01Props) {
+}: React.ComponentProps<'section'> & AgentSessionView_01Props) {
   const session = useSessionContext();
   const { messages } = useSessionMessages(session);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -212,10 +207,7 @@ export function AgentSessionView_01({
   return (
     <section
       ref={ref}
-      className={cn(
-        "bg-background relative z-10 h-full w-full overflow-hidden",
-        className,
-      )}
+      className={cn('bg-background relative z-10 h-full w-full overflow-hidden', className)}
       {...props}
     >
       <Fade top className="absolute inset-x-4 top-0 z-10 h-40" />
@@ -273,10 +265,7 @@ export function AgentSessionView_01({
           </AnimatePresence>
         )}
         <div className="bg-background relative mx-auto max-w-2xl pb-3 md:pb-12">
-          <Fade
-            bottom
-            className="absolute inset-x-0 top-0 h-4 -translate-y-full"
-          />
+          <Fade bottom className="absolute inset-x-0 top-0 h-4 -translate-y-full" />
           <AgentControlBar
             variant="livekit"
             controls={controls}

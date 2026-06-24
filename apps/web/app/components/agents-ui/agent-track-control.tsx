@@ -1,13 +1,13 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
+import { type VariantProps, cva } from "class-variance-authority";
+import { LocalAudioTrack, LocalVideoTrack } from "livekit-client";
 import {
   type TrackReferenceOrPlaceholder,
   useMaybeRoomContext,
   useMediaDeviceSelect,
 } from "@livekit/components-react";
-import { cva, type VariantProps } from "class-variance-authority";
-import type { LocalAudioTrack, LocalVideoTrack } from "livekit-client";
-import { useEffect, useMemo, useState } from "react";
 import { AgentAudioVisualizerBar } from "~/components/agents-ui/agent-audio-visualizer-bar";
 import { AgentTrackToggle } from "~/components/agents-ui/agent-track-toggle";
 import {
@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select-shadcn";
-import type { toggleVariants } from "~/components/ui/toggle";
+import { toggleVariants } from "~/components/ui/toggle";
 import { cn } from "~/lib/utils";
 
 const selectVariants = cva(
