@@ -1,5 +1,7 @@
+import { phoneNumberSchema } from "@cleon/shared";
 import { eq, getColumns } from "drizzle-orm";
 import Elysia from "elysia";
+import { z } from "zod";
 import db from "~/db";
 import { phone_numbers, sip_trunks } from "~/db/schema";
 import models from "~/plugins/models";
@@ -26,7 +28,14 @@ const phoneNumberModule = () =>
           .innerJoin(sip_trunks, eq(sip_trunks.id, phone_numbers.sipTrunkId))
           .where(eq(sip_trunks.workspaceId, workspaceId));
       },
-      { requireAuth: true, headers: "headers.workspaceId" },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+        response: {
+          200: phoneNumberSchema,
+          403: z.any(),
+        },
+      },
     );
 
 export default phoneNumberModule;
