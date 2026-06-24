@@ -89,6 +89,64 @@ const sipModule = () =>
         },
       },
     )
+    .get(
+      "trunks/:id",
+      async ({ session, params, headers, problem }) => {
+        const workspaceId = headers["cleon-workspace-id"];
+
+        const isAllowed = await checkPermissions({
+          user: {
+            id: session.userId,
+          },
+          resource: {
+            kind: "sip_trunk",
+            workspaceId,
+          },
+          action: "view",
+        });
+
+        if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
+
+        const phoneNumbersSubQuery = db
+          .select({
+            phoneNumbers: sql`COALESCE(
+                JSON_AGG(
+                    JSON_BUILD_OBJECT(
+                        'id', ${phone_numbers.id},
+                        'sipTrunkId', ${phone_numbers.sipTrunkId},
+                        'number', ${phone_numbers.number}
+                    )
+                ),
+                '[]'::json
+            )`.as("phoneNumbers"),
+          })
+          .from(phone_numbers)
+          .where(eq(phone_numbers.sipTrunkId, sip_trunks.id))
+          .as("phone_numbers_sq");
+
+        const [trunk] = await db
+          .select({
+            ...getColumns(sip_trunks),
+            password: sql`${sql.param("*".repeat(12))}`,
+            phoneNumbers: phoneNumbersSubQuery.phoneNumbers,
+          })
+          .from(sip_trunks)
+          .leftJoinLateral(phoneNumbersSubQuery, sql`true`)
+          .where(eq(sip_trunks.id, params.id));
+
+        if (!trunk) return problem({ title: "Not Found" });
+
+        return trunk;
+      },
+      {
+        requireAuth: true,
+        headers: "headers.workspaceId",
+        response: {
+          200: sipTrunkSelectSchema,
+          403: z.any(),
+        },
+      },
+    )
     .post(
       "trunks",
       async ({ session, headers, body: payload, status, problem }) => {
