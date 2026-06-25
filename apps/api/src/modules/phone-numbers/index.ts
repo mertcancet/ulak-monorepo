@@ -32,7 +32,7 @@ const phoneNumberModule = () =>
         requireAuth: true,
         headers: "headers.workspaceId",
         response: {
-          200: phoneNumberSchema,
+          200: phoneNumberSchema.array(),
           403: z.any(),
         },
       },
