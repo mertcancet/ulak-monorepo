@@ -1,6 +1,7 @@
 import type { SipTrunk, SipTrunkCreate } from "@cleon/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { sipTrunksApi } from "~/lib/sip-api";
 import { useWorkspaceStore } from "~/store/workspace-store";
@@ -16,7 +17,7 @@ interface SipSettingsCreateProps {
 const SipSettingsCreate = ({ onSuccess }: SipSettingsCreateProps) => {
   const queryClient = useQueryClient();
   const { selectedWorkspaceId } = useWorkspaceStore();
-
+  const _navigate = useNavigate();
   // Form verisini doğrudan SipTrunk tipi (veya ona as edilmiş varsayılan obje) ile yönetiyoruz
   const [formData, setFormData] = useState<SipTrunk>(
     defaultSipTrunkFormData as SipTrunk,
@@ -35,6 +36,8 @@ const SipSettingsCreate = ({ onSuccess }: SipSettingsCreateProps) => {
         queryKey: ["sip-trunks", selectedWorkspaceId],
       });
       setFormData(defaultSipTrunkFormData as SipTrunk); // Formu sıfırla
+
+      _navigate("/dashboard/sip-settings"); // Başarılı işlem sonrası yönlendirme
       if (onSuccess) onSuccess();
     },
   });

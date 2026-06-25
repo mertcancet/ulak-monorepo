@@ -6,11 +6,13 @@ import { Select } from "~/components/ui/select";
 interface SipSettingsFormProps {
   data: SipTrunk | null;
   onChange: (data: SipTrunk) => void;
+  isEdit?: boolean; // Düzenleme modunu belirtmek için opsiyonel bir prop
 }
 
 export default function SipSettingsForm({
   data,
   onChange,
+  isEdit = false,
 }: SipSettingsFormProps) {
   // Temel özellikler için genel güncelleme fonksiyonu
   const updateBase = (partial: Partial<SipTrunk>) => {
@@ -65,6 +67,7 @@ export default function SipSettingsForm({
             onChange={e =>
               handleTypeChange(e.target.value as "inbound" | "outbound")
             }
+            disabled={isEdit} // Düzenleme modunda tip değiştirilemez
           >
             <option value="inbound">Gelen (Inbound)</option>
             <option value="outbound">Giden (Outbound)</option>

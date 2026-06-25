@@ -1,15 +1,19 @@
 import type { SipTrunk, SipTrunkUpdate } from "@cleon/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Trash } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Button } from "~/components/ui/button";
 import { sipTrunksApi } from "~/lib/sip-api";
+import { useWorkspaceStore } from "~/store/workspace-store";
 import DashboardHeader from "./_components/dashboard-header";
 import SipSettingsForm from "./_components/sip-settings/sip-settings-form";
 
 const SipSettingsEdit = () => {
   const { trunkId } = useParams();
   const queryClient = useQueryClient();
+  const _navigate = useNavigate();
+  const { selectedWorkspaceId } = useWorkspaceStore();
 
   // Artık SipTrunkFormData yerine doğrudan SipTrunk tipini kullanıyoruz
   const [formData, setFormData] = useState<SipTrunk | null>(null);
@@ -24,6 +28,28 @@ const SipSettingsEdit = () => {
     select: (apiData): SipTrunk => {
       // Gerekirse burada apiData üzerinden ufak type validation'lar yapabilirsiniz
       return apiData as SipTrunk;
+    },
+  });
+
+  const {
+    mutate: deleteTrunk,
+    isPending: isDeleting,
+    error: deleteError,
+  } = useMutation({
+    // Tetiklerken silinecek sip trunk ID'sini parametre olarak gönderiyorsun
+    mutationFn: async () => {
+      await sipTrunksApi.deleteSipTrunk(undefined, trunkId || "");
+    },
+    onSuccess: () => {
+      // Silme başarılı olunca listeyi tazelemek için cache'i patlatıyoruz
+      queryClient.invalidateQueries({
+        queryKey: ["sip-trunks", selectedWorkspaceId],
+      });
+
+      _navigate("/dashboard/sip-settings"); // Silme işleminden sonra yönlendirme
+
+      // Buraya silme işleminden sonra çalışmasını istediğin yönlendirme (navigasyon)
+      // veya modal kapatma gibi ek mantıkları yazabilirsin.
     },
   });
 
@@ -112,11 +138,28 @@ const SipSettingsEdit = () => {
         )}
 
         {/* formData artık doğrudan bir SipTrunk nesnesi */}
-        <SipSettingsForm data={formData} onChange={setFormData} />
+        <SipSettingsForm data={formData} onChange={setFormData} isEdit />
 
-        <div className="mt-4">
+        <div className="mt-4 flex justify-between">
           <Button type="submit" disabled={isPending}>
             {isPending ? "Güncelleniyor..." : "Değişiklikleri Kaydet"}
+          </Button>
+
+          <Button
+            variant="destructive"
+            disabled={isDeleting}
+            onClick={() => {
+              if (
+                confirm(
+                  "Bu SIP trunk kaydını silmek istediğinize emin misiniz?",
+                )
+              ) {
+                deleteTrunk(); // Veya silmek istediğin trunk'ın ID'si
+              }
+            }}
+          >
+            <Trash className="mr-1 size-4" />
+            {isDeleting ? "Siliniyor..." : "Sil"}
           </Button>
         </div>
       </form>
