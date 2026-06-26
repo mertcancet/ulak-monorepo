@@ -1,9 +1,12 @@
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { betterAuth } from "better-auth";
 import { openAPI } from "better-auth/plugins";
+import { render } from "jsx-email";
 import type { OpenAPIV3 } from "openapi-types";
 import db from "~/db";
 import * as schema from "~/db/schema";
+import { PasswordResetEmail, VerificationEmail } from "~/emails";
+import { emailService } from "~/shared/email-service";
 import env from "~/shared/env";
 
 const socialProviders =
@@ -46,6 +49,28 @@ const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
+      const html = await render(<PasswordResetEmail passwordResetURL={url} />);
+
+      void emailService.send({
+        to: user.email,
+        subject: "Reset your password",
+        html,
+      });
+    },
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const html = await render(<VerificationEmail verificationURL={url} />);
+
+      void emailService.send({
+        to: user.email,
+        subject: "Verify your email address",
+        html,
+      });
+    },
   },
   socialProviders,
   plugins: [openAPI()],
