@@ -19,7 +19,8 @@
       "!!**/.react-router",
       "!!apps/landing/src",
       "!!apps/landing/stitch_assets",
-      "!!apps/web/app/components/agents-ui"
+      "!!apps/web/app/components/agents-ui",
+      "!!apps/web/app/components/ui"
     ]
   },
   "formatter": {
