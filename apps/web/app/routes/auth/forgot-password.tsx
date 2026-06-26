@@ -3,6 +3,7 @@ import { Form, Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { authClient } from "~/lib/auth-client";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +21,18 @@ const ForgotPassword = () => {
       // Buraya şifre sıfırlama API isteğini ekleyebilirsin
       // Örn: await auth.sendPasswordResetEmail(email);
 
+      const _frontendBaseUrl =
+        import.meta.env.VITE_FRONTEND_BASE_URL || "http://localhost:5173";
+
+      await authClient.requestPasswordReset({
+        email,
+        redirectTo: `${_frontendBaseUrl}/auth/reset-password/`,
+        fetchOptions: {
+          onSuccess: () => {
+            console.log("Şifre sıfırlama bağlantısı gönderildi.");
+          },
+        },
+      });
       setIsSuccess(true);
     } catch (error: any) {
       setErrorMessage(

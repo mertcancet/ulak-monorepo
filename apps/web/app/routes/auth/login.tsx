@@ -48,6 +48,9 @@ export default function SignIn() {
         fetchOptions: {
           onError: ({ error }) => {
             const fallbackMessage = "Giris basarisiz. Bilgilerini kontrol et.";
+            if (error.code === "EMAIL_NOT_VERIFIED") {
+              navigate("/auth/verify-email", { state: { email } });
+            }
             setErrorMessage(error.message || fallbackMessage);
           },
         },

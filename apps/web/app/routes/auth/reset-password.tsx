@@ -1,14 +1,15 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Form, Link, useParams } from "react-router";
+import { Form, Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { authClient } from "~/lib/auth-client";
 
 export default function ResetPassword() {
   const [token, setToken] = useState<string | null>(null);
-  const { id } = useParams<{ id: string }>();
 
+  const [searchParams] = useSearchParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isPending, setIsPending] = useState(false);
@@ -17,7 +18,7 @@ export default function ResetPassword() {
 
   // URL'den token veya code parametresini alıyoruz
   useEffect(() => {
-    const tokenParam = id || "";
+    const tokenParam = searchParams.get("token") || "";
     if (tokenParam) {
       setToken(tokenParam);
     } else {
@@ -25,7 +26,7 @@ export default function ResetPassword() {
         "Geçersiz veya süresi dolmuş şifre sıfırlama bağlantısı.",
       );
     }
-  }, [id]);
+  }, [searchParams]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +49,15 @@ export default function ResetPassword() {
       // Buraya backend şifre güncelleme API isteğini ekleyebilirsin
       // Örn: await auth.confirmPasswordReset(token, password);
 
-      setIsSuccess(true);
+      await authClient.resetPassword({
+        token,
+        newPassword: password,
+        fetchOptions: {
+          onSuccess: () => {
+            setIsSuccess(true);
+          },
+        },
+      });
     } catch (error: any) {
       setErrorMessage(
         error?.message || "Şifre güncellenirken bir hata oluştu.",
