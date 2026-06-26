@@ -138,7 +138,11 @@ const SipSettingsEdit = () => {
         )}
 
         {/* formData artık doğrudan bir SipTrunk nesnesi */}
-        <SipSettingsForm data={formData} onChange={setFormData} isEdit />
+        <SipSettingsForm
+          data={{ ...formData, password: null } as SipTrunk} // Password'ü null olarak geçiyoruz, çünkü formda gösterilmeyecek
+          onChange={setFormData}
+          isEdit
+        />
 
         <div className="mt-4 flex justify-between">
           <Button type="submit" disabled={isPending}>
