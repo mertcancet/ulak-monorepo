@@ -12,6 +12,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { TooltipProvider } from "./components/ui/tooltip";
 import "@livekit/components-styles";
+import { Toaster } from "./components/ui/sonner";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </TooltipProvider>
         <ScrollRestoration />
         <Scripts />
+        <Toaster position="top-center" />
       </body>
     </html>
   );

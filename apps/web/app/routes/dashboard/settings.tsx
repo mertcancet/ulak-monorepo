@@ -1,19 +1,5 @@
-import {
-  Bell,
-  Building2,
-  Eye,
-  EyeOff,
-  Globe,
-  Key,
-  Lock,
-  RefreshCw,
-  Shield,
-  Trash2,
-  Upload,
-  User,
-} from "lucide-react";
+import { Bell, Building2, Key, Shield, Trash2, User } from "lucide-react";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -21,9 +7,10 @@ import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
 import { Switch } from "~/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { authClient } from "~/lib/auth-client";
 import DashboardHeader from "./_components/dashboard-header";
 import ActiveSessions from "./_components/settings/active-sessions";
+import ChangePasswordSection from "./_components/settings/change-password-section";
+import ProfileSection from "./_components/settings/profile-section";
 
 const MOCK_API_KEYS = [
   {
@@ -43,18 +30,6 @@ const MOCK_API_KEYS = [
 ];
 
 export default function SettingsPage() {
-  const { data: session } = authClient.useSession();
-
-  const [profileName, setProfileName] = useState(session?.user.name ?? "");
-  const [profileEmail] = useState(session?.user.email ?? "");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
-  const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [apiKeys, setApiKeys] = useState(MOCK_API_KEYS);
 
   const [notifications, setNotifications] = useState({
@@ -66,26 +41,6 @@ export default function SettingsPage() {
     billingAlerts: true,
     newFeatures: false,
   });
-
-  const userDisplayName =
-    session?.user.name || session?.user.email?.split("@")[0] || "U";
-  const userInitial = userDisplayName.charAt(0).toUpperCase();
-
-  const handleSaveProfile = async () => {
-    setIsSavingProfile(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setIsSavingProfile(false);
-  };
-
-  const handleSavePassword = async () => {
-    if (newPassword !== confirmPassword) return;
-    setIsSavingPassword(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setIsSavingPassword(false);
-  };
 
   const handleRevokeKey = (id: string) => {
     setApiKeys(prev => prev.filter(k => k.id !== id));
@@ -148,96 +103,7 @@ export default function SettingsPage() {
 
             {/* ─── Profil ─────────────────────────────────────────── */}
             <TabsContent value="profile" className="space-y-6">
-              <div className="bg-card border-border rounded-xl border p-6 shadow-sm">
-                <h2 className="text-foreground mb-1 text-sm font-semibold">
-                  Profil Bilgileri
-                </h2>
-                <p className="text-muted-foreground mb-6 text-xs">
-                  İsminizi ve iletişim bilgilerinizi güncelleyin.
-                </p>
-
-                {/* Avatar */}
-                <div className="mb-6 flex items-center gap-4">
-                  <Avatar className="border-border h-16 w-16 border-2">
-                    <AvatarImage src={session?.user.image ?? ""} />
-                    <AvatarFallback className="bg-brand text-lg font-bold text-white">
-                      {userInitial}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="space-y-1.5">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="gap-2 text-xs"
-                    >
-                      <Upload className="h-3.5 w-3.5" />
-                      Fotoğraf Yükle
-                    </Button>
-                    <p className="text-muted-foreground text-[11px]">
-                      JPG, PNG veya GIF · Maks. 2MB
-                    </p>
-                  </div>
-                </div>
-
-                <Separator className="mb-6" />
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="name" className="text-xs font-medium">
-                      Ad Soyad
-                    </Label>
-                    <Input
-                      id="name"
-                      value={profileName}
-                      onChange={e => setProfileName(e.target.value)}
-                      placeholder="Adınız Soyadınız"
-                      className="h-9 text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="email" className="text-xs font-medium">
-                      E-posta
-                    </Label>
-                    <Input
-                      id="email"
-                      value={profileEmail}
-                      disabled
-                      className="h-9 text-sm opacity-60"
-                    />
-                  </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <Label htmlFor="timezone" className="text-xs font-medium">
-                      Saat Dilimi
-                    </Label>
-                    <div className="relative">
-                      <Globe className="text-muted-foreground absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2" />
-                      <select
-                        id="timezone"
-                        className="border-border bg-background text-foreground focus:ring-ring h-9 w-full rounded-md border pr-3 pl-9 text-sm focus:ring-2 focus:outline-none"
-                      >
-                        <option>Europe/Istanbul (UTC+3)</option>
-                        <option>Europe/London (UTC+0)</option>
-                        <option>America/New_York (UTC-5)</option>
-                        <option>America/Los_Angeles (UTC-8)</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex justify-end">
-                  <Button
-                    size="sm"
-                    onClick={handleSaveProfile}
-                    disabled={isSavingProfile}
-                    className="gap-2 text-xs"
-                  >
-                    {isSavingProfile && (
-                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                    )}
-                    Değişiklikleri Kaydet
-                  </Button>
-                </div>
-              </div>
+              <ProfileSection />
 
               {/* Danger Zone */}
               <div className="border-destructive/30 bg-destructive/5 rounded-xl border p-6">
@@ -261,133 +127,7 @@ export default function SettingsPage() {
             {/* ─── Güvenlik ───────────────────────────────────────── */}
             <TabsContent value="security" className="space-y-6">
               {/* Şifre Değiştir */}
-              <div className="bg-card border-border rounded-xl border p-6 shadow-sm">
-                <h2 className="text-foreground mb-1 text-sm font-semibold">
-                  Şifre Değiştir
-                </h2>
-                <p className="text-muted-foreground mb-6 text-xs">
-                  Hesap güvenliğiniz için güçlü bir şifre kullanın.
-                </p>
-
-                <div className="space-y-4">
-                  <div className="space-y-1.5">
-                    <Label
-                      htmlFor="current-password"
-                      className="text-xs font-medium"
-                    >
-                      Mevcut Şifre
-                    </Label>
-                    <div className="relative">
-                      <Lock className="text-muted-foreground absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2" />
-                      <Input
-                        id="current-password"
-                        type={showCurrentPassword ? "text" : "password"}
-                        value={currentPassword}
-                        onChange={e => setCurrentPassword(e.target.value)}
-                        className="h-9 pr-9 pl-9 text-sm"
-                        placeholder="••••••••"
-                      />
-                      <button
-                        type="button"
-                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors"
-                        onClick={() => setShowCurrentPassword(p => !p)}
-                      >
-                        {showCurrentPassword ? (
-                          <EyeOff className="h-3.5 w-3.5" />
-                        ) : (
-                          <Eye className="h-3.5 w-3.5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label
-                      htmlFor="new-password"
-                      className="text-xs font-medium"
-                    >
-                      Yeni Şifre
-                    </Label>
-                    <div className="relative">
-                      <Lock className="text-muted-foreground absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2" />
-                      <Input
-                        id="new-password"
-                        type={showNewPassword ? "text" : "password"}
-                        value={newPassword}
-                        onChange={e => setNewPassword(e.target.value)}
-                        className="h-9 pr-9 pl-9 text-sm"
-                        placeholder="••••••••"
-                      />
-                      <button
-                        type="button"
-                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors"
-                        onClick={() => setShowNewPassword(p => !p)}
-                      >
-                        {showNewPassword ? (
-                          <EyeOff className="h-3.5 w-3.5" />
-                        ) : (
-                          <Eye className="h-3.5 w-3.5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label
-                      htmlFor="confirm-password"
-                      className="text-xs font-medium"
-                    >
-                      Yeni Şifre (Tekrar)
-                    </Label>
-                    <div className="relative">
-                      <Lock className="text-muted-foreground absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2" />
-                      <Input
-                        id="confirm-password"
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={confirmPassword}
-                        onChange={e => setConfirmPassword(e.target.value)}
-                        className="h-9 pr-9 pl-9 text-sm"
-                        placeholder="••••••••"
-                      />
-                      <button
-                        type="button"
-                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors"
-                        onClick={() => setShowConfirmPassword(p => !p)}
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className="h-3.5 w-3.5" />
-                        ) : (
-                          <Eye className="h-3.5 w-3.5" />
-                        )}
-                      </button>
-                    </div>
-                    {confirmPassword && newPassword !== confirmPassword && (
-                      <p className="text-destructive text-[11px]">
-                        Şifreler eşleşmiyor.
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-6 flex justify-end">
-                  <Button
-                    size="sm"
-                    onClick={handleSavePassword}
-                    disabled={
-                      isSavingPassword ||
-                      !currentPassword ||
-                      !newPassword ||
-                      newPassword !== confirmPassword
-                    }
-                    className="gap-2 text-xs"
-                  >
-                    {isSavingPassword && (
-                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                    )}
-                    Şifreyi Güncelle
-                  </Button>
-                </div>
-              </div>
+              <ChangePasswordSection />
 
               <ActiveSessions />
             </TabsContent>
