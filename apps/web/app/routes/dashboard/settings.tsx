@@ -6,7 +6,6 @@ import {
   Globe,
   Key,
   Lock,
-  LogOut,
   RefreshCw,
   Shield,
   Trash2,
@@ -15,7 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
+
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -24,6 +23,7 @@ import { Switch } from "~/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { authClient } from "~/lib/auth-client";
 import DashboardHeader from "./_components/dashboard-header";
+import ActiveSessions from "./_components/settings/active-sessions";
 
 const MOCK_API_KEYS = [
   {
@@ -39,30 +39,6 @@ const MOCK_API_KEYS = [
     key: "sk-dev-••••••••••••••••••••••••8c3b",
     createdAt: "15 Şubat 2026",
     lastUsed: "3 gün önce",
-  },
-];
-
-const MOCK_SESSIONS = [
-  {
-    id: "1",
-    device: "macOS · Chrome",
-    location: "İstanbul, Türkiye",
-    lastActive: "Şu an aktif",
-    current: true,
-  },
-  {
-    id: "2",
-    device: "iPhone · Safari",
-    location: "İstanbul, Türkiye",
-    lastActive: "2 saat önce",
-    current: false,
-  },
-  {
-    id: "3",
-    device: "Windows · Edge",
-    location: "Ankara, Türkiye",
-    lastActive: "5 gün önce",
-    current: false,
   },
 ];
 
@@ -129,7 +105,7 @@ export default function SettingsPage() {
         </div>
       </DashboardHeader>
 
-      <div className="scrollbar-thin flex-1 overflow-y-auto">
+      <div className="flex-1 scrollbar-thin overflow-y-auto">
         <div className="mx-auto max-w-3xl px-6 py-8">
           <Tabs defaultValue="profile" className="space-y-6">
             <TabsList className="bg-secondary h-10 gap-1 p-1">
@@ -413,60 +389,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {/* Aktif Oturumlar */}
-              <div className="bg-card border-border rounded-xl border p-6 shadow-sm">
-                <h2 className="text-foreground mb-1 text-sm font-semibold">
-                  Aktif Oturumlar
-                </h2>
-                <p className="text-muted-foreground mb-6 text-xs">
-                  Hesabınızda oturum açık olan cihazları yönetin.
-                </p>
-
-                <div className="space-y-3">
-                  {MOCK_SESSIONS.map(session => (
-                    <div
-                      key={session.id}
-                      className="border-border flex items-center justify-between rounded-lg border p-3"
-                    >
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          <span className="text-foreground text-xs font-medium">
-                            {session.device}
-                          </span>
-                          {session.current && (
-                            <Badge
-                              variant="secondary"
-                              className="bg-success/10 text-success border-0 px-1.5 py-0 text-[10px]"
-                            >
-                              Mevcut
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-muted-foreground text-[11px]">
-                          {session.location} · {session.lastActive}
-                        </p>
-                      </div>
-                      {!session.current && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-destructive hover:text-destructive h-7 gap-1.5 px-2 text-[11px]"
-                        >
-                          <LogOut className="h-3 w-3" />
-                          Sonlandır
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-4 flex justify-end">
-                  <Button variant="outline" size="sm" className="gap-2 text-xs">
-                    <LogOut className="h-3.5 w-3.5" />
-                    Tüm Oturumları Sonlandır
-                  </Button>
-                </div>
-              </div>
+              <ActiveSessions />
             </TabsContent>
 
             {/* ─── Bildirimler ────────────────────────────────────── */}
