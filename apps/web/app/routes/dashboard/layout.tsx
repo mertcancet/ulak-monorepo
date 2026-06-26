@@ -356,12 +356,18 @@ const DashboardLayout = () => {
           >
             {!collapsed && (
               <div className="flex items-center gap-2.5 p-4">
-                <div className="gradient-primary shadow-brand flex h-8 w-8 items-center justify-center rounded-xl">
-                  <Bot className="h-4 w-4 text-white" />
+                <div className="relative isolate inline-block select-none">
+                  {/* Gölgeyi Oluşturan Arka Plan Katmanı (Parlaklığı Azaltıldı) */}
+                  <span className="font-display pointer-events-none absolute inset-0 bg-[linear-gradient(223deg,_#00d2ff_0%,_#0091ff_104.15%)] bg-clip-text text-xl font-semibold tracking-tight text-transparent opacity-35 blur-[6px]">
+                    {/* Parlaklık Azaltma: blur-[12px] -> blur-[6px] ve opacity-70 -> opacity-35 yapıldı */}
+                    Cleon AI
+                  </span>
+
+                  {/* Net ve Renkli Gözüken Ön Katman */}
+                  <span className="font-display relative bg-[linear-gradient(223deg,_#00d2ff_0%,_#0091ff_104.15%)] bg-clip-text text-xl font-semibold tracking-tight text-transparent">
+                    Cleon AI
+                  </span>
                 </div>
-                <span className="text-foreground font-display text-base font-semibold tracking-tight">
-                  Cleon AI
-                </span>
               </div>
             )}
             <button

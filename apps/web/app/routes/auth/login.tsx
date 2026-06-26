@@ -76,20 +76,17 @@ export default function SignIn() {
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <div className="mb-10 text-center">
-          <div className="gradient-primary shadow-brand mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
-                fill="white"
-              />
-            </svg>
+          <div className="relative isolate inline-block select-none">
+            {/* Gölgeyi Oluşturan Arka Plan Katmanı (Parlaklığı Azaltıldı) */}
+            <span className="font-display pointer-events-none absolute inset-0 bg-[linear-gradient(223deg,_#00d2ff_0%,_#0091ff_104.15%)] bg-clip-text text-2xl font-semibold tracking-tight text-transparent opacity-35 blur-[6px]">
+              {/* Parlaklık Azaltma: blur-[12px] -> blur-[6px] ve opacity-70 -> opacity-35 yapıldı */}
+              Cleon AI
+            </span>
+
+            {/* Net ve Renkli Gözüken Ön Katman */}
+            <span className="font-display relative bg-[linear-gradient(223deg,_#00d2ff_0%,_#0091ff_104.15%)] bg-clip-text text-2xl font-semibold tracking-tight text-transparent">
+              Cleon AI
+            </span>
           </div>
           <h1 className="font-display text-foreground text-3xl leading-tight font-semibold">
             Tekrar Hoş Geldiniz
@@ -153,7 +150,15 @@ export default function SignIn() {
             >
               {isPending ? "Giriş yapılıyor..." : "Giriş Yap"}
             </Button>
-
+            <p className="text-muted-foreground text-center font-sans text-sm">
+              Şifrenizi mi unuttunuz?{" "}
+              <Link
+                to="/auth/forgot-password"
+                className="text-foreground decoration-border hover:decoration-foreground font-semibold underline underline-offset-4 transition-colors"
+              >
+                Şifremi Unuttum
+              </Link>
+            </p>
             <p className="text-muted-foreground text-center font-sans text-sm">
               Hesabınız yok mu?{" "}
               <Link
