@@ -22,3 +22,4 @@ coverage
 # React Router
 /.react-router/
 /build/
+apps/web/.react-router/
