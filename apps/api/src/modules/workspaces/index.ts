@@ -79,14 +79,20 @@ const workspacesModule = () =>
                   workspace: ["update"],
                   invitation: ["view", "create", "delete", "update"],
                   user: ["add-role", "remove-role"],
+                  knowledge_base: ["*"],
+                  phone_number: ["*"],
+                  sip_trunk: ["*"],
                 } satisfies RolePermissions,
               },
               {
                 name: "Member",
                 workspaceId: workspace.id,
                 permissions: {
+                  workspace: ["view"],
                   agent: ["view"],
                   tool: ["view"],
+                  phone_number: ["view"],
+                  knowledge_base: ["view"],
                 } satisfies RolePermissions,
               },
             ])
