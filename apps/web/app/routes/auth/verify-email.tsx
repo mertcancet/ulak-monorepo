@@ -11,6 +11,7 @@ const VerifyEmail = () => {
     try {
       const _response = await authClient.sendVerificationEmail({
         email: _email,
+        callbackURL: `${import.meta.env.VITE_FRONTEND_BASE_URL}/dashboard/`,
         fetchOptions: {
           onSuccess: () => {
             console.log("Doğrulama kodu tekrar gönderildi.");
