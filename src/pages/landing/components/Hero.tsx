@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { PlayCircle } from 'lucide-react';
+import { PlayCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Hero = () => {
   return (
@@ -19,8 +19,8 @@ export const Hero = () => {
           <span className="gradient-text">Experience is Autonomous</span>
         </h1>
         <p className="mx-auto mb-12 max-w-2xl text-xl font-light leading-relaxed text-slate-400">
-          Deploy human-like AI voice agents that handle support, sales, and scheduling 24/7 with
-          zero latency and perfect sentiment.
+          Deploy human-like AI voice agents that handle support, sales, and
+          scheduling 24/7 with zero latency and perfect sentiment.
         </p>
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button className="w-full rounded-xl bg-gradient-to-r from-primary to-accent-purple px-8 py-7 text-lg font-bold text-white shadow-xl shadow-primary/20 transition-transform hover:scale-105 sm:w-auto">
@@ -55,7 +55,7 @@ export const Hero = () => {
                 <div className="h-8 w-1 animate-pulse rounded-full bg-accent-mint"></div>
               </div>
               <p className="font-mono text-sm tracking-tighter text-accent-mint">
-                AI AGENT ONLINE // READY TO ASSIST
+                AI AGENT ONLINE {/* READY TO ASSIST */}
               </p>
             </div>
           </div>

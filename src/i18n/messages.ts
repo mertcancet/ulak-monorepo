@@ -135,7 +135,7 @@ export const messages = {
     },
     landing: {
       hero: {
-        badge: 'Çağrı operasyonları için AI kontrol merkezi',
+        badge: 'Yapay zeka destekli çağrı merkezi',
         description:
           'Agent oluştur, konuşma akışını görsel olarak tasarla, bilgi tabanını bağla ve çağrı performansını tek panelden yönet. CleonAI web uygulamasında geliştirdiğimiz tüm çekirdek modüller burada.',
         primaryButton: 'Canlı Demoyu Planla',
