@@ -271,6 +271,7 @@ const agentsModule = () =>
             return problem({
               title: "Not Found",
               detail: "Phone number not found.",
+              status: 404,
             });
 
           if (!phoneNumber.agentId)
