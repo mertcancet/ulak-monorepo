@@ -297,7 +297,6 @@ const agentsModule = () =>
           })
           .from(agents)
           .leftJoinLateral(agentTools, sql`true`)
-          // .leftJoin(phone_numbers, eq(phone_numbers.agentId, agents.id))
           .where(where);
 
         if (!startAgent) return problem({ title: "Not Found", status: 404 });
