@@ -10,6 +10,7 @@ export const standardPermissions = [
 
 const userPermissions = ["add-role", "remove-role", "*"] as const;
 const workspacePermissions = ["view", "update", "remove-member", "*"] as const;
+const phoneNumberPermissions = ["view", "update", "*"] as const;
 
 export type ResourceKind = keyof z.infer<typeof rolePermissionSchema>;
 
@@ -22,6 +23,7 @@ export const rolePermissionSchema = z.object({
   knowledge_base: z.enum(standardPermissions).array().optional(),
   user: z.enum(userPermissions).array().optional(),
   sip_trunk: z.enum(standardPermissions).array().optional(),
+  phone_number: z.enum(phoneNumberPermissions).array().optional(),
 });
 
 export const roleSelectSchema = z.object({

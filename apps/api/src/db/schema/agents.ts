@@ -19,7 +19,6 @@ export const agents = pgTable(
       .notNull()
       .references(() => workspaces.id, { onDelete: "cascade" }),
     name: text().notNull(),
-    phoneNumber: text().unique(),
     llm: jsonb().$type<LLMSettings>(),
     instructions: text().notNull(),
     allowInterruptions: boolean().default(true).notNull(),

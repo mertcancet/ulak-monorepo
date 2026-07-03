@@ -8,7 +8,7 @@ import { and, desc, eq, getColumns, ne, type SQL, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import { z } from "zod";
 import db from "~/db";
-import { agent_tools, agents, tools } from "~/db/schema";
+import { agent_tools, agents, phone_numbers, tools } from "~/db/schema";
 import models from "~/plugins/models";
 import { checkPermissions } from "~/shared/auth-helpers";
 import env from "~/shared/env";
@@ -261,8 +261,26 @@ const agentsModule = () =>
 
         let where: SQL = sql``;
 
-        if ("phoneNumber" in payload)
-          where = eq(agents.phoneNumber, payload.phoneNumber);
+        if ("phoneNumber" in payload) {
+          const [phoneNumber] = await db
+            .select({ agentId: phone_numbers.agentId })
+            .from(phone_numbers)
+            .where(eq(phone_numbers.number, payload.phoneNumber));
+
+          if (!phoneNumber)
+            return problem({
+              title: "Not Found",
+              detail: "Phone number not found.",
+            });
+
+          if (!phoneNumber.agentId)
+            return problem({
+              title: "Bad Request",
+              detail: "Phone number is not assigned to any agent.",
+            });
+
+          where = eq(agents.id, phoneNumber.agentId);
+        }
 
         if ("agentId" in payload) where = eq(agents.id, payload.agentId);
 
@@ -279,6 +297,7 @@ const agentsModule = () =>
           })
           .from(agents)
           .leftJoinLateral(agentTools, sql`true`)
+          // .leftJoin(phone_numbers, eq(phone_numbers.agentId, agents.id))
           .where(where);
 
         if (!startAgent) return problem({ title: "Not Found", status: 404 });

@@ -34,3 +34,16 @@ export const sip_trunks = pgTable(
   },
   table => [index().on(table.workspaceId, table.createdAt)],
 );
+
+export const sip_dispatch_rules = pgTable(
+  "sip_dispatch_rules",
+  {
+    id: uuid().primaryKey().default(sql`uuidv7()`),
+    sipTrunkId: uuid()
+      .notNull()
+      .references(() => sip_trunks.id, { onDelete: "cascade" })
+      .unique(),
+    lkSipDispatchRuleId: text().notNull(),
+  },
+  table => [index().on(table.sipTrunkId)],
+);

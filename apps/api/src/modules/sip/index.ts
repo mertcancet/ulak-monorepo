@@ -4,6 +4,7 @@ import {
   sipTrunkSelectSchema,
   sipTrunkUpdateSchema,
 } from "@cleon/shared";
+import { RoomConfiguration } from "@livekit/protocol";
 import { eq, getColumns, sql } from "drizzle-orm";
 import Elysia from "elysia";
 import {
@@ -13,7 +14,7 @@ import {
 } from "livekit-server-sdk";
 import { z } from "zod";
 import db from "~/db";
-import { phone_numbers, sip_trunks } from "~/db/schema";
+import { phone_numbers, sip_dispatch_rules, sip_trunks } from "~/db/schema";
 import models from "~/plugins/models";
 import problemDetails from "~/plugins/problem-details";
 import { checkPermissions } from "~/shared/auth-helpers";
@@ -166,6 +167,7 @@ const sipModule = () =>
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
         let lkTrunkId: string;
+        let lkDispatchRuleId: string | undefined;
 
         if (payload.type === "inbound") {
           const trunk = await sipClient.createSipInboundTrunk(
@@ -179,7 +181,26 @@ const sipModule = () =>
             },
           );
 
+          const dispatchRule = await sipClient.createSipDispatchRule(
+            {
+              roomPrefix: "call",
+              type: "individual",
+            },
+            {
+              trunkIds: [trunk.sipTrunkId],
+              attributes: { workspaceId },
+              roomConfig: new RoomConfiguration({
+                agents: [
+                  {
+                    agentName: "cleon",
+                  },
+                ],
+              }),
+            },
+          );
+
           lkTrunkId = trunk.sipTrunkId;
+          lkDispatchRuleId = dispatchRule.sipDispatchRuleId;
         } else {
           const trunk = await sipClient.createSipOutboundTrunk(
             payload.name,
@@ -217,13 +238,20 @@ const sipModule = () =>
               })),
             );
 
+            if (payload.type === "inbound") {
+              await tx.insert(sip_dispatch_rules).values({
+                sipTrunkId: trunk.id,
+                lkSipDispatchRuleId: lkDispatchRuleId!,
+              });
+            }
+
             return trunk.id;
           });
           return status("Created", { id });
         } catch {
           await sipClient.deleteSipTrunk(lkTrunkId);
 
-          return problem({ title: "Internal Server Error" });
+          return problem({ title: "Internal Server Error", status: 500 });
         }
       },
       {
@@ -354,13 +382,28 @@ const sipModule = () =>
         if (!isAllowed) return problem({ title: "Forbidden", status: 403 });
 
         const [trunk] = await db
-          .select({ lkTrunkId: sip_trunks.lkTrunkId })
+          .select()
           .from(sip_trunks)
           .where(eq(sip_trunks.id, params.id));
 
         if (!trunk) return problem({ title: "Not Found", status: 404 });
 
         await sipClient.deleteSipTrunk(trunk.lkTrunkId);
+
+        if (trunk.type === "inbound") {
+          const [sipDispatchRule] = await db
+            .select({
+              lkSipDispatchRuleId: sip_dispatch_rules.lkSipDispatchRuleId,
+            })
+            .from(sip_dispatch_rules)
+            .where(eq(sip_dispatch_rules.sipTrunkId, trunk.id));
+
+          if (sipDispatchRule)
+            await sipClient.deleteSipDispatchRule(
+              sipDispatchRule.lkSipDispatchRuleId,
+            );
+        }
+
         await db.delete(sip_trunks).where(eq(sip_trunks.id, params.id));
       },
       {

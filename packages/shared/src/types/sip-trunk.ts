@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { phoneNumberSchema } from "./phone-number";
+import { phoneNumberSelectSchema } from "./phone-number";
+
+const phoneNumberSchema = phoneNumberSelectSchema.pick({
+  id: true,
+  sipTrunkId: true,
+  number: true,
+});
 
 export const sipTrunkTypes = ["inbound", "outbound"] as const;
 
