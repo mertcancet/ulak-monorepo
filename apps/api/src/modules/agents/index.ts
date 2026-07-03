@@ -261,7 +261,7 @@ const agentsModule = () =>
 
         let where: SQL = sql``;
 
-        if ("phoneNumber" in payload) {
+        if (payload.type === "phone") {
           const [phoneNumber] = await db
             .select({ agentId: phone_numbers.agentId })
             .from(phone_numbers)
@@ -283,7 +283,7 @@ const agentsModule = () =>
           where = eq(agents.id, phoneNumber.agentId);
         }
 
-        if ("agentId" in payload) where = eq(agents.id, payload.agentId);
+        if (payload.type === "agent") where = eq(agents.id, payload.agentId);
 
         const agentTools = db
           .select({ tools: sql`JSON_AGG(${agent_tools.toolId})`.as("tools") })
@@ -329,9 +329,15 @@ const agentsModule = () =>
       },
       {
         headers: "headers.cleonAgentSecret",
-        body: z.xor([
-          z.object({ phoneNumber: z.string() }),
-          z.object({ agentId: z.string() }),
+        body: z.discriminatedUnion("type", [
+          z.object({
+            type: z.literal("agent"),
+            agentId: z.uuidv7(),
+          }),
+          z.object({
+            type: z.literal("phone"),
+            phoneNumber: z.e164(),
+          }),
         ]),
         response: {
           200: z.object({
