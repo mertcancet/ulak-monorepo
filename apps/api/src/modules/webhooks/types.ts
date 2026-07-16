@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 const shared = z.object({
-  id: z.uuid(),
+  id: z.string(),
   createdAt: z.string(),
 });
 
 const egressInfo = z.object({
-  egress_id: z.string(),
+  egressId: z.string(),
   roomComposite: z.object({
     roomName: z.string(),
     fileOutputs: z

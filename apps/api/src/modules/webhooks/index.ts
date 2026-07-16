@@ -1,17 +1,12 @@
+import { jwt } from "@elysia/jwt";
 import dayjs from "dayjs";
 import Elysia from "elysia";
-import { WebhookReceiver } from "livekit-server-sdk";
 import db from "~/db";
 import { conversations } from "~/db/schema";
 import models from "~/plugins/models";
 import problemDetails from "~/plugins/problem-details";
 import env from "~/shared/env";
 import { webhookSchema } from "./types";
-
-const receiver = new WebhookReceiver(
-  env.LIVEKIT_API_KEY,
-  env.LIVEKIT_API_SECRET,
-);
 
 const webhookModule = () =>
   new Elysia({
@@ -21,15 +16,21 @@ const webhookModule = () =>
   })
     .use(models())
     .use(problemDetails())
+    .use(
+      jwt({
+        name: "jwt",
+        secret: env.LIVEKIT_API_SECRET,
+      }),
+    )
     .post(
       "livekit",
-      async ({ request, body: payload, problem }) => {
-        const rawBody = await request.text();
+      async ({ headers, body: payload, problem, jwt }) => {
+        const token = await jwt.verify(headers.authorization);
+
+        if (!token) return problem({ title: "Forbidden", status: 403 });
 
         if (payload.event !== "egress_ended")
           return problem({ title: "Bad Request" });
-
-        await receiver.receive(rawBody, "Authorization", false);
 
         const fileOutput = payload.egressInfo.roomComposite.fileOutputs?.[0];
 
@@ -58,6 +59,7 @@ const webhookModule = () =>
       },
       {
         body: webhookSchema,
+        headers: "headers.authorization",
         parse: "application/json",
       },
     );

@@ -6,16 +6,15 @@ const models = () =>
     name: "models",
   }).model({
     "created.response": z.object({ id: z.uuidv7() }),
+    "headers.authorization": z.looseObject({ authorization: z.string() }),
     "headers.workspaceId": z
-      .looseObject(z.object({ "cleon-workspace-id": z.uuidv7() }).shape)
+      .looseObject({ "cleon-workspace-id": z.uuidv7() })
       .toJSONSchema(),
     "headers.workspaceId-optional": z
-      .looseObject(
-        z.object({ "cleon-workspace-id": z.uuidv7().optional() }).shape,
-      )
+      .looseObject({ "cleon-workspace-id": z.uuidv7().optional() })
       .toJSONSchema(),
     "headers.cleonAgentSecret": z
-      .looseObject(z.object({ "cleon-agent-secret": z.string() }).shape)
+      .looseObject({ "cleon-agent-secret": z.string() })
       .toJSONSchema(),
   });
 
