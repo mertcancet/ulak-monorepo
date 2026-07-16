@@ -4,6 +4,7 @@ import { Elysia } from "elysia";
 import type { z } from "zod";
 import agentsModule from "~/modules/agents";
 import authModule from "~/modules/auth";
+import conversationModule from "~/modules/conversations";
 import knowledgeBaseModule from "~/modules/knowledge-base";
 import errorHandler from "~/plugins/error-handler";
 import env from "~/shared/env";
@@ -15,6 +16,7 @@ import rolesModule from "./modules/roles";
 import sipModule from "./modules/sip";
 import toolsModule from "./modules/tools";
 import usersModule from "./modules/users";
+import webhookModule from "./modules/webhooks";
 import workspacesModule from "./modules/workspaces";
 
 const app = new Elysia()
@@ -91,6 +93,8 @@ const app = new Elysia()
   .use(sipModule())
   .use(phoneNumberModule())
   .use(knowledgeBaseModule())
+  .use(conversationModule())
+  .use(webhookModule())
   .listen(env.PORT);
 
 console.log(

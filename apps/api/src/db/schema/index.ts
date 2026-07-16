@@ -1,5 +1,6 @@
 export * from "./agents";
 export * from "./auth";
+export * from "./conversation";
 export * from "./invitations";
 export * from "./knowledge-base";
 export * from "./phone-numbers";
