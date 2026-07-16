@@ -31,6 +31,8 @@ const errorHandler = () =>
       if (!problem) return;
 
       if (code === "INTERNAL_SERVER_ERROR") {
+        console.log(error);
+
         return problem({
           title: "Internal Server Error",
           status: 500,

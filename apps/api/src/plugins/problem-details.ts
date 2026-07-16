@@ -15,17 +15,18 @@ const problemDetails = () =>
       Partial<BadRequest>,
       "title" | "detail" | "status" | "errors" | "code"
     > = {}) {
-      return Response.json(
-        {
-          title,
-          detail,
-          status: statusCode,
-          instance: `${request.method} ${new URL(request.url).pathname}`,
-          code,
-          errors,
-        } satisfies BadRequest,
-        { status: statusCode },
-      );
+      const badRequest = {
+        title,
+        detail,
+        status: statusCode,
+        instance: `${request.method} ${new URL(request.url).pathname}`,
+        code,
+        errors,
+      } satisfies BadRequest;
+
+      console.error(badRequest);
+
+      return Response.json(badRequest, { status: statusCode });
     },
   }));
 
